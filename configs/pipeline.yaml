@@ -1,0 +1,68 @@
+# @package _global_
+# DCH Hydra configuration (single-file baseline)
+# Mirrors defaults in:
+# - [DHGConfig](dch_pipeline/pipeline.py:67)
+# - [TraversalConfig](dch_pipeline/pipeline.py:81)
+# - [PlasticityConfig](dch_pipeline/pipeline.py:88)
+# - [StreamingFSMEngine](dch_core/fsm.py:47) (FSM params provided here for convenience)
+# - Scaffolding policy placeholder (TBD)
+
+dch:
+  # TC-kNN / DHG (see [DefaultDHGConstructor.generate_candidates_tc_knn()](dch_core/dhg.py:132))
+  k: 3
+  combination_order_max: 2
+  causal_coincidence_delta: 500
+  budget_per_head: 16
+  init_reliability: 0.10
+  refractory_rho: 0
+  # Temporal admissibility window relative to head time (see [DCHPipeline.step()](dch_pipeline/pipeline.py:187))
+  delay_min: 100
+  delay_max: 500
+
+traversal:
+  # Constrained backward traversal (see [DefaultTraversalEngine.backward_traverse()](dch_core/traversal.py:103))
+  horizon: 2000
+  beam_size: 8
+  length_penalty_base: 0.98
+
+plasticity:
+  # Evidence-based EMA and pruning (see [DefaultPlasticityEngine.update_from_evidence()](dch_core/plasticity.py:40))
+  ema_alpha: 0.10
+  reliability_min: 0.02
+  reliability_max: 0.98
+  decay_lambda: 0.0
+  prune_threshold: 0.05
+
+fsm:
+  # Streaming FSM parameters (see [StreamingFSMEngine](dch_core/fsm.py:47))
+  theta: 5.0
+  lambda_decay: 0.0
+  hold_k: 2
+  min_weight: 1.0e-6
+
+scaffolding:
+  # Task-aware scaffolding (FREEZE/REUSE/GROW) — placeholder for future policy
+  enabled: false
+  freeze_similarity_threshold: 0.8
+  reuse_similarity_threshold: 0.6
+  growth_region: "auto"
+
+model:
+  # Backend model defaults (adapter TBD). Aligns with [ModelConfig](dch_snn/interface.py:61)
+  backend: "norse"
+  device: "cpu"
+  dt: 1.0
+  threshold: 1.0
+  hidden_size: null
+  num_classes: null
+
+experiment:
+  name: "synthetic"
+  artifacts_dir: "artifacts"
+  seeds: [123, 456, 789]
+
+logging:
+  # See [CSVLogger](dch_pipeline/logging_utils.py:43) and [TBLogger](dch_pipeline/logging_utils.py:127)
+  enable_tensorboard: false
+  metrics_csv: "metrics.csv"
+  tb_subdir: "tb"

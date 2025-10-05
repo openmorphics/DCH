@@ -1,0 +1,20 @@
+# Runtime dependencies for DCH (CPU-friendly). For CUDA, prefer Dockerfile targets.
+torch>=2.2
+norse>=0.0.9
+tonic>=1.4.0
+hydra-core>=1.3
+numpy>=1.24,<2.1
+scipy>=1.10
+scikit-learn>=1.3,<2
+pandas>=2.0,<3
+networkx>=3.0,<4
+pyyaml>=6.0
+statsmodels>=0.14
+tensorboard>=2.12
+tqdm>=4.65
+rich>=13.0
+typing_extensions>=4.7
+
+# Optional baseline extras (install if needed for BindsNET parity)
+# bindsnet>=0.3
+# torchvision>=0.15

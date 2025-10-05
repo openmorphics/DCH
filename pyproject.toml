@@ -1,0 +1,106 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dch"
+version = "0.1.0"
+description = "Dynamic Causal Hypergraph (DCH) neuro-symbolic framework for event-based SNNs"
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = {text = "MIT"}
+authors = [{name = "DCH Maintainers"}]
+keywords = ["spiking neural networks", "neuromorphic", "causal", "hypergraph", "neuro-symbolic"]
+
+dependencies = [
+  "torch>=2.2",
+  "norse>=0.0.9",
+  "tonic>=1.4.0",
+  "hydra-core>=1.3",
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "scikit-learn>=1.3",
+  "pandas>=2.0",
+  "networkx>=3.0",
+  "pyyaml>=6.0",
+  "statsmodels>=0.14",
+  "tensorboard>=2.12",
+  "tqdm>=4.65",
+  "rich>=13.0",
+  "typing_extensions>=4.7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.3",
+  "pytest-cov>=4.1",
+  "hypothesis>=6.75",
+  "mypy>=1.4",
+  "black>=24.1.0",
+  "ruff>=0.5.0",
+  "pre-commit>=3.6",
+  "coverage[toml]>=7.4",
+  "sphinx>=7.0",
+  "myst-parser>=2.0",
+  "furo>=2024.1.0",
+  "types-PyYAML>=6.0.12",
+  "types-requests>=2.31.0.6",
+]
+bindsnet = [
+  "bindsnet>=0.3",
+  "torchvision>=0.15",
+]
+docs = [
+  "sphinx>=7.0",
+  "myst-parser>=2.0",
+  "furo>=2024.1.0",
+]
+
+[project.urls]
+Homepage = "https://example.com/dch"
+Repository = "https://example.com/dch/repo"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dch_core*", "dch_pipeline*", "dch_data*", "dch_snn*", "baselines*", "benchmarks*"]
+exclude = ["docs*", "scripts*", "tests*", "notebooks*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "I", "UP", "B", "C4", "SIM", "RET", "PL", "RUF"]
+ignore = []
+src = ["."]
+
+[tool.ruff.lint.isort]
+known-first-party = ["dch_core", "dch_pipeline", "dch_data", "dch_snn", "baselines"]
+profile = "black"
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+pretty = true
+show_error_codes = true
+exclude = '^(docs/|scripts/|benchmarks/|notebooks/|tests/fixtures/)'
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --cov=dch_core --cov=dch_pipeline --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["dch_core", "dch_pipeline"]
+
+[tool.coverage.report]
+skip_empty = true
+show_missing = true

@@ -1,0 +1,57 @@
+# DCH synthetic micro-benchmark config (Section 11/13 defaults)
+dataset: synthetic_micro
+
+time:
+  wl_cadence_ms: 10
+  traversal_cadence_ms: 20
+  sage_cadence_ms: 500
+  fsm_tick_s: 1
+
+windows:
+  delta_min_us: 1000
+  delta_max_us: 30000
+  delta_causal_us: 2000
+
+refractory_us: 1000
+
+tc_knn:
+  k_max: 3
+  min_in: 6
+  comb_cap: 10
+
+plasticity:
+  alpha: 0.1
+  r_min: 0.02
+  r_max: 0.98
+  decay_gamma_per_s: 0.98
+  tau_prune: 0.02
+  tau_age_min_s: 2
+  tau_use_min: 3
+  h_idle_s: 30
+
+wl:
+  d: 64
+  r: 2
+  lsh:
+    bands: 8
+    rows_per_band: 4
+  tau_cos: 0.65
+  frontier_cap: 256
+
+traversal:
+  seeds: 8
+  depth: 12
+  branch_cap: 4
+  tau_select: 0.7
+  h_back_ms: 100
+  c_in_cap: 16
+
+fsm:
+  window_s: 60
+  support_min: 50
+  r_min: 0.6
+  decay_gamma_per_s: 0.98
+  s_path_min: 0.2
+
+logging:
+  level: INFO

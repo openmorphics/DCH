@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dynamic Causal Hypergraph (DCH) — v0.1 Spec</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="generator" content="export_html.py" />
+  <meta name="exported-at" content="2025-10-04 16:57:16 UTC" />
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --panel: #101419;
+      --text: #e6edf3;
+      --muted: #9aa7b2;
+      --accent: #6cb6ff;
+      --code-bg: #0d1117;
+      --border: #222a33;
+      --link: #91cbff;
+      --toc-bg: #0f1318;
+      --toc-border: #1b212a;
+      --mermaid-bg: #0d1117;
+    }
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+      line-height: 1.55;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+    }
+    .sidebar {
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow: auto;
+      padding: 20px 16px;
+      background: var(--toc-bg);
+      border-right: 1px solid var(--toc-border);
+    }
+    .content {
+      padding: 32px 32px 80px 0;
+      max-width: 1200px;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    pre, code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    pre {
+      padding: 14px;
+      overflow: auto;
+    }
+    code {
+      padding: 2px 6px;
+    }
+    h1, h2, h3, h4 {
+      margin-top: 28px;
+      color: #eaf2f9;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.9rem;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .toc-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .toc ul {
+      list-style: none;
+      padding-left: 8px;
+      margin: 0;
+    }
+    .toc li {
+      margin: 4px 0;
+    }
+    .toc a {
+      color: var(--muted);
+    }
+    .toc a:hover {
+      color: var(--text);
+    }
+    .toc .lvl-1 { margin-left: 0; }
+    .toc .lvl-2 { margin-left: 12px; }
+    .toc .lvl-3 { margin-left: 24px; }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      margin-right: 6px;
+      font-size: 12px;
+    }
+    .mermaid {
+      background: var(--mermaid-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 16px 0;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: linear-gradient(180deg, rgba(11,13,16,0.92), rgba(11,13,16,0.85) 70%, rgba(11,13,16,0));
+      backdrop-filter: blur(6px);
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar .title {
+      font-weight: 600;
+    }
+    .btns {
+      float: right;
+    }
+    .btn {
+      display: inline-block;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      margin-left: 8px;
+      cursor: pointer;
+      background: #0f141a;
+    }
+    .btn:hover {
+      background: #131922;
+    }
+    @media print {
+      .sidebar, .topbar, .btns { display: none !important; }
+      .container {
+        display: block;
+      }
+      .content {
+        padding: 0;
+        max-width: none;
+      }
+      a[href]::after { content: ""; }
+      body { background: white; color: black; }
+    }
+  </style>
+  <!-- Marked.js for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <!-- Mermaid.js for diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+</head>
+<body>
+  <div class="topbar">
+    <span class="title">Dynamic Causal Hypergraph (DCH) — v0.1</span>
+    <span class="btns">
+      <button class="btn" onclick="window.print()">Print to PDF</button>
+      <a class="btn" href="./DCH_TechSpec_v0.1.html" download>Download HTML</a>
+    </span>
+  </div>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="panel">
+        <div class="meta">Artifact exported: 2025-10-04 16:57:16 UTC</div>
+        <div>
+          <span class="badge">DCH</span>
+          <span class="badge">Spec v0.1</span>
+          <span class="badge">Mermaid</span>
+        </div>
+      </div>
+      <div class="panel" style="margin-top: 12px;">
+        <div class="toc-title">Contents</div>
+        <nav class="toc" id="toc"></nav>
+      </div>
+    </aside>
+    <main class="content">
+      <article id="content" class="panel">
+        <div class="meta">Source: docs/DCH_TechSpec_v0.1.md</div>
+        <div id="md-target">Rendering...</div>
+      </article>
+    </main>
+  </div>
+
+  <script>
+    // Configuration for Marked
+    window.addEventListener('DOMContentLoaded', () => {
+      // Configure marked
+      marked.setOptions({
+        gfm: true,
+        breaks: false,
+        mangle: false,
+        headerIds: true
+      });
+
+      const md = "# Dynamic Causal Hypergraph DCH \u2014 Technical Specification v0.1 and Causa-Chip Co-Design\n\nVersion v0.1  \nDate 2025-10-04\n\nExecutive abstract  \nThis v0.1 technical specification defines the Dynamic Causal Hypergraph DCH framework and a hardware co-design, Causa-Chip, for real-time event-driven learning. The DCH turns spiking computation into an evolving, causal, neuro-symbolic model with explicit hyperedges as testable hypotheses, evidence-based credit assignment, streaming rule induction, and task-aware structural policies. This master document provides the high-level narrative, an index of sections, and cross-references for implementation and evaluation on event-vision benchmarks DVS Gesture and N-MNIST, alongside a Python prototype plan.\n\nScope and audience  \n- Primary audience: researchers and engineers building online neuromorphic systems, causal graph analytics, and neuro-symbolic AI.  \n- Deliverables: formal definitions, algorithms, interfaces, complexity targets, prototype blueprint, evaluation protocol, parameter defaults and tuning, risk/runbooks, and a hardware SoC overview.\n\nApproved defaults (canonical)  \n- Time model: continuous-time in microseconds.  \n- TC-kNN temporal window: [1 ms, 30 ms]; \u03b4_causal = 2 ms; refractory = 1 ms.  \n- Path score: product of edge reliabilities.  \n- EMA reliability: \u03b1 = 0.1, r \u2208 [0.02, 0.98].  \n- Traversal: M = 8 seeds, L = 12 max depth, B = 4 branching, \u03c4_select = 0.7, H_back = 100 ms.  \n- FSM: W = 60 s, s_min = 50, r_min = 0.6, \u03b3 = 0.98.  \n- Embeddings: WL online r = 2, d = 64 every 10 ms; periodic GraphSAGE r = 3, d = 128 every 500 ms.\n\nHow to use this master spec  \n- Each section below is authored as a standalone file and linked here for quick navigation and modular maintenance.  \n- For PDF export, concatenate sections in order (Section 1 through Section 15) and include References and Diagrams Index; see Export notes at the end.\n\nTable of Contents (sections and cross-references)\n- 0. Master outline and acceptance criteria  \n  - [docs/DCH_TechSpec_Outline.md](docs/DCH_TechSpec_Outline.md)\n- 1. Formal foundations and glossary  \n  - [docs/sections/DCH_Section1_FormalFoundations.md](docs/sections/DCH_Section1_FormalFoundations.md)\n- 2. Dynamic Hypergraph Construction (DHG) with TC-kNN  \n  - [docs/sections/DCH_Section2_DHG_TCkNN.md](docs/sections/DCH_Section2_DHG_TCkNN.md)\n- 3. Hyperedge plasticity (predict/confirm/miss, EMA, pruning)  \n  - [docs/sections/DCH_Section3_Plasticity.md](docs/sections/DCH_Section3_Plasticity.md)\n- 4. Hyperpath embedding and causal-context similarity (WL online + SAGE periodic)  \n  - [docs/sections/DCH_Section4_HyperpathEmbedding.md](docs/sections/DCH_Section4_HyperpathEmbedding.md)\n- 5. Credit assignment via constrained backward hyperpath traversal  \n  - [docs/sections/DCH_Section5_CreditAssignment.md](docs/sections/DCH_Section5_CreditAssignment.md)\n- 6. Streaming frequent hyperpath mining and online rule induction  \n  - [docs/sections/DCH_Section6_FSM.md](docs/sections/DCH_Section6_FSM.md)\n- 7. Hierarchical abstraction and higher-order hyperedges (HOEs)  \n  - [docs/sections/DCH_Section7_HierarchicalAbstraction.md](docs/sections/DCH_Section7_HierarchicalAbstraction.md)\n- 8. Task-aware scaffolding (REUSE/ISOLATE/HYBRID and FREEZE)  \n  - [docs/sections/DCH_Section8_TaskAwareScaffolding.md](docs/sections/DCH_Section8_TaskAwareScaffolding.md)\n- 9. Module interfaces and data contracts  \n  - [docs/sections/DCH_Section9_Interfaces.md](docs/sections/DCH_Section9_Interfaces.md)\n- 10. Complexity and resource model (latency/memory targets, backpressure)  \n  - [docs/sections/DCH_Section10_ComplexityResource.md](docs/sections/DCH_Section10_ComplexityResource.md)\n- 11. Software prototype blueprint (Python + Norse)  \n  - [docs/sections/DCH_Section11_SoftwareBlueprint.md](docs/sections/DCH_Section11_SoftwareBlueprint.md)\n- 12. Evaluation protocol (datasets, metrics, ablations)  \n  - [docs/sections/DCH_Section12_Evaluation.md](docs/sections/DCH_Section12_Evaluation.md)\n- 13. Parameter defaults and tuning strategy  \n  - [docs/sections/DCH_Section13_ParamsTuning.md](docs/sections/DCH_Section13_ParamsTuning.md)\n- 14. Risk analysis and mitigations (guardrails and runbooks)  \n  - [docs/sections/DCH_Section14_RiskMitigations.md](docs/sections/DCH_Section14_RiskMitigations.md)\n- 15. Causa-Chip hardware co-design overview  \n  - [docs/sections/DCH_Section15_CausaChip.md](docs/sections/DCH_Section15_CausaChip.md)\n- References and diagrams  \n  - [docs/References.md](docs/References.md)  \n  - [docs/DiagramsIndex.md](docs/DiagramsIndex.md)\n\nQuick narrative (one-paragraph summary per section)\n- Section 1: Defines V(t), E(t), hyperedge validity, hyperpaths with B-connectivity, reliability semantics, invariants, and notation.  \n- Section 2: TC-kNN DHG module for candidate hyperedge generation with coherent multi-tail sets, budgets, deduplication, and refractory safety.  \n- Section 3: Watcher-based predict/confirm/miss, EMA updates, discounted counts, decay, pruning policies, and concurrency determinism.  \n- Section 4: Hybrid causal-context embeddings \u2014 WL online (streaming decisions) and GraphSAGE periodic (FSM/abstraction refinement).  \n- Section 5: Multi-start randomized beam backward traversal with temporal logic constraints to produce path-evidence reliability targets.  \n- Section 6: Streaming canonicalization, windowed heavy hitters + CMS counting, drift detection, and promotion to rules.  \n- Section 7: Higher-order hyperedges from promoted rules with provenance, deduplication, safety, traversal compression, and governance.  \n- Section 8: Task-aware scaffolding for continual learning with similarity detection, FREEZE, regionization, and policy knobs.  \n- Section 9: Clear APIs and records for events, vertices, edges, paths, templates, HOEs; ordering, idempotency, security, and observability.  \n- Section 10: Latency/memory targets and backpressure/adaptation strategies for desktop and embedded event-vision workloads.  \n- Section 11: Python prototype architecture (three lanes), repository layout, configs, metrics, tests, and end-to-end orchestration loop.  \n- Section 12: Evaluation datasets, baselines, ablations, interpretability and continual metrics, acceptance thresholds, and reproducibility.  \n- Section 13: Defaults and tuning methodology, safe ranges, dataset presets, meta-controller adaptive rules, and diagnostics.  \n- Section 14: Risks (combinatorics, spurious causality, drift, forgetting, latency/memory), monitors, stress tests, and runbooks.  \n- Section 15: Causa-Chip SoC units (GSE, GMF, PTA, FSM, MC), NoC/memory, bandwidth/latency targets, and verification strategy.\n\nKey cross-reference map\n- Traversal (Sec. 5) produces r\u0302_path consumed by Plasticity (Sec. 3).  \n- Embeddings (Sec. 4) inform DHG (Sec. 2) grouping and Traversal (Sec. 5) similarity bias; SAGE assists FSM (Sec. 6) and Abstraction (Sec. 7).  \n- FSM promotions (Sec. 6) instantiate HOEs (Sec. 7) and provide rule priors to Traversal (Sec. 5).  \n- Scaffolding (Sec. 8) sets FREEZE and regionization affecting DHG/Plasticity/Traversal/FSM/Abstraction and Meta control.  \n- Interfaces (Sec. 9) standardize data flow; Complexity (Sec. 10) sets SLOs for all modules.  \n- Blueprint (Sec. 11) implements 2\u201310; Evaluation (Sec. 12) validates; Params (Sec. 13) tunes; Risk (Sec. 14) stabilizes; Hardware (Sec. 15) accelerates.\n\nMermaid overview \u2014 neuro-symbolic loop (from sections, centralized here)\n\n```mermaid\nflowchart TD\nSNN[Sub-symbolic SNN spikes] --> DHG[Dynamic hypergraph update]\nDHG --> TRAV[Backward traversal credit assignment]\nTRAV --> FSME[Frequent subgraph miner]\nFSME --> RULES[Symbolic rules library]\nRULES --> GUIDE[Top-down guidance]\nGUIDE --> DHG\nGUIDE --> TRAV\n```\n\nExport and assembly notes\n- Master spec composition (for PDF): concatenate the following in order  \n  - [docs/sections/DCH_Section1_FormalFoundations.md](docs/sections/DCH_Section1_FormalFoundations.md)  \n  - [docs/sections/DCH_Section2_DHG_TCkNN.md](docs/sections/DCH_Section2_DHG_TCkNN.md)  \n  - [docs/sections/DCH_Section3_Plasticity.md](docs/sections/DCH_Section3_Plasticity.md)  \n  - [docs/sections/DCH_Section4_HyperpathEmbedding.md](docs/sections/DCH_Section4_HyperpathEmbedding.md)  \n  - [docs/sections/DCH_Section5_CreditAssignment.md](docs/sections/DCH_Section5_CreditAssignment.md)  \n  - [docs/sections/DCH_Section6_FSM.md](docs/sections/DCH_Section6_FSM.md)  \n  - [docs/sections/DCH_Section7_HierarchicalAbstraction.md](docs/sections/DCH_Section7_HierarchicalAbstraction.md)  \n  - [docs/sections/DCH_Section8_TaskAwareScaffolding.md](docs/sections/DCH_Section8_TaskAwareScaffolding.md)  \n  - [docs/sections/DCH_Section9_Interfaces.md](docs/sections/DCH_Section9_Interfaces.md)  \n  - [docs/sections/DCH_Section10_ComplexityResource.md](docs/sections/DCH_Section10_ComplexityResource.md)  \n  - [docs/sections/DCH_Section11_SoftwareBlueprint.md](docs/sections/DCH_Section11_SoftwareBlueprint.md)  \n  - [docs/sections/DCH_Section12_Evaluation.md](docs/sections/DCH_Section12_Evaluation.md)  \n  - [docs/sections/DCH_Section13_ParamsTuning.md](docs/sections/DCH_Section13_ParamsTuning.md)  \n  - [docs/sections/DCH_Section14_RiskMitigations.md](docs/sections/DCH_Section14_RiskMitigations.md)  \n  - [docs/sections/DCH_Section15_CausaChip.md](docs/sections/DCH_Section15_CausaChip.md)  \n  - [docs/References.md](docs/References.md)  \n  - [docs/DiagramsIndex.md](docs/DiagramsIndex.md)\n- Diagram rendering: ensure Mermaid blocks render in the chosen PDF pipeline (e.g., md-to-pdf with mermaid-cli or Pandoc with Mermaid filter).  \n- Internal links: verify anchors and relative paths after concatenation.\n\nAppendix \u2014 acceptance checklist alignment\n- Functional completeness: see Sections 1\u20139 for formalisms, algorithms, and interfaces.  \n- Engineering readiness: see Sections 10\u201311 for resource model and prototype blueprint.  \n- Evaluation plan and thresholds: see Section 12.  \n- Tuning defaults and adaptation: see Section 13.  \n- Risk, runbooks, and guardrails: see Section 14.  \n- Hardware overview and dataflows: see Section 15.\n\nChangelog (v0.1)\n- Initial release of the unified specification with linked sections and export notes.\n";
+      const target = document.getElementById('md-target');
+
+      // Render markdown
+      const html = marked.parse(md);
+
+      // Inject rendered HTML
+      target.innerHTML = html;
+
+      // Transform fenced mermaid blocks into <div class="mermaid">
+      document.querySelectorAll('pre code.language-mermaid').forEach((code) => {
+        const pre = code.parentElement;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid';
+        // Preserve raw mermaid source
+        wrapper.textContent = code.textContent;
+        pre.replaceWith(wrapper);
+      });
+
+      // Build a simple TOC (H1..H3)
+      const tocRoot = document.getElementById('toc');
+      const heads = document.querySelectorAll('#md-target h1, #md-target h2, #md-target h3');
+      const ul = document.createElement('ul');
+      heads.forEach((h) => {
+        // Ensure ID exists
+        if (!h.id) {
+          // derive slug
+          const slug = (h.textContent || '')
+            .toLowerCase()
+            .trim()
+            .replace(/[`*_~]/g, '')
+            .replace(/[^a-z0-9 \-\.]+/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-{2,}/g, '-')
+            .replace(/^[\-.]+|[\-.]+$/g, '');
+          h.id = slug;
+        }
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = h.textContent || '';
+        const lvl = h.tagName === 'H1' ? 'lvl-1' : (h.tagName === 'H2' ? 'lvl-2' : 'lvl-3');
+        li.className = lvl;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      tocRoot.appendChild(ul);
+
+      // Initialize mermaid after content is in place
+      if (window.mermaid) {
+        try {
+          mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+          // In case startOnLoad misses (defer), explicitly run init
+          setTimeout(() => {
+            mermaid.init();
+          }, 50);
+        } catch (e) {
+          console.error('Mermaid init failed', e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
