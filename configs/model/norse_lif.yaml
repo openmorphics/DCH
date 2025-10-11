@@ -1,0 +1,35 @@
+# Norse LIF model configuration (portable YAML; no Hydra).
+# Minimal, safe defaults matching the Norse wrapper’s expected dims.
+#
+# Components:
+# - model: backend/model identity and temporal unroll flag
+# - lif: neuron dynamics parameters (ms units where applicable)
+# - topology: MLP-style sizes and dropout
+# - optimizer: suggested optimizer hyperparameters
+#
+# Related:
+# - Wrapper factory: [dch_snn/norse_models.py](dch_snn/norse_models.py:79)
+# - Interfaces: [dch_snn/interface.py](dch_snn/interface.py:1)
+
+model:
+  name: "norse_lif"
+  unroll: true
+
+topology:
+  # input_size will be overridden by the encoder-derived N at runtime if available.
+  input_size: 3
+  hidden_sizes: [256, 256]
+  num_classes: 3
+  dropout: 0.0
+
+lif:
+  tau_mem: 20.0    # membrane time constant (ms)
+  tau_syn: 5.0     # synaptic time constant (ms)
+  v_th: 1.0        # threshold
+  v_reset: 0.0     # reset potential
+  refractory: 2.0  # refractory period (ms)
+
+optimizer:
+  name: "adam"
+  lr: 0.001
+  weight_decay: 0.0

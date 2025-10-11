@@ -1,0 +1,29 @@
+# Hyperparameter sweep grid (portable YAML; no Hydra runtime required).
+# This file encodes arrays of candidate values for simple grid or random search.
+# Keys are dotted paths so a launcher can merge into nested config structures.
+#
+# Example usage (pseudo-code):
+#   with open("configs/hyperparams_sweep.yaml") as f:
+#       sweep = yaml.safe_load(f)["grid"]
+#   for combo in product_over(sweep):
+#       cfg = load_base_yaml("configs/experiments/dvs_gesture.yaml")
+#       cfg = deep_set(cfg, "dch.traversal.beam_size", combo["dch.traversal.beam_size"])
+#       ...
+#       run(cfg)
+#
+# Notes:
+# - dch.* keys are intended to map into the structure defined in [configs/dch.yaml](configs/dch.yaml:1)
+# - Keep arrays small and conservative to bound total runs.
+
+grid:
+  "dch.traversal.beam_size": [8, 16, 32]
+  "dch.traversal.length_penalty": [0.9, 0.95, 0.98]
+  "dch.plasticity.ema_alpha": [0.1, 0.2, 0.3]
+  "dch.plasticity.prune_threshold": [0.05, 0.1, 0.2]
+  "fsm.theta": [2.0, 3.0, 4.0]
+  "abstraction.enable_abstraction": [false, true]
+
+# Optional metadata (ignored by most simple launchers)
+meta:
+  description: "Conservative DCH sweep ranges for traversal, plasticity, and FSM/abstraction flags."
+  total_combinations_hint: 3 * 3 * 3 * 3 * 3 * 2  # 486

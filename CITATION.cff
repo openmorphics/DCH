@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Dynamic Causal Hypergraph (DCH): A Neuro-Symbolic Framework for Event-Driven Causal Learning"
+version: "0.1.0"
+date-released: "2025-10-05"
+license: "MIT"
+authors:
+  - name: "DCH Maintainers"
+keywords:
+  - dynamic causal hypergraph
+  - neuro-symbolic
+  - spiking neural networks
+  - frequent subgraph mining
+  - hierarchical abstraction
+abstract: >
+  The Dynamic Causal Hypergraph (DCH) is a neuro-symbolic framework that turns streams
+  of spike events into an evolving causal model using dynamic hypergraphs, constrained
+  backward traversal for credit assignment, streaming frequent hyperpath mining for
+  online rule induction, and hierarchical abstraction into higher-order hyperedges.

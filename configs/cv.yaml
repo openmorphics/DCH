@@ -1,0 +1,24 @@
+# Cross-validation configuration (portable YAML; no Hydra).
+# Intended for use with scripts that implement deterministic, stratified K-fold splits.
+#
+# Keys:
+# - k_folds: Number of folds to generate.
+# - seed: RNG seed used to shuffle IDs within each label group before round-robin assignment.
+# - input_manifest: Path to a CSV manifest file; header required.
+# - output_dir: Directory where fold JSON files will be written.
+# - stratify_by: Column name to stratify on (defaults to "label").
+#
+# CSV schema (header required):
+#   id,label
+# - id: unique identifier string for each sample
+# - label: class label string used for stratification
+#
+# Notes:
+# - This file is loader-agnostic; the provided script (scripts/make_splits.py) accepts
+#   equivalent CLI flags to override these values without requiring a YAML parser.
+
+k_folds: 5
+seed: 42
+input_manifest: "./manifests/dataset_manifest.csv"
+output_dir: "./splits"
+stratify_by: "label"

@@ -1,100 +1,235 @@
 # Dynamic Causal Hypergraph (DCH)
-A neuro-symbolic causal framework for event-driven Spiking Neural Networks (SNNs)
 
-Status: v0.1 (scaffold) • License: MIT • Target venue: NeurIPS 2025
+[![CI - GitHub Actions](https://img.shields.io/badge/CI-GitHub%20Actions-blue?logo=githubactions)](.github/workflows/ci.yml) [![Python 3.10–3.12](https://img.shields.io/badge/Python-3.10–3.12-3776AB?logo=python&logoColor=white)](pyproject.toml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-DCH reframes SNN learning as continuous causal inference. It builds an evolving temporal hypergraph of spike events and causal hypotheses, assigns credit via constrained backward hyperpath traversal, and induces symbolic rules online via streaming frequent subgraph mining. This enables interpretable, auditable learning with explicit causal evidence trails.
+Neuro-symbolic causal learning for event-based computation. DCH represents an evolving causal model as a temporal hypergraph constructed from spike events (or other discrete event streams). Learning replaces gradient backpropagation with:
+- Constrained backward hyperpath traversal for credit assignment
+- Streaming frequent hyperpath mining (FSM) for online rule induction
+- Hierarchical abstraction (promotion to higher-order hyperedges)
+- Task-aware scaffolding (FREEZE/REUSE/ISOLATE) for continual learning
 
-Key features (publication checklist aligned)
-- Typed data models and interfaces: Events, Hyperedges, Hypergraph, Hyperpaths, Plasticity state (see docs/Interfaces.md)
-- Modular pipeline: preprocessing, encoding, dynamic hypergraph construction (TC‑kNN), traversal, credit assignment, plasticity, FSM, abstraction, evaluation
-- Algorithm specs: pseudocode + complexity for hyperpath construction, credit assignment, adaptive policies (see docs/AlgorithmSpecs.md)
-- Dual SNN backend via Backend Abstraction Layer (BAL): Norse primary, BindsNET parity (see dch_snn/interface.py)
-- Reproducibility: complete protocol for DVS Gesture and N‑MNIST, CV and seed handling, stats and effect sizes, containers, CI (see docs/EVALUATION_PROTOCOL.md, docs/REPRODUCIBILITY.md)
-- Baselines: Norse surrogate-gradient, BindsNET STDP (to be implemented)
-- Hardware appendix (FPGA/neuromorphic mapping) (to be implemented)
+Torch-free by default at runtime, with optional SNN backends (e.g., Norse) decoupled behind typed interfaces.
 
-Repository structure (in-progress)
-- Core libraries
-  - dch_core/: interfaces, DHG (TC‑kNN), traversal, plasticity, embeddings, FSM, abstraction, scaffolding
-  - dch_snn/: backend-neutral interfaces, Norse/BindsNET adapters
-  - dch_pipeline/: orchestration, evaluation, metrics, stats, seeding, logging
-  - dch_data/: datasets (DVS Gesture, N‑MNIST), transforms, encoders
-  - baselines/: Norse surrogate-gradient, BindsNET STDP
-  - benchmarks/: pipeline and traversal microbenchmarks
-- Tooling and packaging
-  - pyproject.toml • requirements.txt • environment.yml • Dockerfile • .pre-commit-config.yaml • .github/workflows/ci.yml
-- Documentation
-  - docs/FrameworkDecision.md • docs/Interfaces.md • docs/AlgorithmSpecs.md • docs/EVALUATION_PROTOCOL.md • docs/REPRODUCIBILITY.md
-  - docs/BASELINES.md (TBD) • docs/HardwareAppendix.md (TBD) • docs/API_REFERENCE.md (TBD)
-- Scripts
-  - scripts/run_experiment.py (TBD) • scripts/make_splits.py (TBD) • scripts/download_datasets.py (TBD)
-  - scripts/collect_env.py (TBD) • scripts/with_docker.sh
+> Paper-oriented documentation lives under [docs/](docs/), with specifications, evaluation protocol, and engineering blueprint.
 
-Quickstart (CPU, Python venv)
-1) Create environment
-- python3 -m venv .venv && source .venv/bin/activate
-- pip install -U pip wheel
-- pip install -e .
-- pip install -r requirements.txt
+---
 
-2) Run checks (once tests exist)
-- pytest -q
+## Highlights
 
-3) Reproduce a CPU experiment (after pipeline land)
-- python scripts/run_experiment.py experiment=dvs_gesture backend=norse device=cpu
-- python scripts/run_experiment.py experiment=nmnist backend=norse device=cpu
+- Dynamic Hypergraph Construction (TC‑kNN) over recent histories
+- Credit assignment via constrained, B-connected backward traversal with temporal logic
+- Streaming FSM with decay+hysteresis to promote reusable causal rules
+- Hierarchical abstraction to higher-order hyperedges (HOEs)
+- Task-aware scaffolding for stability/plasticity management
+- Torch-free pipeline and test suite; optional backends gated cleanly
+- Determinism-first: seeded synthetic benchmarks and repeatable tests
 
-Conda (CPU)
-- conda env create -f environment.yml
-- conda activate dch
+---
 
-Docker
-- Build CPU: bash scripts/with_docker.sh build cpu
-- Run CPU shell: bash scripts/with_docker.sh run cpu -- bash
-- Build CUDA: bash scripts/with_docker.sh build cuda
-- Run CUDA shell: bash scripts/with_docker.sh run cuda -- bash
+## Repository Layout
 
-Datasets
-- DVS Gesture, N‑MNIST via Tonic. Use scripts/download_datasets.py (TBD) or follow docs/EVALUATION_PROTOCOL.md. Default data root: ./data
+- Core DCH
+  - `dch_core/interfaces.py` — types, entities, and engine protocols
+  - `dch_core/hypergraph_mem.py` — in-memory hypergraph backend
+  - `dch_core/dhg.py` — dynamic hypergraph construction (TC‑kNN)
+  - `dch_core/traversal.py` — constrained backward traversal
+  - `dch_core/plasticity.py` — reliability updates and pruning
+  - `dch_core/embeddings/wl.py` — WL-style hyperpath embedding
+  - `dch_core/fsm.py` — streaming frequent hyperpath mining
+  - `dch_core/abstraction.py` — promote frequent hyperpaths to HOEs
+  - `dch_core/scaffolding.py` — task-aware scaffolding policy (FREEZE/REUSE/ISOLATE)
 
-Reproducibility and evaluation
-- Protocol: docs/EVALUATION_PROTOCOL.md
-- Reproducibility guide: docs/REPRODUCIBILITY.md
-- Statistical testing: dch_pipeline/stats.py (paired t‑test, Wilcoxon, FDR, effect sizes)
-- Artifacts per run:
-  - artifacts/<run_id>/config.yaml • metrics.csv • tb/ (TensorBoard) • env.json • ckpt/
+- Pipeline and utilities
+  - `dch_pipeline/pipeline.py` — orchestrates ingestion, traversal, plasticity, FSM, abstraction
+  - `dch_pipeline/metrics.py`, `dch_pipeline/evaluation.py`, `dch_pipeline/stats.py`
+  - `dch_pipeline/logging_utils.py` — CSV/JSONL/TensorBoard (lazy, no-op if missing)
+  - `dch_pipeline/seeding.py` — deterministic seeds and environment fingerprint
 
-Backend Abstraction Layer (BAL)
-- Interface: dch_snn/interface.py
-- Adapters:
-  - Norse (primary): LIF/LI&F models, CPU+CUDA
-  - BindsNET (parity): classic STDP baselines
-- DCH traversal/credit does not depend on the SNN backend internals beyond emitted spikes/outputs.
+- Data and encoders (optional deps gated)
+  - `dch_data/transforms.py` — event transforms (torch-free)
+  - `dch_data/encoders.py` — SimpleBinner encoder (torch-optional)
+  - `dch_data/nmnist.py`, `dch_data/dvs_gesture.py` — lazy-optional dataset loaders
+  - `scripts/download_datasets.py` — CLI downloader (lazy tonic import)
 
-Roadmap and status (high-level)
-- M0: Packaging, CI, containers, interfaces, evaluation protocol [DONE/IN PROGRESS]
-- M1: Data loaders, encoders, pipeline runner [PENDING]
-- M2: DCH core (DHG, traversal, plasticity, embeddings, FSM, abstraction, scaffolding) [PENDING]
-- M3: Baselines, metrics, CV/stats, result tables [PENDING]
-- M4: API docs, examples, notebooks, hardware appendix [PENDING]
-- M5: v1.0.0 release, archival under docs/export/ [PENDING]
+- SNN backend interfaces
+  - `dch_snn/interface.py` — typed protocols for encoders, models, trainers (no hard torch dep)
 
-Contributing
-- Contributions welcome after v0.1 interfaces are stabilized.
-- Please run pre-commit locally before pushing:
-  - pip install pre-commit && pre-commit install && pre-commit run --all-files
-- See docs/CONTRIBUTING.md (TBD) and docs/CODE_OF_CONDUCT.md (TBD)
+- Configs and Experiments
+  - `configs/` — baseline pipeline, DCH params, FSM, scaffolding, sweeps, experiments
 
-Citing DCH
-- Citation metadata will be provided in CITATION.cff upon first preprint.
-- For now, please cite the repository and technical specification (docs/ and export artifacts).
+- Tests and Benchmarks
+  - `tests/` — unit/integration tests (torch-free by default)
+  - `benchmarks/benchmark_traversal.py`, `benchmarks/benchmark_pipeline.py` — deterministic JSON outputs
 
-License
-- MIT. See LICENSE (TBD).
+- Project scaffolding
+  - `LICENSE`, `CITATION.cff`, `docs/CONTRIBUTING.md`, `docs/CODE_OF_CONDUCT.md`
+  - `docs/` — algorithm specs, evaluation protocol, hardware appendix (WIP), etc.
 
-Acknowledgements
-- Built with PyTorch, Norse, Tonic, and SciPy/NumPy; thanks to maintainers and community.
+---
 
-Contact
-- Please file issues and discussions in this repository once public. For private feedback, refer to the corresponding author listed in CITATION.cff (TBD).
+## Installation (CPU-only)
+
+Recommended environment: Python 3.10–3.12 on Linux/macOS.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
+# Optional local tooling
+pip install -U pre-commit
+pre-commit install
+```
+
+Optional dependencies and torch-optional policy
+- torch (for optional SNN backends; not required for DCH-only path)
+- norse (reference SNN models; used when `snn.enabled=true`)
+- tonic (dataset loaders), numpy (metrics/evaluation)
+- TensorBoard (`torch.utils.tensorboard` or `tensorboardX`) — logging gracefully no-ops if missing.
+
+Install optional deps only if needed:
+- pip:
+  ```bash
+  pip install "torch>=2.2" "norse>=0.0.9" "tonic>=1.4.0"
+  ```
+- conda:
+  ```bash
+  conda install -c conda-forge pytorch norse tonic
+  ```
+
+To run CPU-only DCH without these, pass `snn.enabled=false` (default for examples).
+
+Docs site build (optional; not required for using DCH)
+```bash
+python -m pip install -U sphinx myst-parser furo
+make -C docs html
+# or:
+python -m sphinx -b html docs docs/_build/html
+```
+
+---
+
+## Quickstart (torch-free path)
+
+Run tests:
+```bash
+pytest -q
+```
+
+Run the DCH-only CLI example (no torch required):
+```bash
+dch-run experiment=dvs_gesture snn.enabled=false
+```
+
+Optional: run the pipeline smoke test directly:
+```bash
+pytest -q tests/test_pipeline_smoke.py
+```
+
+Download datasets (optional; requires `tonic` to use real datasets, otherwise falls back to synthetic):
+```bash
+python scripts/download_datasets.py --dataset nmnist --root ./data/nmnist --split train
+python scripts/download_datasets.py --dataset dvs_gesture --root ./data/dvs_gesture --split train
+```
+
+Run deterministic performance benchmarks (each prints a single JSON line). See [benchmarks/benchmark_traversal.py](benchmarks/benchmark_traversal.py) and [benchmarks/benchmark_pipeline.py](benchmarks/benchmark_pipeline.py).
+```bash
+python benchmarks/benchmark_traversal.py --num-neurons 512 --num-edges 10000
+python benchmarks/benchmark_pipeline.py --num-neurons 256 --event-rate 200 --steps 500
+```
+
+---
+
+## Running an Experiment (baseline)
+
+This repository provides a script scaffold to run an experiment end-to-end on synthetic or prepared events.
+
+Examples (torch-free baseline path):
+```bash
+# Use the baseline pipeline config
+python scripts/run_experiment.py \
+  --config configs/pipeline.yaml \
+  --output ./runs/micro
+```
+
+Experiment-oriented configs (plain YAML, Hydra-style organization, no runtime requirement):
+- `configs/experiments/dvs_gesture.yaml`
+- `configs/experiments/nmnist.yaml`
+
+Adjust logging outputs in configs:
+- CSV: `./runs/<exp>/metrics.csv`
+- JSONL: `./runs/<exp>/metrics.jsonl`
+- TensorBoard: `./runs/<exp>/tb` (no-op if TB is missing)
+
+---
+
+## Configuration Map (selected defaults)
+
+- DCH (see `configs/dch.yaml`)
+  - DHG: `delay_min`, `delay_max`, `candidate_budget_unary/pair/triple`
+  - Traversal: `horizon`, `beam_size`, `length_penalty`
+  - Plasticity: `ema_alpha`, `potentiation`, `depression`, `prune_threshold`
+  - FSM: `theta`, `lambda_decay`, `hold_k`, `min_weight`
+  - Abstraction: `enable_abstraction=false` (default), `reliability_agg="min"`, `reliability_floor=0.1`
+
+- FSM promotion to abstraction in pipeline
+  - Enable via pipeline config flag `enable_abstraction: true`
+  - Limit promotions per step with `fsm_promotion_limit_per_step` (keeps runtime predictable)
+
+- Scaffolding (see `configs/scaffolding.yaml`)
+  - Jaccard-based similarity, thresholds for REUSE vs ISOLATE
+  - FREEZE strategy: immutable or resistance scaling
+
+- Metrics and evaluation
+  - `dch_pipeline/metrics.py`, `dch_pipeline/evaluation.py` (macro/micro F1, confusion matrix)
+  - Streaming evaluator (torch-free)
+
+---
+
+## Datasets (optional)
+
+The dataset modules import cleanly without `tonic` or `numpy`. Actual usage lazily imports and provides friendly error messages with installation hints.
+
+Download with:
+```bash
+python scripts/download_datasets.py --dataset nmnist --root ./data/nmnist --split train
+python scripts/download_datasets.py --dataset dvs_gesture --root ./data/dvs_gesture --split train
+```
+
+---
+
+## Reproducibility & Governance
+
+- Reproducibility
+  - Deterministic seeds and environment capture via [dch_pipeline/seeding.py](dch_pipeline/seeding.py)
+  - Benchmarks are seed-controlled and print machine-readable JSON
+- Governance & Compliance
+  - License: MIT (see [LICENSE](LICENSE))
+  - Citation: [CITATION.cff](CITATION.cff)
+  - Conduct: [docs/CODE_OF_CONDUCT.md](docs/CODE_OF_CONDUCT.md)
+  - Contributing guidelines: [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)
+
+---
+
+## Citation
+
+If you use this software, please cite it. See [CITATION.cff](CITATION.cff) for machine-readable metadata.
+
+```
+DCH Maintainers (2025).
+Dynamic Causal Hypergraph (DCH): A Neuro-Symbolic Framework for Event-Driven Causal Learning.
+Software. MIT License.
+```
+
+---
+
+## License
+
+This project is licensed under the MIT License — see `LICENSE` for details.
+
+---
+
+## Acknowledgments
+
+- The DCH framework synthesizes ideas from causal inference, temporal logics, streaming graph mining, and neuromorphic computing.
+- Thanks to contributors and maintainers who helped implement torch-free pipelines, gated optional dependencies, and comprehensive tests.

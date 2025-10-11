@@ -1,0 +1,22 @@
+# Task-aware scaffolding configuration (portable YAML; no Hydra).
+# Maps to ScaffoldingParams and DefaultScaffoldingPolicy for reuse/freeze planning.
+# See [ScaffoldingParams](dch_core/scaffolding.py:21) and [DefaultScaffoldingPolicy](dch_core/scaffolding.py:62).
+#
+# Fields:
+# - similarity_metric: String name of similarity function (only "jaccard" supported).
+# - similarity_threshold: Jaccard threshold; >= threshold => REUSE else ISOLATE.
+# - freeze_strategy: "resistance" (scale updates) or "immutable" (block updates).
+# - freeze_strength: Resistance value [0,1] when freeze_strategy == "resistance".
+# - freeze_top_k: Fraction (0,1] of eligible edges to freeze (ceil applied).
+# - reliability_cutoff: Only edges with reliability >= cutoff are considered eligible.
+# - region_prefix: Prefix used to emit region tags for growth/isolation.
+#
+# Conservative defaults are chosen to preserve baseline behavior and avoid aggressive freezing.
+
+similarity_metric: "jaccard"
+similarity_threshold: 0.5
+freeze_strategy: "resistance"
+freeze_strength: 1.0
+freeze_top_k: 0.2
+reliability_cutoff: 0.6
+region_prefix: "task"

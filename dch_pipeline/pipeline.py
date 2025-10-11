@@ -125,6 +125,16 @@ class FSMConfig:
 
 
 @dataclass(frozen=True)
+class SNNConfig:
+    enabled: bool = False
+    model: str = "norse_lif"
+    unroll: bool = True
+    device: str = "cpu"
+    # Optional additional model parameters forwarded into the Norse wrapper factory
+    model_params: Mapping[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
 class PipelineConfig:
     dhg: DHGConfig = DHGConfig()
     traversal: TraversalConfig = TraversalConfig()
@@ -136,6 +146,8 @@ class PipelineConfig:
     abstraction_params: Mapping[str, Any] = field(default_factory=dict)
     # Back-compat alias for per-step promotion cap
     fsm_promotion_limit_per_step: int = 1
+    # Optional SNN integration (torch-optional, lazy model instantiation)
+    snn: SNNConfig = SNNConfig()
 
 
 # -------------------------
@@ -176,6 +188,14 @@ class DCHPipeline:
         self.fsm_engine: Optional[StreamingFSMEngine] = None
         self.abstraction_engine: Optional[DefaultAbstractionEngine] = None
         self._wl_canonizer: Optional[WLHyperpathEmbedding] = None
+
+        # Optional encoder and SNN integration (torch-optional; created lazily)
+        self.encoder: Optional[SimpleBinnerEncoder] = None
+        self.snn_model: Optional[Any] = None
+        self._snn_input_size: Optional[int] = None
+        self._snn_enabled: bool = False
+        self._snn_device: str = "cpu"
+        self._snn_model_config: Mapping[str, Any] = {}
 
     @no_grad_decorator
     def step(
@@ -318,6 +338,55 @@ class DCHPipeline:
             )
             metrics["n_pruned"] = pruned
 
+        # Optional SNN forward hook (no effect on DCH metrics)
+        if getattr(self, "_snn_enabled", False) and self.encoder is not None and events:
+            try:
+                import importlib
+                torch = importlib.import_module("torch")
+                device = torch.device(self._snn_device if (torch.cuda.is_available() or "cpu" in str(self._snn_device)) else "cpu")
+                t0 = min(int(e.t) for e in events)
+                t1 = max(int(e.t) for e in events)
+                spikes, meta = self.encoder.encode(events, (t0, t1), device)
+                N = int(meta.get("N", 0))
+                T = int(meta.get("T", 0))
+                if N > 0 and T > 0:
+                    if self.snn_model is None or self._snn_input_size != N:
+                        # Resolve model config with input size
+                        cfg_map = dict(self._snn_model_config)
+                        model_map = dict(cfg_map.get("model", {}))
+                        topo_map = dict(cfg_map.get("topology", {}))
+                        topo_map["input_size"] = N
+                        if "num_classes" not in topo_map or int(topo_map.get("num_classes", 0)) <= 0:
+                            topo_map["num_classes"] = N
+                        cfg_map["model"] = model_map
+                        cfg_map["topology"] = topo_map
+                        # Build model lazily
+                        norse_models = importlib.import_module("dch_snn.norse_models")
+                        self.snn_model, self.snn_meta = norse_models.create_model(cfg_map)
+                        self.snn_model = self.snn_model.to(device)
+                        self.snn_model.eval()
+                        self._snn_input_size = N
+                    # Forward
+                    logits, aux = self.snn_model(spikes)
+                    try:
+                        mval = float(torch.mean(torch.abs(logits)).item())
+                    except Exception:
+                        mval = 0.0
+                    metrics["snn_T"] = T
+                    metrics["snn_N"] = N
+                    metrics["snn_forward"] = 1
+                    metrics["snn_logits_mean_abs"] = mval
+                else:
+                    metrics["snn_T"] = T
+                    metrics["snn_N"] = N
+                    metrics["snn_forward"] = 0
+            except ImportError:
+                # Should not occur given early gating; ignore to keep DCH-only path robust
+                metrics["snn_forward"] = 0
+            except Exception:
+                # Keep robust; do not fail pipeline due to SNN issues
+                metrics["snn_forward"] = 0
+
         return metrics
 
     # -------------------------
@@ -370,6 +439,41 @@ class DCHPipeline:
             pipeline._wl_canonizer = WLHyperpathEmbedding(WLParams())
 
         enc = SimpleBinnerEncoder(encoder_config or EncoderConfig())
+        pipeline.encoder = enc
+
+        # Optional SNN gating (lazy; model constructed on first forward when input size is known)
+        try:
+            snn_cfg = getattr(cfg, "snn", None)
+            if snn_cfg and getattr(snn_cfg, "enabled", False):
+                import importlib.util as _ilu
+                missing = []
+                if _ilu.find_spec("torch") is None:
+                    missing.append("torch")
+                if _ilu.find_spec("norse") is None:
+                    missing.append("norse")
+                if missing:
+                    missing_str = ", ".join(missing)
+                    raise ImportError(
+                        f"SNN enabled but missing optional dependency/dependencies: {missing_str}. "
+                        "Install with:\n"
+                        "- pip install 'torch>=2.2' 'norse>=0.0.9'\n"
+                        "- or conda install -c conda-forge pytorch norse\n"
+                        "Alternatively set snn.enabled=false in your config."
+                    )
+                pipeline._snn_enabled = True
+                pipeline._snn_device = getattr(snn_cfg, "device", "cpu")
+                # Base model config; topology.input_size resolved at first forward based on encoder meta['N']
+                pipeline._snn_model_config = {
+                    "model": {"name": getattr(snn_cfg, "model", "norse_lif"), "unroll": bool(getattr(snn_cfg, "unroll", True))},
+                }
+                # Merge additional parameters if provided
+                extra_params = getattr(snn_cfg, "model_params", {})
+                if isinstance(extra_params, dict) and extra_params:
+                    pipeline._snn_model_config.update(extra_params)
+        except Exception:
+            # Keep pipeline import-safe: re-raise to caller for clarity
+            raise
+
         return pipeline, enc
 
 
@@ -378,6 +482,7 @@ __all__ = [
     "TraversalConfig",
     "PlasticityConfig",
     "FSMConfig",
+    "SNNConfig",
     "PipelineConfig",
     "DCHPipeline",
 ]

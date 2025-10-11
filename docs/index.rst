@@ -1,0 +1,37 @@
+Dynamic Causal Hypergraph (DCH) Documentation
+=============================================
+
+Minimal Sphinx site for user-facing docs and API references. Building the docs is optional and not required to use DCH.
+
+Optional build dependencies:
+
+.. code-block:: bash
+
+   python -m pip install -U sphinx myst-parser furo
+   make -C docs html
+   # or:
+   python -m sphinx -b html docs docs/_build/html
+
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents
+
+   API_REFERENCE.md
+   EVALUATION_PROTOCOL.md
+   REPRODUCIBILITY.md
+   USAGE.md
+   TROUBLESHOOTING.md
+   ModuleResponsibilityMatrix.md
+   HardwareAppendix.md
+   RESULTS.md
+   ReleaseNotes.md
+
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

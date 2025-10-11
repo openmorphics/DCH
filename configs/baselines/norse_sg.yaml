@@ -1,0 +1,13 @@
+# Minimal, fast Norse SG baseline on synthetic data
+seed: 0
+device: cpu
+epochs: 1
+lr: 0.001
+batch_size: 16
+input_size: 32
+hidden_sizes: [64]
+num_classes: 2
+max_steps: 10
+log_every: 50
+dataset: synthetic
+data_root: ./data

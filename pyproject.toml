@@ -60,6 +60,11 @@ docs = [
 Homepage = "https://example.com/dch"
 Repository = "https://example.com/dch/repo"
 
+[project.scripts]
+dch-run = "scripts.run_experiment:main"
+dch-baseline-norse = "baselines.norse_sg:main"
+dch-baseline-bindsnet = "baselines.bindsnet_stdp:main"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["dch_core*", "dch_pipeline*", "dch_data*", "dch_snn*", "baselines*", "benchmarks*"]

@@ -125,12 +125,36 @@ Integration tests
     - Add targeted unit tests for each engine and data module; add regression suite for traversal and DHG.
 
 Planned modules (stubs pending)
-- dch_core/abstraction.py — higher-order edge promotion; acyclicity and dedup guards.
-- dch_core/scaffolding.py — task-aware FREEZE/PRUNE/GROW policy.
-- dch_snn/norse_models.py — Norse reference models and trainer adapter.
-- dch_snn/registry.py — registry to select backend adapter by name; plugin entrypoints (optional).
-- dch_data/dvs_gesture.py, dch_data/nmnist.py — dataset loaders via Tonic; reproducible splits in scripts/make_splits.py.
-- dch_pipeline/evaluation.py, dch_pipeline/metrics.py, dch_pipeline/logging_utils.py — evaluation loop, metrics aggregation, logging.
+- [dch_snn/registry.py](dch_snn/registry.py) — registry to select backend adapter by name; plugin entrypoints (optional).
+
+Embeddings
+- File: [dch_core/embeddings/wl.py](dch_core/embeddings/wl.py)
+  - Purpose: Weisfeiler–Lehman-style hyperpath embedding for label features and similarity.
+  - Verification: [tests/test_embeddings_wl.py](../tests/test_embeddings_wl.py)
+
+Evaluation and metrics
+- Files: [dch_pipeline/evaluation.py](dch_pipeline/evaluation.py), [dch_pipeline/metrics.py](dch_pipeline/metrics.py)
+  - Responsibilities: streaming metrics (accuracy, macro/micro F1, confusion), evaluation helpers.
+  - Verification: [tests/test_metrics_evaluation.py](../tests/test_metrics_evaluation.py)
+
+Datasets and transforms
+- Files: [dch_data/nmnist.py](dch_data/nmnist.py), [dch_data/dvs_gesture.py](dch_data/dvs_gesture.py), [dch_data/transforms.py](dch_data/transforms.py)
+  - Responsibilities: dataset adapters (lazy tonic import), event transforms (torch-free).
+  - Verification: [tests/test_data_nmnist.py](../tests/test_data_nmnist.py), [tests/test_data_dvs_gesture.py](../tests/test_data_dvs_gesture.py), [tests/test_utils_transforms_embedding.py](../tests/test_utils_transforms_embedding.py)
+
+SNN backends (optional)
+- File: [dch_snn/norse_models.py](dch_snn/norse_models.py)
+  - Responsibilities: Norse reference models and trainer adapter (activated when `snn.enabled=true`).
+  - Verification: future adapter tests (TBD); torch-optional policy enforced in runner.
+
+Scripts and configs
+- Scripts: [scripts/run_experiment.py](../scripts/run_experiment.py), [scripts/download_datasets.py](../scripts/download_datasets.py), [scripts/make_splits.py](../scripts/make_splits.py)
+- Configs: [configs/pipeline.yaml](../configs/pipeline.yaml), [configs/dch.yaml](../configs/dch.yaml), [configs/fsm.yaml](../configs/fsm.yaml), [configs/scaffolding.yaml](../configs/scaffolding.yaml), [configs/experiments/dvs_gesture.yaml](../configs/experiments/dvs_gesture.yaml), [configs/experiments/nmnist.yaml](../configs/experiments/nmnist.yaml), [configs/model/norse_lif.yaml](../configs/model/norse_lif.yaml)
+
+Benchmarks
+- Files: [benchmarks/benchmark_traversal.py](../benchmarks/benchmark_traversal.py), [benchmarks/benchmark_pipeline.py](../benchmarks/benchmark_pipeline.py)
+  - Responsibilities: deterministic performance probes printing single-line JSON.
+  - Verification: manual run in CI and local; compare JSON keys against expected schema.
 
 Traceability
 - Formal algorithms and complexities: [docs/AlgorithmSpecs.md](docs/AlgorithmSpecs.md)

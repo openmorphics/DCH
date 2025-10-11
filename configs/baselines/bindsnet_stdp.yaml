@@ -1,0 +1,13 @@
+# Minimal, fast BindsNET STDP baseline on synthetic data
+seed: 0
+device: cpu
+timesteps: 25
+dt: 1.0
+stdp_lr: 0.01
+batch_size: 16
+input_size: 64
+num_exc_neurons: 32
+epochs: 1
+max_steps: 10
+dataset: synthetic
+data_root: ./data

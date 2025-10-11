@@ -66,3 +66,10 @@ logging:
   enable_tensorboard: false
   metrics_csv: "metrics.csv"
   tb_subdir: "tb"
+
+snn:
+  # Optional SNN integration for Norse; pipeline remains torch-free when disabled.
+  enabled: false
+  model: "norse_lif"  # see [configs/model/norse_lif.yaml](configs/model/norse_lif.yaml:1)
+  unroll: true
+  device: "cpu"

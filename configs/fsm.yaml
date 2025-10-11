@@ -1,0 +1,9 @@
+# Streaming FSM configuration (portable YAML; no Hydra).
+# Maps to StreamingFSMEngine parameters used when abstraction is enabled.
+# See [StreamingFSMEngine](dch_core/fsm.py:47) and [FSMConfig](dch_pipeline/pipeline.py:117).
+
+theta: 3.0                  # promotion threshold on (decayed) count
+lambda_decay: 0.99          # exponential decay rate per unit time
+hold_k: 2                   # require K observations (hysteresis)
+min_weight: 1.0             # minimum per-hyperpath weight to add
+promotion_limit_per_step: 1 # cap number of promotions the pipeline should process per step
