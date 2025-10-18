@@ -1,0 +1,734 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Release Notes" href="ReleaseNotes.html"><link rel="prev" title="DCH Baselines" href="BASELINES.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH) - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/AlgorithmSpecs.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="algorithm-specifications-and-complexity-dynamic-causal-hypergraph-dch">
+<h1>Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)<a class="headerlink" href="#algorithm-specifications-and-complexity-dynamic-causal-hypergraph-dch" title="Link to this heading">¶</a></h1>
+<p>Status: Draft v0.1<br />
+Date: 2025-10-04<br />
+Owners: DCH Maintainers</p>
+<p>Authoritative interfaces</p>
+<ul class="simple">
+<li><p>Core typed contracts: <a class="reference internal" href="#dch_core/interfaces.py"><span class="xref myst">dch_core/interfaces.py</span></a></p></li>
+<li><p>Planned implementations:</p>
+<ul>
+<li><p>Dynamic Hypergraph Construction (TC‑kNN): <a class="reference internal" href="#dch_core/dhg.py"><span class="xref myst">dch_core/dhg.py</span></a></p></li>
+<li><p>Constrained Backward Traversal &amp; Credit: <a class="reference internal" href="#dch_core/traversal.py"><span class="xref myst">dch_core/traversal.py</span></a></p></li>
+<li><p>Plasticity &amp; Pruning: <a class="reference internal" href="#dch_core/plasticity.py"><span class="xref myst">dch_core/plasticity.py</span></a></p></li>
+<li><p>Streaming FSM: <a class="reference internal" href="#dch_core/fsm.py"><span class="xref myst">dch_core/fsm.py</span></a></p></li>
+<li><p>Hierarchical Abstraction (HOEs): <a class="reference internal" href="#dch_core/abstraction.py"><span class="xref myst">dch_core/abstraction.py</span></a></p></li>
+</ul>
+</li>
+</ul>
+<p>Supporting documents</p>
+<ul class="simple">
+<li><p>Interface contracts and invariants: <a class="reference internal" href="#docs/Interfaces.md"><span class="xref myst">docs/Interfaces.md</span></a></p></li>
+<li><p>Evaluation protocol (datasets, stats, CV): <a class="reference internal" href="#docs/EVALUATION_PROTOCOL.md"><span class="xref myst">docs/EVALUATION_PROTOCOL.md</span></a></p></li>
+<li><p>Framework decision record: <a class="reference internal" href="#docs/FrameworkDecision.md"><span class="xref myst">docs/FrameworkDecision.md</span></a></p></li>
+<li><p>Paper packaging &amp; reproducibility: <a class="reference internal" href="#docs/PaperPackaging.md"><span class="xref myst">docs/PaperPackaging.md</span></a></p></li>
+</ul>
+<p>Notation</p>
+<ul class="simple">
+<li><p>V(t): vertices (materialized spike events) up to time t; E(t): directed hyperedges as causal hypotheses.</p></li>
+<li><p>Vertex v = (neuron_id, timestamp), Hyperedge e = (Tail, Head) with reliability r ∈ [0,1], temporal window [Δmin, Δmax], refractory ρ.</p></li>
+<li><p>B‑connectivity: an edge is traversable only if all Tail vertices are evidenced.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple">
+<li><p>Dynamic Hypergraph Construction via Temporal‑Causal kNN (TC‑kNN)</p></li>
+</ol>
+<p>Inputs</p>
+<ul class="simple">
+<li><p>Hypergraph store H implementing HypergraphOps, connectivity oracle C implementing GraphConnectivity</p></li>
+<li><p>Head vertex v_post = (n_j, t_j)</p></li>
+<li><p>Window W = [t_j − Δmax, t_j − Δmin], presyn search budget k per presyn neuron</p></li>
+<li><p>combination_order_max ∈ {1..m}, causal_coincidence_delta (grouping proximity), budget_per_head</p></li>
+<li><p>init_reliability r0, refractory ρ</p></li>
+</ul>
+<p>Output</p>
+<ul class="simple">
+<li><p>Candidate set of hyperedges to admit into E(t)</p></li>
+</ul>
+<p>Pseudocode</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">procedure</span> <span class="n">TCkNN_Candidates</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">v_post</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">combination_order_max</span><span class="p">,</span> <span class="n">δ_causal</span><span class="p">,</span> <span class="n">budget_per_head</span><span class="p">,</span> <span class="n">r0</span><span class="p">,</span> <span class="n">ρ</span><span class="p">):</span>
+    <span class="n">presyn_set</span> <span class="err">←</span> <span class="n">C</span><span class="o">.</span><span class="n">presyn_sources</span><span class="p">(</span><span class="n">v_post</span><span class="o">.</span><span class="n">neuron_id</span><span class="p">)</span>
+    <span class="n">S</span> <span class="err">←</span> <span class="err">∅</span>
+    <span class="k">for</span> <span class="n">n_i</span> <span class="ow">in</span> <span class="n">presyn_set</span><span class="p">:</span>
+        <span class="c1"># Retrieve recent spikes for presyn neuron within window W</span>
+        <span class="n">S_i</span> <span class="err">←</span> <span class="n">top_k_recent_spikes</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">neuron</span><span class="o">=</span><span class="n">n_i</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">W</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>   <span class="c1"># by time, most recent first</span>
+        <span class="n">S</span> <span class="err">←</span> <span class="n">S</span> <span class="err">∪</span> <span class="n">S_i</span>
+
+    <span class="c1"># Unary candidates</span>
+    <span class="n">Cand</span> <span class="err">←</span> <span class="err">∅</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="err">∈</span> <span class="n">S</span><span class="p">:</span>
+        <span class="n">e</span> <span class="err">←</span> <span class="n">make_unary_edge</span><span class="p">(</span><span class="n">tail</span><span class="o">=</span><span class="p">{</span><span class="n">s</span><span class="p">},</span> <span class="n">head</span><span class="o">=</span><span class="n">v_post</span><span class="p">,</span> <span class="n">Δmin</span><span class="p">,</span> <span class="n">Δmax</span><span class="p">,</span> <span class="n">ρ</span><span class="p">,</span> <span class="n">r0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">temporal_admissible</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="n">refractory_ok</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+            <span class="n">Cand</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="c1"># Higher-order candidates: group spikes within δ_causal</span>
+    <span class="n">Groups</span> <span class="err">←</span> <span class="n">cluster_by_time_proximity</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">δ_causal</span><span class="p">)</span>  <span class="c1"># small clusters of spikes close in time</span>
+    <span class="k">for</span> <span class="n">G</span> <span class="err">∈</span> <span class="n">Groups</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="mf">2.</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="o">|</span><span class="n">G</span><span class="o">|</span><span class="p">,</span> <span class="n">combination_order_max</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">tail_subset</span> <span class="ow">in</span> <span class="n">choose</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">m</span><span class="p">):</span>
+                <span class="n">e</span> <span class="err">←</span> <span class="n">make_edge</span><span class="p">(</span><span class="n">tail</span><span class="o">=</span><span class="n">tail_subset</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="n">v_post</span><span class="p">,</span> <span class="n">Δmin</span><span class="p">,</span> <span class="n">Δmax</span><span class="p">,</span> <span class="n">ρ</span><span class="p">,</span> <span class="n">r0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">temporal_admissible</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="ow">and</span> <span class="n">refractory_ok</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+                    <span class="n">Cand</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="n">Cand</span> <span class="err">←</span> <span class="n">deduplicate_by_key</span><span class="p">(</span><span class="n">Cand</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tail</span><span class="p">)))</span>
+    <span class="n">Cand</span> <span class="err">←</span> <span class="n">enforce_budget</span><span class="p">(</span><span class="n">Cand</span><span class="p">,</span> <span class="n">budget_per_head</span><span class="p">,</span> <span class="n">tie_break</span><span class="o">=</span><span class="n">reliability_then_recency</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Cand</span>
+</pre></div>
+</div>
+<p>Complexity</p>
+<ul class="simple">
+<li><p>Let d = |presyn_set|, k = per‑presyn history bound. top_k_recent_spikes per presyn is O(log N_i + k) with time index; total O(d·(log N̄ + k)).</p></li>
+<li><p>Grouping within δ_causal: if cluster size g ≪ S, enumerating combinations up to m yields O(Σ_g Σ_{m≤m_max} C(g, m)). Bound with m_max small (e.g., 2–3) to avoid explosion.</p></li>
+<li><p>Dedup and budget: O(|Cand| log |Cand|). Overall expected O(d·k + |Cand| log |Cand|), dominated by candidate enumeration for large g without budgets.</p></li>
+</ul>
+<p>Memory</p>
+<ul class="simple">
+<li><p>Candidates transient O(|Cand|); persistent edge storage grows with admitted edges bounded by per‑head budgets.</p></li>
+</ul>
+<p>Invariants and guards</p>
+<ul class="simple">
+<li><p>Temporal admissibility: ∀tail t_i, t_j − Δmax ≤ t_i ≤ t_j − Δmin</p></li>
+<li><p>Refractory: enforce spacing between heads for same postsyn neuron (ρ)</p></li>
+<li><p>Dedup key uniqueness on (head, sorted(tail))</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="2">
+<li><p>Constrained Backward Hyperpath Traversal (Randomized Beam with AND‑Frontier)</p></li>
+</ol>
+<p>Goal</p>
+<ul class="simple">
+<li><p>Enumerate valid backward hyperpaths ending at a target vertex, respecting B‑connectivity and temporal logic, to support credit assignment.</p></li>
+</ul>
+<p>Inputs</p>
+<ul class="simple">
+<li><p>Hypergraph H, target vertex v*, horizon T_h, beam_size B</p></li>
+<li><p>RNG policy π for randomized branching; refractory enforcement flag</p></li>
+</ul>
+<p>Output</p>
+<ul class="simple">
+<li><p>Set of hyperpaths P with scores</p></li>
+</ul>
+<p>Pseudocode</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">procedure</span> <span class="n">BackwardTraverse</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">v</span><span class="o">*</span><span class="p">,</span> <span class="n">T_h</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">π</span><span class="p">,</span> <span class="n">refractory_enforce</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">beam</span> <span class="err">←</span> <span class="p">{</span> <span class="p">(</span><span class="n">head</span><span class="o">=</span><span class="n">v</span><span class="o">*</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="p">[],</span> <span class="n">score</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">t_head</span><span class="o">=</span><span class="n">timestamp</span><span class="p">(</span><span class="n">v</span><span class="o">*</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">results</span> <span class="err">←</span> <span class="err">∅</span>
+    <span class="k">while</span> <span class="n">beam</span> <span class="ow">not</span> <span class="n">empty</span><span class="p">:</span>
+        <span class="n">next_beam</span> <span class="err">←</span> <span class="err">∅</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">beam</span><span class="p">:</span>
+            <span class="n">incoming_edges</span> <span class="err">←</span> <span class="n">admissible_incoming_edges</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">t_head</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">t_head</span><span class="p">,</span>
+                                                       <span class="n">refractory</span><span class="o">=</span><span class="n">refractory_enforce</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">incoming_edges</span> <span class="ow">is</span> <span class="n">empty</span><span class="p">:</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path_as_hyperpath</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># B-connectivity: expand only edges whose entire tail is evidenced within horizon</span>
+            <span class="n">candidates</span> <span class="err">←</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">incoming_edges</span><span class="p">:</span>
+                <span class="n">tail_vertices</span> <span class="err">←</span> <span class="n">vertices</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">min</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">t_head</span> <span class="o">-</span> <span class="n">t</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tail_vertices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">T_h</span><span class="p">:</span> 
+                    <span class="k">continue</span>  <span class="c1"># beyond horizon</span>
+                <span class="k">if</span> <span class="n">all_temporal_ok</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">tail_vertices</span><span class="p">,</span> <span class="n">head_time</span><span class="o">=</span><span class="n">path</span><span class="o">.</span><span class="n">t_head</span><span class="p">):</span>
+                    <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+            <span class="c1"># Stochastic beam expansion</span>
+            <span class="n">scored</span> <span class="err">←</span> <span class="p">[(</span><span class="n">e</span><span class="p">,</span> <span class="n">edge_score</span><span class="p">(</span><span class="n">e</span><span class="p">))</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">]</span>
+            <span class="n">probs</span> <span class="err">←</span> <span class="n">softmax_over_scores</span><span class="p">(</span><span class="n">scored</span><span class="p">,</span> <span class="n">τ</span><span class="p">)</span>  <span class="c1"># temperature τ</span>
+            <span class="n">picks</span> <span class="err">←</span> <span class="n">sample_top_k_or_weighted</span><span class="p">(</span><span class="n">scored</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">B</span><span class="p">,</span> <span class="n">policy</span><span class="o">=</span><span class="n">π</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">:</span>
+                <span class="n">new_path</span> <span class="err">←</span> <span class="n">path</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">new_path</span><span class="o">.</span><span class="n">score</span> <span class="err">←</span> <span class="n">compose_scores</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">score</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">reliability</span><span class="p">,</span> <span class="n">penalty</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">new_path</span><span class="o">.</span><span class="n">edges</span><span class="p">))</span>
+                <span class="n">new_path</span><span class="o">.</span><span class="n">head</span> <span class="err">←</span> <span class="n">choose_tail_frontier</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>  <span class="c1"># AND-frontier expansion over tail</span>
+                <span class="n">next_beam</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_path</span><span class="p">)</span>
+
+        <span class="n">beam</span> <span class="err">←</span> <span class="n">top_k_by_score</span><span class="p">(</span><span class="n">next_beam</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">B</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">finalize</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>  <span class="c1"># dedup by canonical label, compute final scores</span>
+</pre></div>
+</div>
+<p>Scoring</p>
+<ul class="simple">
+<li><p>edge_score(e): reliability(e) (optionally penalize by tail size)</p></li>
+<li><p>compose_scores: product or min across path edges, with length penalty λ^L</p></li>
+</ul>
+<p>Complexity</p>
+<ul class="simple">
+<li><p>Let b = average admissible in‑degree at nodes, B = beam size, D = effective depth bounded by T_h.</p></li>
+<li><p>Per level expansion O(B · b) with scoring; sampling/top‑k O(B·b log(B·b)). Total O(D · B · b log(B·b)).</p></li>
+<li><p>Memory O(D · B) for frontier.</p></li>
+</ul>
+<p>Correctness guards</p>
+<ul class="simple">
+<li><p>B‑connectivity: traverse only when all tail events are present and within temporal bounds</p></li>
+<li><p>Refractory and horizon enforced at each step</p></li>
+<li><p>Canonicalization ensures isomorphic hyperpaths collapse to identical labels</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="3">
+<li><p>Temporal Credit Assignment and Evidence Aggregation</p></li>
+</ol>
+<p>Goal</p>
+<ul class="simple">
+<li><p>Update hyperedge reliability using discrete, evidence‑based signals from valid hyperpaths spawned by supervised outcomes, errors, or rewards.</p></li>
+</ul>
+<p>Inputs</p>
+<ul class="simple">
+<li><p>Hyperpaths set P (from traversal), sign ∈ {+1, −1}, now_t, PlasticityState ψ = (α, clamp, decay, freeze, prune_threshold)</p></li>
+</ul>
+<p>Pseudocode</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">procedure</span> <span class="n">UpdateReliability</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">sign</span><span class="p">,</span> <span class="n">now_t</span><span class="p">,</span> <span class="n">ψ</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ψ</span><span class="o">.</span><span class="n">freeze</span><span class="p">:</span> <span class="k">return</span> <span class="p">{}</span>
+    <span class="n">contrib</span><span class="p">:</span> <span class="n">Map</span><span class="p">[</span><span class="n">EdgeId</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">]</span> <span class="err">←</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">P</span><span class="p">:</span>
+        <span class="n">w_p</span> <span class="err">←</span> <span class="n">path_score</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>           <span class="c1"># product/min with penalties, normalized</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">edges</span><span class="p">:</span>
+            <span class="n">contrib</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="err">←</span> <span class="n">contrib</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">w_p</span>
+
+    <span class="n">updates</span> <span class="err">←</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">e_id</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="n">contrib</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">e</span> <span class="err">←</span> <span class="n">H</span><span class="o">.</span><span class="n">get_edge</span><span class="p">(</span><span class="n">e_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">e</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="n">s_norm</span> <span class="err">←</span> <span class="n">s</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1e-8</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">contrib</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>   <span class="c1"># normalize evidence</span>
+        <span class="n">r_old</span> <span class="err">←</span> <span class="n">e</span><span class="o">.</span><span class="n">reliability</span>
+        <span class="n">r_tgt</span> <span class="err">←</span> <span class="n">clip</span><span class="p">(</span><span class="n">r_old</span> <span class="o">+</span> <span class="n">sign</span> <span class="o">*</span> <span class="n">s_norm</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">r_new</span> <span class="err">←</span> <span class="n">ψ</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ψ</span><span class="o">.</span><span class="n">ema_alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">r_old</span> <span class="o">+</span> <span class="n">ψ</span><span class="o">.</span><span class="n">ema_alpha</span> <span class="o">*</span> <span class="n">r_tgt</span> <span class="p">)</span>
+        <span class="n">e</span><span class="o">.</span><span class="n">reliability</span> <span class="err">←</span> <span class="n">r_new</span>
+        <span class="k">if</span> <span class="n">sign</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">counts_success</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>        <span class="n">e</span><span class="o">.</span><span class="n">counts_miss</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">e</span><span class="o">.</span><span class="n">last_update_t</span> <span class="err">←</span> <span class="n">now_t</span>
+        <span class="n">updates</span><span class="p">[</span><span class="n">e_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">r_new</span>
+
+    <span class="c1"># Optional time decay</span>
+    <span class="k">if</span> <span class="n">ψ</span><span class="o">.</span><span class="n">decay_lambda</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">hyperedges</span><span class="p">():</span>          <span class="c1"># iterator over edges</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">reliability</span> <span class="err">←</span> <span class="n">ψ</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">reliability</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ψ</span><span class="o">.</span><span class="n">decay_lambda</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">updates</span>
+</pre></div>
+</div>
+<p>Pruning</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">procedure</span> <span class="n">Prune</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">now_t</span><span class="p">,</span> <span class="n">ψ</span><span class="p">):</span>
+    <span class="n">removed</span> <span class="err">←</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">H</span><span class="o">.</span><span class="n">hyperedges</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">reliability</span> <span class="o">&lt;</span> <span class="n">ψ</span><span class="o">.</span><span class="n">prune_threshold</span><span class="p">:</span>
+            <span class="n">H</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">removed</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">removed</span>
+</pre></div>
+</div>
+<p>Complexity</p>
+<ul class="simple">
+<li><p>Let E_active be edges touched by P; update is O(Σ_p |p|) to aggregate + O(|E_active|) to write.</p></li>
+<li><p>Optional decay O(|E|). Pruning O(|E|) per sweep; amortize via periodic housekeeping.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="4">
+<li><p>Adaptive Thresholding and Budget Policies</p></li>
+</ol>
+<ul class="simple">
+<li><p>Reliability clamp: r ∈ [r_min, r_max] prevents saturation and preserves learning headroom.</p></li>
+<li><p>Prune threshold: dynamic schedule possible (e.g., cosine or piecewise constant); couple to budget pressure.</p></li>
+<li><p>Candidate budgets: per‑head or per‑neuron caps to bound growth of E(t).</p></li>
+<li><p>Freeze: task‑aware scaffolding may set ψ.freeze = True for protected subgraphs.</p></li>
+</ul>
+<p>Policy sketch</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">memory_pressure_high</span><span class="p">()</span> <span class="ow">or</span> <span class="n">growth_rate_exceeds</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+    <span class="n">ψ</span><span class="o">.</span><span class="n">prune_threshold</span> <span class="err">←</span> <span class="nb">min</span><span class="p">(</span><span class="n">ψ</span><span class="o">.</span><span class="n">prune_threshold</span> <span class="o">+</span> <span class="n">δ</span><span class="p">,</span> <span class="n">r_max</span> <span class="o">-</span> <span class="n">ε</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">validation_underfit</span><span class="p">():</span>
+    <span class="n">ψ</span><span class="o">.</span><span class="n">prune_threshold</span> <span class="err">←</span> <span class="nb">max</span><span class="p">(</span><span class="n">ψ</span><span class="o">.</span><span class="n">prune_threshold</span> <span class="o">-</span> <span class="n">δ</span><span class="p">,</span> <span class="n">r_min</span> <span class="o">+</span> <span class="n">ε</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<ol class="arabic simple" start="5">
+<li><p>Streaming Frequent Hyperpath Mining (FSM) and Promotion</p></li>
+</ol>
+<p>Goal</p>
+<ul class="simple">
+<li><p>Detect recurring, high‑reliability hyperpaths online; promote to symbolic rules and optionally to higher‑order hyperedges.</p></li>
+</ul>
+<p>Inputs</p>
+<ul class="simple">
+<li><p>Hyperpaths with canonical labels ℓ(p), weights w_p, sliding window W_fsm, thresholds θ_promote with hysteresis</p></li>
+</ul>
+<p>Pseudocode</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">procedure</span> <span class="n">FSM_Observe</span><span class="p">(</span><span class="n">stream</span> <span class="n">P_t</span><span class="p">,</span> <span class="n">now_t</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">P_t</span><span class="p">:</span>
+        <span class="n">ℓ</span> <span class="err">←</span> <span class="n">canonical_label</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ℓ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">:</span> <span class="n">counts</span><span class="p">[</span><span class="n">ℓ</span><span class="p">]</span> <span class="err">←</span> <span class="mi">0</span>
+        <span class="n">counts</span><span class="p">[</span><span class="n">ℓ</span><span class="p">]</span> <span class="err">←</span> <span class="n">decay</span><span class="p">(</span><span class="n">counts</span><span class="p">[</span><span class="n">ℓ</span><span class="p">],</span> <span class="n">now_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">weight</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">counts</span><span class="p">[</span><span class="n">ℓ</span><span class="p">]</span> <span class="err">≥</span> <span class="n">θ_promote</span> <span class="ow">and</span> <span class="n">stable_above_threshold</span><span class="p">(</span><span class="n">ℓ</span><span class="p">):</span>
+            <span class="n">promotions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ℓ</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">promotions</span>
+</pre></div>
+</div>
+<p>Canonical labeling</p>
+<ul class="simple">
+<li><p>Deterministic serialization of DAG‑like hyperpaths: order edges by topological + lexical order on (head, sorted(tail)), include timing bins if needed.</p></li>
+<li><p>Collision‑resistant hashing optional for compactness.</p></li>
+</ul>
+<p>Complexity</p>
+<ul class="simple">
+<li><p>Per‑hyperpath O(L) to derive label (L edges), O(1) average map update; total O(|P_t|·L).</p></li>
+<li><p>Sliding window decay via timestamps (lazy) O(1) per touch.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="6">
+<li><p>Hierarchical Abstraction: Higher‑Order Hyperedges (HOEs)</p></li>
+</ol>
+<p>Goal</p>
+<ul class="simple">
+<li><p>Compress frequently validated causal chains into single high‑level hyperedges to form structural shortcuts and improve search.</p></li>
+</ul>
+<p>Pseudocode</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">procedure</span> <span class="n">PromoteToHOE</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">ℓ</span><span class="p">):</span>
+    <span class="n">p_template</span> <span class="err">←</span> <span class="n">reconstruct_template</span><span class="p">(</span><span class="n">ℓ</span><span class="p">)</span>
+    <span class="n">sources</span> <span class="err">←</span> <span class="n">source_vertices_of</span><span class="p">(</span><span class="n">p_template</span><span class="p">)</span>
+    <span class="n">sink</span> <span class="err">←</span> <span class="n">sink_vertex_of</span><span class="p">(</span><span class="n">p_template</span><span class="p">)</span>
+    <span class="n">e_hoe</span> <span class="err">←</span> <span class="n">Hyperedge</span><span class="p">(</span><span class="n">tail</span><span class="o">=</span><span class="n">sources</span><span class="p">,</span> <span class="n">head</span><span class="o">=</span><span class="n">sink</span><span class="p">,</span> <span class="n">Δmin</span><span class="s1">&#39;, Δmax&#39;</span><span class="p">,</span> <span class="n">ρ</span><span class="s1">&#39;, reliability=r_init_high,</span>
+                      <span class="n">provenance</span><span class="o">=</span><span class="n">ℓ</span><span class="p">,</span> <span class="n">budget_class</span><span class="o">=</span><span class="s2">&quot;HOE&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">guard_acyclic</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">e_hoe</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">duplicate</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">e_hoe</span><span class="p">):</span>
+        <span class="n">H</span><span class="o">.</span><span class="n">insert_hyperedges</span><span class="p">([</span><span class="n">e_hoe</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">e_hoe</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>Guards</p>
+<ul class="simple">
+<li><p>Acyclicity: forbid cycles under temporal constraints</p></li>
+<li><p>Duplication: reject if identical (head, sorted(tail)) already exists with similar temporal params</p></li>
+</ul>
+<p>Complexity</p>
+<ul class="simple">
+<li><p>Template reconstruction depends on label size; insertion O(log |E|) with indexed structures.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="7">
+<li><p>Data Structures and Indices</p></li>
+</ol>
+<p>Recommended</p>
+<ul class="simple">
+<li><p>Time‑indexed per‑neuron ring buffers for fast window queries (O(1) amortized append, O(log N_i + k) query).</p></li>
+<li><p>Packed Memory Array (PMA) or gap‑buffered arrays for dynamic edge sets with batched updates.</p></li>
+<li><p>Hashmaps for incoming/outgoing adjacency: VertexId → {EdgeId}</p></li>
+<li><p>Optional Count‑Min Sketch for FSM heavy‑hitters under memory bounds.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="8">
+<li><p>Numerical Stability and Determinism</p></li>
+</ol>
+<ul class="simple">
+<li><p>Normalize path evidence to prevent dominance by large path counts.</p></li>
+<li><p>Clamp reliabilities to [r_min, r_max].</p></li>
+<li><p>Seed control and deterministic flags enabled globally; see seeding utilities in pipeline.</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="9">
+<li><p>Asymptotic Summary</p></li>
+</ol>
+<p>Let:</p>
+<ul class="simple">
+<li><p>d: average presyn degree, k: recent spikes per presyn in window, g: cluster size for δ_causal</p></li>
+<li><p>m_max: tail combination cap, B: beam size, b: admissible branching, D: depth bound by horizon</p></li>
+<li><p>L: average hyperpath length, |E|: number of edges</p></li>
+<li><p>TC‑kNN generation: O(d·k + Σ_g Σ_{m≤m_max} C(g, m) + |Cand| log |Cand|)</p></li>
+<li><p>Traversal: O(D · B · b log(B·b)), memory O(D·B)</p></li>
+<li><p>Credit update: O(Σ_p |p| + |E_active|)</p></li>
+<li><p>Prune sweep: O(|E|)</p></li>
+<li><p>FSM observe: O(|P_t|·L)</p></li>
+</ul>
+<hr class="docutils" />
+<ol class="arabic simple" start="10">
+<li><p>Traceability to Code</p></li>
+</ol>
+<p>Primary call sites (to be implemented against interfaces):</p>
+<ul class="simple">
+<li><p>DHG generation and admission: <a class="reference internal" href="#dch_core/dhg.py"><span class="xref myst">dch_core/dhg.py</span></a></p></li>
+<li><p>Traversal and path scoring: <a class="reference internal" href="#dch_core/traversal.py"><span class="xref myst">dch_core/traversal.py</span></a></p></li>
+<li><p>Plasticity update and pruning: <a class="reference internal" href="#dch_core/plasticity.py"><span class="xref myst">dch_core/plasticity.py</span></a></p></li>
+<li><p>FSM observe and promotion triggers: <a class="reference internal" href="#dch_core/fsm.py"><span class="xref myst">dch_core/fsm.py</span></a></p></li>
+<li><p>HOE creation with guards: <a class="reference internal" href="#dch_core/abstraction.py"><span class="xref myst">dch_core/abstraction.py</span></a></p></li>
+</ul>
+<p>All modules must honor contracts in <a class="reference internal" href="#dch_core/interfaces.py"><span class="xref myst">dch_core/interfaces.py</span></a> and invariants in <a class="reference internal" href="#docs/Interfaces.md"><span class="xref myst">docs/Interfaces.md</span></a>.</p>
+<hr class="docutils" />
+<p>P2 Addenda — Formal notes and invariants (implementation-aligned)</p>
+<p>A) B-connectivity and hyperpaths</p>
+<ul class="simple">
+<li><p>Base rule (B0): For any observed vertex v ∈ V within the horizon, v is trivially B-evidenced.</p></li>
+<li><p>Recursive rule (B1): Let e = (Tail -&gt; Head) be a directed hyperedge with Tail = {u1,…,um}. A backward step from Head is admissible iff:</p>
+<ol class="arabic simple">
+<li><p>Temporal constraints hold for each ui: Δmin(e) ≤ t(Head) − t(ui) ≤ Δmax(e)</p></li>
+<li><p>All Tail vertices are B-evidenced (either by B0 or by previous applications of B1 within the path)</p></li>
+</ol>
+</li>
+<li><p>Hyperpath: A finite sequence of edges p = (e1,…,eL) with head(eL) = v* such that when traversed backward from v*, each ek satisfies B1 w.r.t. the already-evidenced frontier. Minimality: p is B-minimal if no proper subsequence of p remains B-valid for v*.</p></li>
+<li><p>Correctness sketch for backward traversal: The AND-frontier expansion composes edge-wise constraints. If every step respects B1 and the horizon/refractory guards, then concatenation yields a globally admissible hyperpath. Canonicalization ensures isomorphic hyperpaths collapse to the same label. See traversal guards and scoring in the traversal module and the EAT emission below.</p></li>
+</ul>
+<p>B) Beta–Bernoulli update and credible intervals</p>
+<ul class="simple">
+<li><p>Posterior derivation: With Beta(α0, β0) prior and evidence counts (s, f), the posterior is Beta(α0 + s, β0 + f) and the posterior mean is α/(α+β).</p>
+<ul>
+<li><p>Utilities: <a class="reference internal" href="#dch_core/beta_utils.py:31"><span class="xref myst">posterior_params()</span></a>, <a class="reference internal" href="#dch_core/beta_utils.py:58"><span class="xref myst">posterior_mean()</span></a></p></li>
+</ul>
+</li>
+<li><p>Implementation hook: The Beta plasticity engine computes posterior-mean reliability after aggregating normalized path evidence; see <a class="reference internal" href="#dch_core/plasticity_beta.py:94"><span class="xref myst">BetaPlasticityEngine.update_from_evidence()</span></a>.</p></li>
+<li><p>Monte Carlo credible intervals (fixed seed): We approximate CIs by sampling with a fixed RNG seed for determinism; see <a class="reference internal" href="#dch_core/beta_utils.py:150"><span class="xref myst">credible_interval_mc()</span></a>. The stats harness summarizes per-edge means and CIs via <a class="reference internal" href="#dch_pipeline/evaluation.py:483"><span class="xref myst">summarize_reliability()</span></a>, which uses a fixed seed internally.</p></li>
+</ul>
+<p>C) DPO rules (GROW/PRUNE/FREEZE) and invariants</p>
+<ul class="simple">
+<li><p>Intent (L-K-R schematic):</p>
+<ul>
+<li><p>GROW: add a new edge consistent with typed metadata; preserves vertices; no deletion.</p></li>
+<li><p>PRUNE: remove an edge under a reliability threshold; preserves vertices; does not add edges.</p></li>
+<li><p>FREEZE: attribute-only mutation; marks an existing edge as frozen; no structural change.</p></li>
+</ul>
+</li>
+<li><p>Preconditions and thresholds:</p>
+<ul>
+<li><p>Reliability thresholds are enforced in the engine: <a class="reference internal" href="#dch_core/dpo.py:238"><span class="xref myst">DPOEngine.apply()</span></a>.</p></li>
+<li><p>Reliability source is posterior-mean from counters when available: <a class="reference internal" href="#dch_core/dpo.py:204"><span class="xref myst">DPOGraphAdapter.get_reliability()</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Application behavior and auditability:</p>
+<ul>
+<li><p>GROW inserts a non-duplicate edge with simple temporal defaults: <a class="reference internal" href="#dch_core/dpo.py:124"><span class="xref myst">DPOGraphAdapter.add_edge()</span></a>.</p></li>
+<li><p>FREEZE mutates attributes only: <a class="reference internal" href="#dch_core/dpo.py:190"><span class="xref myst">DPOGraphAdapter.set_edge_attr()</span></a>.</p></li>
+<li><p>Each apply returns a structured outcome for audit: <a class="reference internal" href="#dch_core/dpo.py:73"><span class="xref myst">DPO_ApplyResult</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Invariants:</p>
+<ul>
+<li><p>PRUNE preserves vertices; only removes listed edges.</p></li>
+<li><p>FREEZE is attribute-only; preserves head/tail and all numeric fields except allowed attrs.</p></li>
+<li><p>GROW is additive; no removal or vertex mutation; deduplicates on (head, sorted(tail)).</p></li>
+</ul>
+</li>
+</ul>
+<p>D) Dual-proof (CMC v1) semantics and gating</p>
+<ul class="simple">
+<li><p>Causal proof: a hyperpath recorded in the Episode Audit Trail; emission via <a class="reference internal" href="#dch_pipeline/eat_logger.py:158"><span class="xref myst">EATAuditLogger.emit_eat()</span></a>.</p></li>
+<li><p>Manifold feasibility: side-effect-free feasibility check; <a class="reference internal" href="#dch_core/manifold.py:61"><span class="xref myst">ManifoldBackend.check_feasible()</span></a>, default NoOp returns True: <a class="reference internal" href="#dch_core/manifold.py:102"><span class="xref myst">NoOpManifold.check_feasible()</span></a>.</p></li>
+<li><p>Gating modes:</p>
+<ul>
+<li><p>OFF (default): no gating; parity with ungated pipeline is maintained (see tests).</p></li>
+<li><p>SOFT: log counters for non-feasible cases; allow processing to continue.</p></li>
+<li><p>HARD: reject non-feasible cases at configured checkpoints (e.g., “grow”, “backward”).</p></li>
+</ul>
+</li>
+<li><p>Reference tests for semantics: <a class="reference internal" href="#tests/test_dual_proof_gating.py:72"><span class="xref myst">test_dual_proof_default_off_parity</span></a>, <a class="reference internal" href="#tests/test_dual_proof_gating.py:99"><span class="xref myst">test_dual_proof_noop_soft_parity</span></a>, <a class="reference internal" href="#tests/test_dual_proof_gating.py:134"><span class="xref myst">test_dual_proof_grow_hard_rejects</span></a>, <a class="reference internal" href="#tests/test_dual_proof_gating.py:170"><span class="xref myst">test_dual_proof_backward_soft_counts</span></a>.</p></li>
+</ul>
+<p>E) P2 complexity notes (complements §2 and §9)</p>
+<ul class="simple">
+<li><p>Backward traversal: O(K · L · C_in)</p>
+<ul>
+<li><p>K: number of expansions sampled/retained per level (beam/selection budget)</p></li>
+<li><p>L: realized hyperpath length</p></li>
+<li><p>C_in: average admissible incoming edges per frontier vertex</p></li>
+<li><p>Rationale: per level consider up to C_in edges, select K, compose scores O(1) each; total proportional to K·L·C_in.</p></li>
+</ul>
+</li>
+<li><p>DPO rule application: O(1) per apply in this prototype (duplicate check bounded by incoming edges of head and small tails).</p></li>
+<li><p>Logging overhead: EAT/CRC emissions are constant-time per step for hashing and append; hash-chain verification is linear in number of records when performed offline.</p></li>
+</ul>
+<hr class="docutils" />
+<p>End of spec</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ReleaseNotes.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Release Notes</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="BASELINES.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">DCH Baselines</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

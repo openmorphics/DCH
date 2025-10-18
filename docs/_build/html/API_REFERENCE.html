@@ -1,0 +1,487 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)" href="EVALUATION_PROTOCOL.html"><link rel="prev" title="Dynamic Causal Hypergraph (DCH) Documentation" href="index.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>DCH API Reference - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/API_REFERENCE.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dch-api-reference">
+<h1>DCH API Reference<a class="headerlink" href="#dch-api-reference" title="Link to this heading">¶</a></h1>
+<p>This reference summarizes the key modules, data models, and protocols that define the Dynamic Causal Hypergraph (DCH) framework. It focuses on stable, torch-free interfaces and core algorithms. Optional backends (e.g., Norse, BindsNET) integrate through a decoupled adapter layer.</p>
+<p>Conventions</p>
+<ul class="simple">
+<li><p>Clickable source anchors reference the repository file and line for definitions, e.g., <a class="reference internal" href="#dch_core/interfaces.py:71"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Event</span></code></span></a>.</p></li>
+<li><p>All time units (Timestamp) are integers (dataset-native or microseconds).</p></li>
+<li><p>Torch is optional; when absent, codepaths remain import-safe and tests stay green.</p></li>
+</ul>
+<hr class="docutils" />
+<section id="core-types-and-entities">
+<h2>Core Types and Entities<a class="headerlink" href="#core-types-and-entities" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Timestamp, NeuronId, VertexId, EdgeId, ReliabilityScore, Window<br />
+See type aliases in <a class="reference internal" href="#dch_core/interfaces.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/interfaces.py</span></code></span></a>.</p></li>
+<li><p>Event<br />
+Structured event with neuron_id, t, and optional meta: <a class="reference internal" href="#dch_core/interfaces.py:71"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Event</span></code></span></a></p></li>
+<li><p>Vertex<br />
+Materialized node for an event (id = “neuron&#64;time”): <a class="reference internal" href="#dch_core/interfaces.py:82"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Vertex</span></code></span></a>, <a class="reference internal" href="#dch_core/interfaces.py:57"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">make_vertex_id()</span></code></span></a></p></li>
+<li><p>Hyperedge<br />
+Directed, causal hypothesis from a non-empty tail set to a single head with temporal constraints and reliability: <a class="reference internal" href="#dch_core/interfaces.py:88"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Hyperedge</span></code></span></a></p></li>
+<li><p>Hyperpath<br />
+DAG-like proof chain satisfying B-connectivity and temporal logic (with optional label for FSM): <a class="reference internal" href="#dch_core/interfaces.py:137"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Hyperpath</span></code></span></a></p></li>
+<li><p>PlasticityState<br />
+Parameters for reliability updates and pruning: <a class="reference internal" href="#dch_core/interfaces.py:151"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">PlasticityState</span></code></span></a></p></li>
+<li><p>Helpers<br />
+<a class="reference internal" href="#dch_core/interfaces.py:62"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">make_edge_id()</span></code></span></a>, <a class="reference internal" href="#dch_core/interfaces.py:166"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">is_temporally_admissible()</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="core-protocols-engine-interfaces">
+<h2>Core Protocols (Engine Interfaces)<a class="headerlink" href="#core-protocols-engine-interfaces" title="Link to this heading">¶</a></h2>
+<p>These are the stable contracts your implementations must follow:</p>
+<ul class="simple">
+<li><p>Storage and indices: <a class="reference internal" href="#dch_core/interfaces.py:181"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">HypergraphOps</span></code></span></a></p></li>
+<li><p>Connectivity oracle: <a class="reference internal" href="#dch_core/interfaces.py:218"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">GraphConnectivity</span></code></span></a></p></li>
+<li><p>Dynamic Hypergraph Construction (TC‑kNN): <a class="reference internal" href="#dch_core/interfaces.py:227"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">DHGConstructor</span></code></span></a></p></li>
+<li><p>Constrained backward traversal: <a class="reference internal" href="#dch_core/interfaces.py:259"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">TraversalEngine</span></code></span></a></p></li>
+<li><p>Reliability updates and pruning: <a class="reference internal" href="#dch_core/interfaces.py:282"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">PlasticityEngine</span></code></span></a></p></li>
+<li><p>Hyperpath embeddings (WL-style, etc.): <a class="reference internal" href="#dch_core/interfaces.py:310"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">EmbeddingEngine</span></code></span></a></p></li>
+<li><p>Streaming FSM engine: <a class="reference internal" href="#dch_core/interfaces.py:321"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">FSMEngine</span></code></span></a></p></li>
+<li><p>Hierarchical abstraction (HOEs): <a class="reference internal" href="#dch_core/interfaces.py:336"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">AbstractionEngine</span></code></span></a></p></li>
+<li><p>Task-aware scaffolding policy: <a class="reference internal" href="#dch_core/interfaces.py:353"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ScaffoldingPolicy</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="core-implementations">
+<h2>Core Implementations<a class="headerlink" href="#core-implementations" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>In-memory hypergraph backend<br />
+<a class="reference internal" href="#dch_core/hypergraph_mem.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/hypergraph_mem.py</span></code></span></a></p></li>
+<li><p>Dynamic Hypergraph Construction (TC‑kNN)<br />
+<a class="reference internal" href="#dch_core/dhg.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/dhg.py</span></code></span></a></p></li>
+<li><p>Constrained backward traversal and scoring<br />
+<a class="reference internal" href="#dch_core/traversal.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/traversal.py</span></code></span></a></p></li>
+<li><p>Plasticity updates and pruning<br />
+<a class="reference internal" href="#dch_core/plasticity.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/plasticity.py</span></code></span></a></p></li>
+<li><p>WL-style hyperpath embedding (canonical labels and feature hashing)<br />
+<a class="reference internal" href="#dch_core/embeddings/wl.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/embeddings/wl.py</span></code></span></a></p></li>
+<li><p>Streaming frequent hyperpath mining (decay + hysteresis; promotion queue)<br />
+<a class="reference internal" href="#dch_core/fsm.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/fsm.py</span></code></span></a></p></li>
+<li><p>Hierarchical abstraction (promotion to higher‑order hyperedges)<br />
+<a class="reference internal" href="#dch_core/abstraction.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/abstraction.py</span></code></span></a></p></li>
+<li><p>Task-aware scaffolding (FREEZE/REUSE/ISOLATE)<br />
+<a class="reference internal" href="#dch_core/scaffolding.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/scaffolding.py</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="pipeline-orchestration-and-utilities">
+<h2>Pipeline Orchestration and Utilities<a class="headerlink" href="#pipeline-orchestration-and-utilities" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>DCH Pipeline (ingestion → DHG → traversal → plasticity → FSM → abstraction)<br />
+<a class="reference internal" href="#dch_pipeline/pipeline.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_pipeline/pipeline.py</span></code></span></a></p></li>
+<li><p>Metrics and evaluation (torch-free)<br />
+<a class="reference internal" href="#dch_pipeline/metrics.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_pipeline/metrics.py</span></code></span></a>, <a class="reference internal" href="#dch_pipeline/evaluation.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_pipeline/evaluation.py</span></code></span></a></p></li>
+<li><p>Deterministic seeding and environment fingerprint<br />
+<a class="reference internal" href="#dch_pipeline/seeding.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_pipeline/seeding.py</span></code></span></a></p></li>
+<li><p>Logging (CSV, JSONL, TensorBoard; TB no-op if missing)<br />
+<a class="reference internal" href="#dch_pipeline/logging_utils.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_pipeline/logging_utils.py</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="data-transforms-and-encoders">
+<h2>Data, Transforms, and Encoders<a class="headerlink" href="#data-transforms-and-encoders" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Event transforms (torch-free)<br />
+<a class="reference internal" href="#dch_data/transforms.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_data/transforms.py</span></code></span></a></p></li>
+<li><p>Dataset loaders (lazy optional deps: tonic/numpy)<br />
+<a class="reference internal" href="#dch_data/nmnist.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_data/nmnist.py</span></code></span></a>, <a class="reference internal" href="#dch_data/dvs_gesture.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_data/dvs_gesture.py</span></code></span></a></p></li>
+<li><p>Simple event-to-spike encoder (torch-optional fallback)<br />
+<a class="reference internal" href="#dch_data/encoders.py:62"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">SimpleBinnerEncoder</span></code></span></a></p></li>
+<li><p>Dataset downloader CLI (lazy tonic import; JSON output)<br />
+<a class="reference internal" href="#scripts/download_datasets.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">scripts/download_datasets.py</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="backend-abstraction-layer-snn">
+<h2>Backend Abstraction Layer (SNN)<a class="headerlink" href="#backend-abstraction-layer-snn" title="Link to this heading">¶</a></h2>
+<p>Torch is optional. Interfaces remain import-safe and usable without torch.</p>
+<ul class="simple">
+<li><p>Encoder/Model/Trainer configs and protocols<br />
+<a class="reference internal" href="#dch_snn/interface.py:51"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">EncoderConfig</span></code></span></a>, <a class="reference internal" href="#dch_snn/interface.py:64"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">ModelConfig</span></code></span></a>, <a class="reference internal" href="#dch_snn/interface.py:76"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">TrainerConfig</span></code></span></a>,<br />
+<a class="reference internal" href="#dch_snn/interface.py:97"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Encoder</span></code></span></a>, <a class="reference internal" href="#dch_snn/interface.py:131"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">SNNModel</span></code></span></a>, <a class="reference internal" href="#dch_snn/interface.py:178"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></span></a>, <a class="reference internal" href="#dch_snn/interface.py:216"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">BackendAdapter</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h2>
+<p>Plain YAML (no runtime Hydra dependency) for experiments, DCH params, scaffolding, FSM, and sweeps:</p>
+<ul class="simple">
+<li><p>Experiments: <code class="docutils literal notranslate"><span class="pre">configs/experiments/dvs_gesture.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">configs/experiments/nmnist.yaml</span></code></p></li>
+<li><p>DCH &amp; Pipeline defaults: <code class="docutils literal notranslate"><span class="pre">configs/dch.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">configs/pipeline.yaml</span></code></p></li>
+<li><p>Scaffolding: <code class="docutils literal notranslate"><span class="pre">configs/scaffolding.yaml</span></code></p></li>
+<li><p>FSM: <code class="docutils literal notranslate"><span class="pre">configs/fsm.yaml</span></code></p></li>
+<li><p>Sweeps: <code class="docutils literal notranslate"><span class="pre">configs/hyperparams_sweep.yaml</span></code></p></li>
+<li><p>CV splits: <code class="docutils literal notranslate"><span class="pre">configs/cv.yaml</span></code>, generator <a class="reference internal" href="#scripts/make_splits.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">scripts/make_splits.py</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="benchmarks-stdlib-only-deterministic">
+<h2>Benchmarks (Stdlib-only, deterministic)<a class="headerlink" href="#benchmarks-stdlib-only-deterministic" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Traversal micro-benchmark → JSON line<br />
+<a class="reference internal" href="#benchmarks/benchmark_traversal.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">benchmarks/benchmark_traversal.py</span></code></span></a></p></li>
+<li><p>Pipeline macro-benchmark → JSON line<br />
+<a class="reference internal" href="#benchmarks/benchmark_pipeline.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">benchmarks/benchmark_pipeline.py</span></code></span></a></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>Fast, torch-free unit tests cover DHG, traversal, plasticity, FSM, embeddings, transforms, gating, logging, and integration smoke.</p>
+<ul class="simple">
+<li><p>Start with:<br />
+<code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-q</span></code><br />
+Selected: <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-q</span> <span class="pre">tests/test_pipeline_smoke.py</span></code> (torch-free path)</p></li>
+<li><p>Integration (torch-required) are skipped automatically when torch is absent.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="design-notes">
+<h2>Design Notes<a class="headerlink" href="#design-notes" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Determinism-first: seeded RNGs, reproducible traversal, and logging in machine-readable formats.</p></li>
+<li><p>Optional dependencies are lazily imported with actionable error messages; modules import cleanly without them.</p></li>
+<li><p>The pipeline can be feature-gated (e.g., <code class="docutils literal notranslate"><span class="pre">enable_abstraction</span></code>) to bound compute and keep default behavior unchanged.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="extending-dch">
+<h2>Extending DCH<a class="headerlink" href="#extending-dch" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Implement a protocol from <a class="reference internal" href="#dch_core/interfaces.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">dch_core/interfaces.py</span></code></span></a> (e.g., a custom <code class="docutils literal notranslate"><span class="pre">TraversalEngine</span></code> or <code class="docutils literal notranslate"><span class="pre">EmbeddingEngine</span></code>).</p></li>
+<li><p>Wire it into the pipeline via composition (no global state).</p></li>
+<li><p>Add unit tests (torch-free when possible); mock optional deps.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">docs/CONTRIBUTING.md</span></code> and <code class="docutils literal notranslate"><span class="pre">docs/API_REFERENCE.md</span></code> with new public APIs.</p></li>
+</ol>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="EVALUATION_PROTOCOL.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">DCH API Reference</a><ul>
+<li><a class="reference internal" href="#core-types-and-entities">Core Types and Entities</a></li>
+<li><a class="reference internal" href="#core-protocols-engine-interfaces">Core Protocols (Engine Interfaces)</a></li>
+<li><a class="reference internal" href="#core-implementations">Core Implementations</a></li>
+<li><a class="reference internal" href="#pipeline-orchestration-and-utilities">Pipeline Orchestration and Utilities</a></li>
+<li><a class="reference internal" href="#data-transforms-and-encoders">Data, Transforms, and Encoders</a></li>
+<li><a class="reference internal" href="#backend-abstraction-layer-snn">Backend Abstraction Layer (SNN)</a></li>
+<li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#benchmarks-stdlib-only-deterministic">Benchmarks (Stdlib-only, deterministic)</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#design-notes">Design Notes</a></li>
+<li><a class="reference internal" href="#extending-dch">Extending DCH</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

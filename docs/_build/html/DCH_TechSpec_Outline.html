@@ -1,0 +1,798 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH Technical Specification and Causa Chip Hardware Overview - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/DCH_TechSpec_Outline.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-technical-specification-and-causa-chip-hardware-overview">
+<h1>Dynamic Causal Hypergraph DCH Technical Specification and Causa Chip Hardware Overview<a class="headerlink" href="#dynamic-causal-hypergraph-dch-technical-specification-and-causa-chip-hardware-overview" title="Link to this heading">¶</a></h1>
+<p>Version v0.1 tech spec outline and acceptance criteria</p>
+<p>Scope Full technical specification for researchers covering DCH formalism, DHG construction with TC kNN, hyperedge plasticity, constrained backward hyperpath traversal with B walk adaptation, streaming frequent hyperpath mining, and meta controller policy, with complexity analysis, data structures, clear interfaces, and 3 to 4 Mermaid diagrams; plus 4 to 6 page hardware co design overview for Causa Chip; target use cases DVS Gesture and N MNIST; Python prototype plan using PyTorch Norse.</p>
+<p>Table of contents</p>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Formal foundations and glossary</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Dynamic Hypergraph Construction DHG with TC kNN</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>Hyperedge plasticity refine and prune</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="4">
+<li><p>Hyperpath embedding and causal context similarity</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="5">
+<li><p>Credit assignment via constrained backward hyperpath traversal</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="6">
+<li><p>Streaming frequent hyperpath mining and online rule induction</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="7">
+<li><p>Hierarchical abstraction and higher order hyperedges</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="8">
+<li><p>Task aware scaffolding isolate or reuse and freeze</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="9">
+<li><p>Module interfaces and data contracts</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="10">
+<li><p>Complexity and resource model</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="11">
+<li><p>Software prototype blueprint Python Norse</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="12">
+<li><p>Evaluation protocol datasets metrics and ablations</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="13">
+<li><p>Parameter defaults and tuning</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="14">
+<li><p>Risk analysis and mitigations</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="15">
+<li><p>Causa Chip hardware co design overview</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="16">
+<li><p>Mermaid diagrams</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="17">
+<li><p>References</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="18">
+<li><p>Acceptance criteria checklist</p></li>
+</ol>
+</li>
+</ul>
+<section id="formal-foundations-and-glossary">
+<h2>1. Formal foundations and glossary<a class="headerlink" href="#formal-foundations-and-glossary" title="Link to this heading">¶</a></h2>
+<p>Symbols and entities</p>
+<ul class="simple">
+<li><p>V t set of vertices spike events v equals neuron id comma timestamp</p></li>
+<li><p>E t set of directed hyperedges e equals Tail to Head with Head size equals 1</p></li>
+<li><p>Attributes per vertex neuron id int, timestamp float microseconds</p></li>
+<li><p>Attributes per hyperedge tail set of vertex ids, head vertex id, delay window min max, refractory, reliability score in 0 to 1, creation time, last update time, usage count</p></li>
+<li><p>Reliability score central learnable confidence updated by evidence based rules</p></li>
+</ul>
+<p>Temporal semantics</p>
+<ul class="simple">
+<li><p>V t contains all events with timestamp less than or equal to t</p></li>
+<li><p>E t evolves online via GROW PRUNE and abstraction operations</p></li>
+<li><p>Valid hyperedge requires all tail timestamps in window before head timestamp and respects refractory for head neuron</p></li>
+</ul>
+<p>Causal path objects</p>
+<ul class="simple">
+<li><p>Hyperpath is a DAG where each traversed hyperedge has all tail vertices present earlier on the path</p></li>
+<li><p>Path score is product or min of reliability scores of edges</p></li>
+</ul>
+</section>
+<section id="dynamic-hypergraph-construction-dhg-with-tc-knn">
+<h2>2. Dynamic Hypergraph Construction DHG with TC kNN<a class="headerlink" href="#dynamic-hypergraph-construction-dhg-with-tc-knn" title="Link to this heading">¶</a></h2>
+<p>Purpose Generate candidate causal hypotheses when a postsynaptic spike occurs</p>
+<p>Algorithm TC kNN for event v post at neuron n j time t j</p>
+<ul class="simple">
+<li><p>Identify presynaptic sources S j from static synapse map</p></li>
+<li><p>For each i in S j find most recent spike v i within window t j minus delay max to t j minus delay min</p></li>
+<li><p>Build candidate sets</p>
+<ul>
+<li><p>Unary edges per qualifying v i</p></li>
+<li><p>K way edges for small k up to k max for presyn spikes within micro window delta causal</p></li>
+</ul>
+</li>
+<li><p>Initialize reliability score small epsilon and insert into E t</p></li>
+</ul>
+<p>Data structures</p>
+<ul class="simple">
+<li><p>Per neuron ring buffer of recent events with binary search by time</p></li>
+<li><p>Adjacency maps keyed by head vertex id to list of incoming hyperedges</p></li>
+<li><p>Hash of tail signature to hyperedge id for deduplication</p></li>
+</ul>
+<p>Complexity and constraints</p>
+<ul class="simple">
+<li><p>Time O degree in plus log buffer for searches plus combinations up to k max</p></li>
+<li><p>Memory proportional to active hyperedges bounded by pruning policy</p></li>
+<li><p>Parameters delay min delay max k max delta causal epsilon init</p></li>
+</ul>
+</section>
+<section id="hyperedge-plasticity-refine-and-prune">
+<h2>3. Hyperedge plasticity refine and prune<a class="headerlink" href="#hyperedge-plasticity-refine-and-prune" title="Link to this heading">¶</a></h2>
+<p>Refinement predict and confirm</p>
+<ul class="simple">
+<li><p>Potentiate increase reliability when tail observed and head arrives within window</p></li>
+<li><p>Depress decrease reliability when tail observed and head absent in window</p></li>
+<li><p>Optional time decay toward prior</p></li>
+</ul>
+<p>Update rule example</p>
+<ul class="simple">
+<li><p>reliability new equals clamp reliability old plus alpha times outcome minus reliability old</p></li>
+<li><p>outcome equals 1 for confirmed else 0</p></li>
+<li><p>Use per edge learning rate alpha and confidence floor and ceiling</p></li>
+</ul>
+<p>Pruning</p>
+<ul class="simple">
+<li><p>Remove edge when reliability below tau prune or age exceeds tau age with low usage</p></li>
+<li><p>Maintain budget cap on hyperedges per neuron pair and global cap</p></li>
+</ul>
+<p>Concurrency</p>
+<ul class="simple">
+<li><p>Event driven updates use atomic add on reliability and counters</p></li>
+<li><p>Deterministic order per head neuron by timestamp</p></li>
+<li><p>Idempotent updates via edge observation tokens</p></li>
+</ul>
+</section>
+<section id="hyperpath-embedding-and-causal-context-similarity">
+<h2>4. Hyperpath embedding and causal context similarity<a class="headerlink" href="#hyperpath-embedding-and-causal-context-similarity" title="Link to this heading">¶</a></h2>
+<p>Goal Group vertices by similarity of causal histories not by raw features</p>
+<p>Design</p>
+<ul class="simple">
+<li><p>For each vertex compute an embedding of the backward k radius hyperpath</p></li>
+<li><p>Use Weisfeiler Lehman style hashing over multiset of labeled tails and delays</p></li>
+<li><p>Maintain incremental updates as new edges arrive</p></li>
+<li><p>Use embeddings to propose higher order hyperedges between groups of vertices with similar origins</p></li>
+</ul>
+<p>Parameters</p>
+<ul class="simple">
+<li><p>Radius r levels, hash base, embedding dimension d, update period</p></li>
+</ul>
+</section>
+<section id="credit-assignment-via-constrained-backward-hyperpath-traversal">
+<h2>5. Credit assignment via constrained backward hyperpath traversal<a class="headerlink" href="#credit-assignment-via-constrained-backward-hyperpath-traversal" title="Link to this heading">¶</a></h2>
+<p>Objective Assign credit or blame to edges using evidence from valid causal hyperpaths</p>
+<p>Traversal policy Multi start random B walk</p>
+<ul class="simple">
+<li><p>Seed at supervised or reward tagged head vertices</p></li>
+<li><p>Step from head to candidate incoming hyperedges that satisfy B connectivity all tails present and temporal constraints</p></li>
+<li><p>Sample edges proportional to reliability bias and optionally rule priors</p></li>
+<li><p>Stop when reaching input sources or budget exceeded</p></li>
+<li><p>Score each discovered path by product or min of edge reliabilities</p></li>
+<li><p>Aggregate scores per edge for potentiation or depression</p></li>
+</ul>
+<p>Temporal logic constraints</p>
+<ul class="simple">
+<li><p>Enforce delay windows and refractory for head neurons</p></li>
+<li><p>Prevent two edges with same head neuron too close in time</p></li>
+</ul>
+<p>Parameters</p>
+<ul class="simple">
+<li><p>Seeds per event M, max steps L, branching cap B, temperature tau select, positive or negative update weights</p></li>
+</ul>
+</section>
+<section id="streaming-frequent-hyperpath-mining-and-online-rule-induction">
+<h2>6. Streaming frequent hyperpath mining and online rule induction<a class="headerlink" href="#streaming-frequent-hyperpath-mining-and-online-rule-induction" title="Link to this heading">¶</a></h2>
+<p>Pipeline</p>
+<ul class="simple">
+<li><p>Canonical labeling convert each high score hyperpath to a unique template id</p></li>
+<li><p>Counting maintain frequency with sliding window and decay</p></li>
+<li><p>Thresholding promote templates that exceed support and reliability thresholds</p></li>
+<li><p>Rule abstraction emit a symbolic rule and register a higher order hyperedge candidate</p></li>
+</ul>
+<p>Data structures</p>
+<ul class="simple">
+<li><p>On line hash tables for template counts, approximate counters, reservoirs</p></li>
+</ul>
+<p>Parameters</p>
+<ul class="simple">
+<li><p>Support s min, reliability r min, window W, decay gamma</p></li>
+</ul>
+</section>
+<section id="hierarchical-abstraction-and-higher-order-hyperedges">
+<h2>7. Hierarchical abstraction and higher order hyperedges<a class="headerlink" href="#hierarchical-abstraction-and-higher-order-hyperedges" title="Link to this heading">¶</a></h2>
+<p>Procedure</p>
+<ul class="simple">
+<li><p>When a template passes thresholds create a new hyperedge with tail equal to source vertices of the hyperpath and head equal to sink vertex</p></li>
+<li><p>Set initial reliability from aggregate path statistics</p></li>
+<li><p>Add provenance link to underlying edges for audit</p></li>
+</ul>
+<p>Integrity constraints</p>
+<ul class="simple">
+<li><p>Detect and prevent cycles</p></li>
+<li><p>Deduplicate similar rules via canonicalization</p></li>
+<li><p>Limit fan in per abstraction</p></li>
+</ul>
+</section>
+<section id="task-aware-scaffolding-isolate-or-reuse-and-freeze">
+<h2>8. Task aware scaffolding isolate or reuse and freeze<a class="headerlink" href="#task-aware-scaffolding-isolate-or-reuse-and-freeze" title="Link to this heading">¶</a></h2>
+<p>Task similarity detection</p>
+<ul class="simple">
+<li><p>Present new task samples and measure activation overlap of high reliability edges and paths</p></li>
+<li><p>Compute similarity score by Jaccard or cosine over activated edge ids or embeddings</p></li>
+</ul>
+<p>Policy</p>
+<ul class="simple">
+<li><p>If similarity below threshold freeze critical edges for previous tasks and bias GROW to new region id</p></li>
+<li><p>If similarity above threshold keep relevant edges plastic and raise learning rates locally</p></li>
+<li><p>Maintain per task registry of protected edges and budgets</p></li>
+</ul>
+</section>
+<section id="module-interfaces-and-data-contracts">
+<h2>9. Module interfaces and data contracts<a class="headerlink" href="#module-interfaces-and-data-contracts" title="Link to this heading">¶</a></h2>
+<p>Event ingestion</p>
+<ul class="simple">
+<li><p>push event neuron id int, timestamp float, meta dict</p></li>
+</ul>
+<p>DHG constructor</p>
+<ul class="simple">
+<li><p>on post spike neuron id, timestamp returns list of edge ids created</p></li>
+<li><p>query edges by head vertex id or by tail signature</p></li>
+</ul>
+<p>Plasticity</p>
+<ul class="simple">
+<li><p>update edge id, event outcome confirmed or missed, time</p></li>
+<li><p>prune policy step returns removed edge ids</p></li>
+</ul>
+<p>Traversal</p>
+<ul class="simple">
+<li><p>assign credit seeds list of vertex ids, mode reward or error, returns edge delta map</p></li>
+</ul>
+<p>FSM</p>
+<ul class="simple">
+<li><p>submit path path object with edge list and score</p></li>
+<li><p>poll rules returns list of new rule descriptors</p></li>
+</ul>
+<p>Meta controller</p>
+<ul class="simple">
+<li><p>step stats snapshot returns control actions like adjust pruning threshold or traversal temperature</p></li>
+</ul>
+<p>Logging and metrics</p>
+<ul class="simple">
+<li><p>emit counters for events per second, edges active, average reliability, prune rate, traversal yield, rules discovered</p></li>
+</ul>
+</section>
+<section id="complexity-and-resource-model">
+<h2>10. Complexity and resource model<a class="headerlink" href="#complexity-and-resource-model" title="Link to this heading">¶</a></h2>
+<p>Event vision targets</p>
+<ul class="simple">
+<li><p>DVS Gesture average events per second ten to the five to ten to the six</p></li>
+<li><p>N MNIST average events per second ten to the four to ten to the five</p></li>
+</ul>
+<p>Targets</p>
+<ul class="simple">
+<li><p>End to end throughput events per second greater than or equal to dataset rate with headroom factor two</p></li>
+<li><p>Memory budget edges below fifty million for desktop prototype and below five million for embedded</p></li>
+</ul>
+<p>Asymptotics</p>
+<ul class="simple">
+<li><p>DHG O degree in plus combinations up to k max per post spike</p></li>
+<li><p>Traversal near linear in explored edges with caps M, L, B</p></li>
+<li><p>FSM near linear in submitted paths with hash update O one</p></li>
+</ul>
+</section>
+<section id="software-prototype-blueprint-python-norse">
+<h2>11. Software prototype blueprint Python Norse<a class="headerlink" href="#software-prototype-blueprint-python-norse" title="Link to this heading">¶</a></h2>
+<p>Stack</p>
+<ul class="simple">
+<li><p>Python 3.11, PyTorch, Norse, tonic for event datasets, networkx for audit, numpy, numba optional</p></li>
+</ul>
+<p>Repository structure</p>
+<ul class="simple">
+<li><p>dch core library with modules events, dhg, plasticity, traversal, fsm, rules, meta</p></li>
+<li><p>experiments with dvs gesture and n mnist</p></li>
+<li><p>tests with unit and integration</p></li>
+<li><p>docs with spec and diagrams</p></li>
+</ul>
+<p>Data flow</p>
+<ul class="simple">
+<li><p>Load event stream, feed to SNN for spikes or use recorded spikes</p></li>
+<li><p>For each post spike run DHG then plasticity updates</p></li>
+<li><p>Periodically run traversal on supervision or reward seeds</p></li>
+<li><p>Stream high score paths to FSM and apply abstraction and policy</p></li>
+</ul>
+<p>Test harness</p>
+<ul class="simple">
+<li><p>Deterministic seed, synthetic micrographs, invariant checks for temporal logic constraints</p></li>
+</ul>
+</section>
+<section id="evaluation-protocol-datasets-metrics-and-ablations">
+<h2>12. Evaluation protocol datasets metrics and ablations<a class="headerlink" href="#evaluation-protocol-datasets-metrics-and-ablations" title="Link to this heading">¶</a></h2>
+<p>Datasets</p>
+<ul class="simple">
+<li><p>DVS Gesture, N MNIST as event vision benchmarks</p></li>
+</ul>
+<p>Baselines</p>
+<ul class="simple">
+<li><p>Surrogate gradient SNN on same datasets, reservoir SNN, TEH static variant without DHG</p></li>
+</ul>
+<p>Metrics</p>
+<ul class="simple">
+<li><p>Classification accuracy, F one for event detection, sample efficiency, energy proxy events per update, interpretability audit success rate, rule stability</p></li>
+</ul>
+<p>Ablations</p>
+<ul class="simple">
+<li><p>Remove FSM, remove hierarchical abstraction, vary k max and traversal caps, disable task scaffolding</p></li>
+</ul>
+</section>
+<section id="parameter-defaults-and-tuning">
+<h2>13. Parameter defaults and tuning<a class="headerlink" href="#parameter-defaults-and-tuning" title="Link to this heading">¶</a></h2>
+<p>Suggested defaults</p>
+<ul class="simple">
+<li><p>delay min one ms, delay max thirty ms, k max three, delta causal two ms</p></li>
+<li><p>epsilon init 0.05, alpha 0.1, tau prune 0.02, tau age 10 seconds of inactivity</p></li>
+<li><p>traversal M 8, L 12, B 4, tau select 0.7</p></li>
+<li><p>FSM s min 50, r min 0.6, W 60 seconds, gamma 0.98</p></li>
+<li><p>scaffolding similarity threshold 0.35</p></li>
+</ul>
+<p>Tuning strategy</p>
+<ul class="simple">
+<li><p>Grid search small around defaults, adaptive meta controller adjusts thresholds online</p></li>
+</ul>
+</section>
+<section id="risk-analysis-and-mitigations">
+<h2>14. Risk analysis and mitigations<a class="headerlink" href="#risk-analysis-and-mitigations" title="Link to this heading">¶</a></h2>
+<p>Risks</p>
+<ul class="simple">
+<li><p>Combinatorial explosion of candidate edges and paths</p></li>
+<li><p>Noise and spurious correlations</p></li>
+<li><p>Catastrophic forgetting</p></li>
+<li><p>Irregular memory access overhead</p></li>
+</ul>
+<p>Mitigations</p>
+<ul class="simple">
+<li><p>Strict caps, reliability based pruning, hierarchical abstraction to compress</p></li>
+<li><p>Temporal logic constraints and refractory enforcement</p></li>
+<li><p>Task aware freeze and region partitioning</p></li>
+<li><p>Cache conscious data layouts and batch updates</p></li>
+</ul>
+</section>
+<section id="causa-chip-hardware-co-design-overview">
+<h2>15. Causa Chip hardware co design overview<a class="headerlink" href="#causa-chip-hardware-co-design-overview" title="Link to this heading">¶</a></h2>
+<p>Units</p>
+<ul class="simple">
+<li><p>Graph Streaming Engine handles TC kNN and event queues</p></li>
+<li><p>Graph Memory Fabric near memory processing with ReRAM like arrays and atomic updates</p></li>
+<li><p>Parallel Traversal Accelerator PE array for constrained walks and SpMV SpGEMM on incidence structures</p></li>
+<li><p>Frequent Subgraph Miner pipeline for canonical labeling and counting</p></li>
+<li><p>Meta Controller RISC V class core with policy</p></li>
+</ul>
+<p>Dataflow</p>
+<ul class="simple">
+<li><p>Events to GSE to GMF insert edges then PTA traverses and emits paths to FSM then rules to MC which feeds back controls to GSE GMF PTA FSM</p></li>
+</ul>
+<p>Resource targets desktop prototype</p>
+<ul class="simple">
+<li><p>Bandwidth requirement greater than 50 GB per second across graph fabric</p></li>
+<li><p>On chip memory scratch greater than 256 MB, off chip DRAM</p></li>
+<li><p>Latency budget per event less than 100 microseconds for DHG path</p></li>
+</ul>
+<p>Open questions</p>
+<ul class="simple">
+<li><p>Feasible PIM primitives for atomic reliability update</p></li>
+<li><p>Canonical labeling hardware throughput per path</p></li>
+<li><p>Partitioning hypergraph across PEs to minimize NoC contention</p></li>
+</ul>
+</section>
+<section id="mermaid-diagrams">
+<h2>16. Mermaid diagrams<a class="headerlink" href="#mermaid-diagrams" title="Link to this heading">¶</a></h2>
+<p>Neuro symbolic learning loop</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart TD
+SNN[Sub symbolic SNN spikes] --&gt; DHG[Dynamic hypergraph update]
+DHG --&gt; TRAV[Backward traversal credit assignment]
+TRAV --&gt; FSME[Frequent subgraph miner]
+FSME --&gt; RULES[Symbolic rules library]
+RULES --&gt; GUIDE[Top down guidance]
+GUIDE --&gt; DHG
+GUIDE --&gt; TRAV
+</pre></div>
+</div>
+<p>DHG construction around a post spike</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+POST[Post spike at neuron j time t j] --&gt; SRC[Find presyn sources]
+SRC --&gt; WIN[Search temporal windows]
+WIN --&gt; CAND[Generate candidate edges]
+CAND --&gt; INIT[Init reliability and insert]
+</pre></div>
+</div>
+<p>Constrained backward traversal</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart TB
+HEAD[Seed head vertex] --&gt; E1[Select incoming edges that meet constraints]
+E1 --&gt; TAILS[Verify all tail events present]
+TAILS --&gt; STEP[Add edge to path and continue]
+STEP --&gt; SCORE[Score path and update edges]
+</pre></div>
+</div>
+<p>Causa Chip dataflow</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+EVQ[Event queues] --&gt; GSEU[GSE]
+GSEU --&gt; GMFU[GMF]
+GMFU --&gt; PTAU[PTA]
+PTAU --&gt; FSMU[FSM]
+FSMU --&gt; MCU[MC]
+MCU --&gt; GMFU
+MCU --&gt; PTAU
+MCU --&gt; GSEU
+MCU --&gt; FSMU
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>17. References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Cite prior work on DHGNN, temporal logic for events, ILP, frequent subgraph mining for dynamic graphs, SNN libraries Norse and BindsNET, event vision datasets</p></li>
+</ul>
+</section>
+<section id="acceptance-criteria-checklist">
+<h2>18. Acceptance criteria checklist<a class="headerlink" href="#acceptance-criteria-checklist" title="Link to this heading">¶</a></h2>
+<p>Functional completeness</p>
+<ul class="simple">
+<li><p>Formal definitions V t E t hyperedge validity and reliability with temporal semantics are specified</p></li>
+<li><p>DHG TC kNN algorithm with data structures parameters and complexity is specified</p></li>
+<li><p>Plasticity rules with update equations decay and pruning are specified</p></li>
+<li><p>Traversal algorithm with B connectivity and temporal constraints and scoring is specified</p></li>
+<li><p>Streaming FSM with canonical labeling counting thresholds and outputs is specified</p></li>
+<li><p>Hierarchical abstraction creation constraints and provenance are specified</p></li>
+<li><p>Task aware scaffolding similarity policy freeze and reuse are specified</p></li>
+<li><p>Module interfaces and data contracts are listed with input output types and responsibilities</p></li>
+</ul>
+<p>Engineering readiness</p>
+<ul class="simple">
+<li><p>Complexity and resource model with numeric targets for DVS Gesture and N MNIST is provided</p></li>
+<li><p>Software prototype blueprint with repo layout data flow test harness and dependencies is provided</p></li>
+<li><p>Parameter defaults and tuning guidance are provided</p></li>
+<li><p>Risk and mitigation plan is provided</p></li>
+</ul>
+<p>Hardware overview</p>
+<ul class="simple">
+<li><p>Causa Chip units and dataflow are specified with resource targets and open questions</p></li>
+</ul>
+<p>Documentation quality</p>
+<ul class="simple">
+<li><p>Three or more Mermaid diagrams render and match the workflows</p></li>
+<li><p>Glossary and symbol list are included</p></li>
+<li><p>References include core related work</p></li>
+</ul>
+<p>Validation plan</p>
+<ul class="simple">
+<li><p>Evaluation protocol with datasets baselines metrics ablations is defined</p></li>
+<li><p>Success criteria include accuracy and interpretability and throughput thresholds</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Dynamic Causal Hypergraph DCH Technical Specification and Causa Chip Hardware Overview</a><ul>
+<li><a class="reference internal" href="#formal-foundations-and-glossary">1. Formal foundations and glossary</a></li>
+<li><a class="reference internal" href="#dynamic-hypergraph-construction-dhg-with-tc-knn">2. Dynamic Hypergraph Construction DHG with TC kNN</a></li>
+<li><a class="reference internal" href="#hyperedge-plasticity-refine-and-prune">3. Hyperedge plasticity refine and prune</a></li>
+<li><a class="reference internal" href="#hyperpath-embedding-and-causal-context-similarity">4. Hyperpath embedding and causal context similarity</a></li>
+<li><a class="reference internal" href="#credit-assignment-via-constrained-backward-hyperpath-traversal">5. Credit assignment via constrained backward hyperpath traversal</a></li>
+<li><a class="reference internal" href="#streaming-frequent-hyperpath-mining-and-online-rule-induction">6. Streaming frequent hyperpath mining and online rule induction</a></li>
+<li><a class="reference internal" href="#hierarchical-abstraction-and-higher-order-hyperedges">7. Hierarchical abstraction and higher order hyperedges</a></li>
+<li><a class="reference internal" href="#task-aware-scaffolding-isolate-or-reuse-and-freeze">8. Task aware scaffolding isolate or reuse and freeze</a></li>
+<li><a class="reference internal" href="#module-interfaces-and-data-contracts">9. Module interfaces and data contracts</a></li>
+<li><a class="reference internal" href="#complexity-and-resource-model">10. Complexity and resource model</a></li>
+<li><a class="reference internal" href="#software-prototype-blueprint-python-norse">11. Software prototype blueprint Python Norse</a></li>
+<li><a class="reference internal" href="#evaluation-protocol-datasets-metrics-and-ablations">12. Evaluation protocol datasets metrics and ablations</a></li>
+<li><a class="reference internal" href="#parameter-defaults-and-tuning">13. Parameter defaults and tuning</a></li>
+<li><a class="reference internal" href="#risk-analysis-and-mitigations">14. Risk analysis and mitigations</a></li>
+<li><a class="reference internal" href="#causa-chip-hardware-co-design-overview">15. Causa Chip hardware co design overview</a></li>
+<li><a class="reference internal" href="#mermaid-diagrams">16. Mermaid diagrams</a></li>
+<li><a class="reference internal" href="#references">17. References</a></li>
+<li><a class="reference internal" href="#acceptance-criteria-checklist">18. Acceptance criteria checklist</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

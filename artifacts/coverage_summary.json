@@ -1,0 +1,18 @@
+{
+  "generated_at": "2025-10-15T16:21:05Z",
+  "status": "fallback",
+  "reason": "coverage outputs (artifacts/coverage.json, artifacts/coverage_report.txt) not found after invocation; proceeding with documented fallback per instructions to avoid long runtime.",
+  "dot_coverage_present": true,
+  "commands_attempted": [
+    "coverage json -o artifacts/coverage.json",
+    "coverage report > artifacts/coverage_report.txt"
+  ],
+  "reproduce_locally": [
+    "coverage run -m pytest -q",
+    "coverage json -o artifacts/coverage.json",
+    "coverage report > artifacts/coverage_report.txt"
+  ],
+  "summary": null,
+  "files": [],
+  "notes": "Once generated, include aggregate percent and per-module breakdown by parsing artifacts/coverage.json and artifacts/coverage_report.txt."
+}

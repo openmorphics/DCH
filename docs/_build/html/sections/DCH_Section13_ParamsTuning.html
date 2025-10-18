@@ -1,0 +1,452 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 13 Parameter Defaults and Tuning Strategy - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section13_ParamsTuning.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-13-parameter-defaults-and-tuning-strategy">
+<h1>Dynamic Causal Hypergraph DCH — Section 13 Parameter Defaults and Tuning Strategy<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-13-parameter-defaults-and-tuning-strategy" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a><br />
+Cross references Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a>, Section 2 <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a>, Section 3 <a class="reference internal" href="DCH_Section3_Plasticity.html"><span class="std std-doc">DCH_Section3_Plasticity.md</span></a>, Section 4 <a class="reference internal" href="DCH_Section4_HyperpathEmbedding.html"><span class="std std-doc">DCH_Section4_HyperpathEmbedding.md</span></a>, Section 5 <a class="reference internal" href="DCH_Section5_CreditAssignment.html"><span class="std std-doc">DCH_Section5_CreditAssignment.md</span></a>, Section 6 <a class="reference internal" href="DCH_Section6_FSM.html"><span class="std std-doc">DCH_Section6_FSM.md</span></a>, Section 8 <a class="reference internal" href="DCH_Section8_TaskAwareScaffolding.html"><span class="std std-doc">DCH_Section8_TaskAwareScaffolding.md</span></a>, Section 10 <a class="reference internal" href="DCH_Section10_ComplexityResource.html"><span class="std std-doc">DCH_Section10_ComplexityResource.md</span></a>, Section 11 <a class="reference internal" href="DCH_Section11_SoftwareBlueprint.html"><span class="std std-doc">DCH_Section11_SoftwareBlueprint.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Purpose and scope</p></li>
+</ol>
+<ul class="simple">
+<li><p>Consolidate canonical defaults for all major DCH modules.</p></li>
+<li><p>Provide a practical tuning methodology with safe ranges, sensitivity guidance, and online adaptation policies.</p></li>
+<li><p>Deliver dataset specific presets for DVS Gesture and N MNIST consistent with complexity and throughput targets.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Canonical defaults by module<br />
+2.1 Time and windows</p></li>
+</ol>
+<ul class="simple">
+<li><p>Timestamps unit μs; refractory ρ 1000 μs per neuron.</p></li>
+<li><p>Delay window Δ_min 1000 μs, Δ_max 30000 μs; δ_causal 2000 μs.</p></li>
+</ul>
+<p>2.2 DHG TC kNN (Section 2)</p>
+<ul class="simple">
+<li><p>k_max 3; M_in 6 admitted unary candidates per head prior to combinations; C_cap 10 total candidates per head after scoring.</p></li>
+<li><p>Candidate scoring weights w_delay 0.7, w_size 0.3; ε_init 0.05 reliability.</p></li>
+</ul>
+<p>2.3 Plasticity (Section 3)</p>
+<ul class="simple">
+<li><p>EMA step α 0.1; bounds r_min 0.02, r_max 0.98; prior r_0 0.5; discounted counts decay γ_c 0.98/s; time decay β 0.01/s.</p></li>
+<li><p>Prune τ_prune 0.02; τ_age_min 2 s inactivity; τ_use_min 3; H_idle 30 s.</p></li>
+<li><p>λ_path 0.5 blending path signals with local watchers.</p></li>
+</ul>
+<p>2.4 Hyperpath embeddings (Section 4)</p>
+<ul class="simple">
+<li><p>WL r_WL 2; d_WL 64; cadence Δt_WL 10 ms; frontier cap F_max 256.</p></li>
+<li><p>LSH bands 8, rows_per_band 4; τ_LSH 2; cosine threshold τ_cos 0.65.</p></li>
+<li><p>SAGE r_SAGE 3; d_SAGE 128; cadence Δt_SAGE 500 ms; batch 4096; S_nbr 32; S_edge 64.</p></li>
+</ul>
+<p>2.5 Credit assignment (Section 5)</p>
+<ul class="simple">
+<li><p>Seeds M 8; depth L 12; branch cap B 4; C_in 16 admissible in filter; τ_select 0.7; H_back 100 ms.</p></li>
+<li><p>Feature weights w_rel 1.0, w_rec 0.5, w_rule 0.5, w_sim 0.5; λ_rec 1/100 ms; ε_norm 1.0.</p></li>
+</ul>
+<p>2.6 FSM and rule induction (Section 6)</p>
+<ul class="simple">
+<li><p>Window W 60 s; decay γ 0.98/s; s_min 50; r_min_rule 0.6; c_min 10 distinct sinks; L_max_rule 6; k_max_rule 3.</p></li>
+<li><p>HH capacity K_HH 100k; CMS width 32768, depth 4; EWMA α_r 0.1; hysteresis D_stab 5 s; s_min_demote 0.5×s_min; D_demote 5 s; s_path_min 0.2.</p></li>
+</ul>
+<p>2.7 Task aware scaffolding (Section 8)</p>
+<ul class="simple">
+<li><p>Similarity thresholds θ_reuse 0.6; θ_isolate 0.3; weights w_act 0.5, w_emb 0.4, w_perf 0.1; r_act 0.7.</p></li>
+<li><p>Freeze K_protect_pct 5%; K_protect_max 50k; TTL 120 s; α_review 0.02; τ_conflict 0.02.</p></li>
+<li><p>Region leakage ε_leak 0.1; λ_reg 0.5; σ_max 0.6; k_alpha_up 1.5; K_head_boost 1.2; r_gate 0.8.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Tuning methodology and order of operations<br />
+3.1 Fix timing and admission first</p></li>
+</ol>
+<ul class="simple">
+<li><p>Validate refractory ρ and Δ windows against observed empirical delays (quantile check p10 ≥ Δ_min, p90 ≤ Δ_max).</p></li>
+<li><p>Calibrate δ_causal to cluster true presyn bursts (1–3 ms typical); widen only if WL grouping is disabled.</p></li>
+</ul>
+<p>3.2 Control combinatorics</p>
+<ul class="simple">
+<li><p>Set DHG budgets C_cap and k_max; if candidate explosion or queue lag, reduce C_cap first, then k_max to 2.</p></li>
+<li><p>Raise τ_prune temporarily to cull low r_e edges during burn in.</p></li>
+</ul>
+<p>3.3 Stabilize learning signals</p>
+<ul class="simple">
+<li><p>Tune α within 0.05–0.2 (higher for nonstationary streams).</p></li>
+<li><p>Use λ_path sweep {0.3, 0.5, 0.7} to balance local vs. path evidence; monitor watcher confirm/miss ratio.</p></li>
+</ul>
+<p>3.4 Traverse efficiently</p>
+<ul class="simple">
+<li><p>Start with M 8, L 12, B 4; if traversal latency &gt; budget, reduce L to 10, then C_in to 12; maintain determinism via fixed RNG seeding.</p></li>
+<li><p>Increase w_rule to 0.8 when an adequate ruleset is active to improve search efficiency.</p></li>
+</ul>
+<p>3.5 FSM sensitivity</p>
+<ul class="simple">
+<li><p>Increase s_min to 75 on high churn datasets; decrease to 40 for sparse labels.</p></li>
+<li><p>Raise γ to 0.995 (slower decay) when patterns should persist longer; lower to 0.95 to adapt rapidly.</p></li>
+</ul>
+<p>3.6 Scaffolding gates</p>
+<ul class="simple">
+<li><p>Calibrate θ_reuse/θ_isolate using a short pilot on Task A then Task B; target hybrid band width 0.1–0.2 to avoid oscillation.</p></li>
+<li><p>Set region leakage ε_leak ≤ 0.1 to limit spurious cross links; relax when transfer is desired.</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Safe ranges and sensitivity notes</p></li>
+</ol>
+<ul class="simple">
+<li><p>Δ_min [0.5, 2] ms; Δ_max [20, 50] ms; widening increases false positives in DHG; prefer WL grouping instead.</p></li>
+<li><p>α in [0.05, 0.2]; too high causes volatility; too low slows adaptation.</p></li>
+<li><p>τ_prune in [0.01, 0.05]; below 0.01 increases memory; above 0.05 may prune useful edges.</p></li>
+<li><p>M∈[4,12], L∈[8,16], B∈[2,6]; traversal cost scales roughly linearly in K·L·C_in (Section 10).</p></li>
+<li><p>s_min∈[30,100]; lower values promote noisy rules; higher values slow rule discovery.</p></li>
+<li><p>θ_reuse∈[0.5,0.7], θ_isolate∈[0.2,0.4]; too close induces policy oscillation; enforce hysteresis 0.05.</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Dataset specific presets<br />
+5.1 N MNIST</p></li>
+</ol>
+<ul class="simple">
+<li><p>Δ_min 1 ms, Δ_max 25 ms, δ_causal 1.5 ms; k_max 2; α 0.08; τ_prune 0.02.</p></li>
+<li><p>WL r 2, d 64, Δt_WL 10 ms; M 6, L 10, B 3; s_min 40; γ 0.98; θ_reuse 0.6, θ_isolate 0.3.</p></li>
+</ul>
+<p>5.2 DVS Gesture</p>
+<ul class="simple">
+<li><p>Δ_min 1 ms, Δ_max 30 ms, δ_causal 2 ms; k_max 3; α 0.1; τ_prune 0.02.</p></li>
+<li><p>WL r 2, d 64, Δt_WL 10 ms; M 8, L 12, B 4; s_min 60–75; γ 0.98; θ_reuse 0.6, θ_isolate 0.3.</p></li>
+<li><p>Under high churn raise s_min to 75 and increase Δt_WL to 15 ms to cap load.</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Online adaptation policies (Meta controller)</p></li>
+</ol>
+<ul class="simple">
+<li><p>Queue lag high: reduce C_cap by 20%, increase τ_prune by 25%, increase Δt_WL by 5 ms.</p></li>
+<li><p>Rule churn high: raise s_min by 25%, increase γ by 0.01 absolute; lower w_rule temporarily.</p></li>
+<li><p>Low traversal yield: increase w_rule to 0.8 and w_sim to 0.7; enable HOE preference; consider raising H_back to 120 ms briefly.</p></li>
+<li><p>Memory pressure: increase τ_prune; lower K_head budget; demote low freshness edges using s_prune = r_e·exp(−λ_age·age).</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Diagnostics and invariants to watch</p></li>
+</ol>
+<ul class="simple">
+<li><p>DHG candidate hit rate target ≥ 30%; dedup rate ≥ 20%; rising queues → reduce C_cap.</p></li>
+<li><p>Watcher confirm rate: aim 55–75% in stationary segments; sustained &lt; 40% → shrink Δ windows or increase τ_prune.</p></li>
+<li><p>Traversal valid ratio ≥ 50%; average depth 6–9; if lower, raise w_rule or adjust L.</p></li>
+<li><p>FSM promotion precision proxy ≥ 70% (rules remain active ≥ 60 s).</p></li>
+<li><p>HOE path shortening factor ≥ 1.5× on DVS Gesture after warm-up.</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Auto calibration routines</p></li>
+</ol>
+<ul class="simple">
+<li><p>Delay envelope fitting: per pair i→j maintain exponential histograms; update Δ_min/Δ_max to [p10, p95] with hysteresis to avoid thrash.</p></li>
+<li><p>Temperature τ_select annealing: start at 0.9 for exploration; decay to 0.7 over 60 s of stable performance.</p></li>
+<li><p>λ_path scheduling: increase toward 0.7 when supervised signals confirm traversal correctness; fall back to 0.5 otherwise.</p></li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>Reproducibility and config hashing</p></li>
+</ol>
+<ul class="simple">
+<li><p>Emit a config hash derived from a stable serialization of all knobs (ordered YAML) plus code revisions; attach to every metrics bundle.</p></li>
+<li><p>Record snapshot ids for WL, SAGE, and FSM rulesets (see <a class="reference internal" href="DCH_Section9_Interfaces.html"><span class="std std-doc">DCH_Section9_Interfaces.md</span></a>).</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Acceptance criteria for Section 13</p></li>
+</ol>
+<ul class="simple">
+<li><p>Canonical defaults listed for all modules and consistent with earlier sections.</p></li>
+<li><p>Clear order of tuning with safe ranges and sensitivity notes.</p></li>
+<li><p>Dataset presets for DVS Gesture and N MNIST are provided.</p></li>
+<li><p>Online adaptation rules defined for meta control and backpressure.</p></li>
+<li><p>Diagnostics and invariants enable guardrail checks during runs.</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Windows and refractory semantics <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p></li>
+<li><p>DHG budgets and scoring <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a></p></li>
+<li><p>EMA and pruning <a class="reference internal" href="DCH_Section3_Plasticity.html"><span class="std std-doc">DCH_Section3_Plasticity.md</span></a></p></li>
+<li><p>Embeddings and grouping <a class="reference internal" href="DCH_Section4_HyperpathEmbedding.html"><span class="std std-doc">DCH_Section4_HyperpathEmbedding.md</span></a></p></li>
+<li><p>Traversal policy <a class="reference internal" href="DCH_Section5_CreditAssignment.html"><span class="std std-doc">DCH_Section5_CreditAssignment.md</span></a></p></li>
+<li><p>FSM thresholds <a class="reference internal" href="DCH_Section6_FSM.html"><span class="std std-doc">DCH_Section6_FSM.md</span></a></p></li>
+<li><p>Scaffolding decisions <a class="reference internal" href="DCH_Section8_TaskAwareScaffolding.html"><span class="std std-doc">DCH_Section8_TaskAwareScaffolding.md</span></a></p></li>
+<li><p>Performance budgets <a class="reference internal" href="DCH_Section10_ComplexityResource.html"><span class="std std-doc">DCH_Section10_ComplexityResource.md</span></a></p></li>
+</ul>
+<p>End of Section 13</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

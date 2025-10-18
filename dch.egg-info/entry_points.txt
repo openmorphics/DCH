@@ -1,0 +1,11 @@
+[console_scripts]
+dch-ablation = scripts.run_ablation_suite:run_main
+dch-baseline-bindsnet = baselines.bindsnet_stdp:main
+dch-baseline-norse = baselines.norse_sg:main
+dch-baselines = scripts.run_baselines_experiment:run_main
+dch-bundle = scripts.make_results_bundle:run_main
+dch-dataset = scripts.run_dataset_experiment:run_main
+dch-gate = scripts.run_gate_review:run_main
+dch-quick = scripts.run_quick_experiment:run_main
+dch-run = scripts.run_experiment:main
+dch-stats = scripts.run_stats_report:run_main

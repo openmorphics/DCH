@@ -1,0 +1,377 @@
+{
+  "generated_at": "2025-10-15T16:17:33Z",
+  "scope": "Repo-wide scan (project modules only: dch_core/*, dch_pipeline/*)",
+  "patterns": ["TODO", "FIXME", "HACK", "NOTIMPLEMENTED", "raise NotImplementedError", "pass"],
+  "notes": "Third-party and venv files excluded. Many 'pass' are intentional robustness guards to keep pipeline non-fatal.",
+  "findings": [
+    {
+      "file": "dch_core/dpo.py",
+      "line": 217,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "210 |             s = float(getattr(e, \"counts_success\", 0.0))",
+        "211 |             f = float(getattr(e, \"counts_miss\", 0.0))",
+        "216 |                 return float(num / den)",
+        "217 |         except Exception:",
+        "218 |             pass",
+        "219 |         try:"
+      ]
+    },
+    {
+      "file": "dch_core/dpo_analysis.py",
+      "line": 70,
+      "type": "pass",
+      "category": "best_effort_parse",
+      "context": [
+        "66 |                 v = int(s)",
+        "67 |                 neuron_id = v",
+        "68 |                 t = v",
+        "69 |             except Exception:",
+        "70 |                 pass",
+        "71 |         vtx = Vertex(id=vid, neuron_id=neuron_id, t=t)"
+      ]
+    },
+    {
+      "file": "dch_pipeline/eat_logger.py",
+      "line": 155,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "150 |             base[\"hash\"] = digest_hex",
+        "151 |             self._f.write(json.dumps(base, ensure_ascii=False, separators=(\",\", \":\"), sort_keys=True) + \"\\n\")",
+        "153 |             self._last_hash = bytes.fromhex(digest_hex)",
+        "154 |         except Exception:",
+        "155 |             # P1: non-fatal side-effect; ignore",
+        "156 |             pass"
+      ]
+    },
+    {
+      "file": "dch_pipeline/eat_logger.py",
+      "line": 187,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "183 |                 \"length\": int(hyperpath.length),",
+        "184 |                 \"label\": hyperpath.label if (hyperpath.label is None or isinstance(hyperpath.label, str)) else str(hyperpath.label),",
+        "186 |             self.emit_event({\"ts\": _now_iso_utc(), \"kind\": \"EAT\", \"payload\": payload})",
+        "187 |         except Exception:",
+        "188 |             pass",
+        "189 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/eat_logger.py",
+      "line": 207,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "203 |         try:",
+        "205 |             self.emit_event({\"ts\": now_t_iso or _now_iso_utc(), \"kind\": \"GROW\", \"payload\": payload})",
+        "206 |         except Exception:",
+        "207 |             pass",
+        "208 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/eat_logger.py",
+      "line": 227,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "223 |             edges = [{\"id\": str(k), \"reliability\": float(v)} for k, v in updated.items()]",
+        "225 |             self.emit_event({\"ts\": now_t_iso or _now_iso_utc(), \"kind\": \"UPDATE\", \"payload\": payload})",
+        "226 |         except Exception:",
+        "227 |             pass",
+        "228 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/eat_logger.py",
+      "line": 259,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "255 |                 self._f = self.path.open(\"a\", encoding=\"utf-8\")",
+        "256 |                 self._last_hash = None",
+        "257 |         except Exception:",
+        "258 |             # Non-fatal",
+        "259 |             pass",
+        "260 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/replay.py",
+      "line": 77,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "73 |     try:",
+        "74 |         random.seed(int(seeds.python))",
+        "75 |     except Exception:",
+        "76 |         # Extremely defensive; if this fails, leave state as-is",
+        "77 |         pass",
+        "78 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/replay.py",
+      "line": 103,
+      "type": "pass",
+      "category": "optional_cuda_seed",
+      "context": [
+        "98 |                 if hasattr(torch, \"cuda\") and callable(getattr(torch.cuda, \"is_available\", None)) and torch.cuda.is_available():  # type: ignore[attr-defined]",
+        "100 |                         torch.cuda.manual_seed_all(int(seeds.torch))  # type: ignore[attr-defined]",
+        "101 |                     except Exception:",
+        "102 |                         # CUDA seeding best-effort",
+        "103 |                         pass",
+        "104 |                 applied[\"torch\"] = int(seeds.torch)"
+      ]
+    },
+    {
+      "file": "dch_pipeline/replay.py",
+      "line": 141,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "137 |             ver = getattr(np, \"__version__\", None)",
+        "139 |                 packages[\"numpy\"] = ver",
+        "140 |     except Exception:",
+        "141 |         pass",
+        "142 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/logging_utils.py",
+      "line": 319,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "315 |             return",
+        "316 |         try:",
+        "317 |             self._writer.add_scalar(tag, float(value), None if step is None else int(step))",
+        "318 |         except Exception:",
+        "319 |             pass",
+        "320 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/logging_utils.py",
+      "line": 335,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "331 |         try:",
+        "333 |             self._writer.add_histogram(tag, values, None if step is None else int(step))",
+        "334 |         except Exception:",
+        "335 |             pass",
+        "336 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/logging_utils.py",
+      "line": 342,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "338 |         if self.is_active:",
+        "340 |                 self._writer.flush()",
+        "341 |             except Exception:",
+        "342 |                 pass",
+        "343 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/logging_utils.py",
+      "line": 350,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "345 |         if self.is_active:",
+        "347 |                 self._writer.flush()",
+        "348 |                 self._writer.close()",
+        "349 |             except Exception:",
+        "350 |                 pass",
+        "351 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/crc_logger.py",
+      "line": 45,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "41 |         self.path = Path(path)",
+        "42 |         try:",
+        "43 |             self.path.parent.mkdir(parents=True, exist_ok=True)",
+        "44 |         except Exception:",
+        "45 |             # Non-fatal",
+        "46 |             pass"
+      ]
+    },
+    {
+      "file": "dch_pipeline/crc_logger.py",
+      "line": 68,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "64 |             with self.path.open(\"a\", encoding=\"utf-8\") as f:",
+        "65 |                 f.write(json.dumps(rec, ensure_ascii=False, separators=(\",\", \":\"), sort_keys=True) + \"\\n\")",
+        "66 |         except Exception:",
+        "67 |             # Non-fatal logging",
+        "68 |             pass",
+        "69 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/determinism.py",
+      "line": 71,
+      "type": "pass",
+      "category": "fallback_sort_key",
+      "context": [
+        "67 |     if \"id\" in e:",
+        "68 |         try:",
+        "69 |             return (\"id\", str(e.get(\"id\")))",
+        "70 |         except Exception:",
+        "71 |             pass",
+        "72 |     # fallback sort by mean"
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 452,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "447 |                             res = self._dpo_engine.apply(rule, DPO_Match(), self._dpo_adapter)  # type: ignore[arg-type]",
+        "449 |                                 added_ids.extend([str(x) for x in res.changes.get(\"added_edges\", [])])",
+        "450 |                         except Exception:",
+        "451 |                             # Skip candidate on failure; rely on legacy fallback if nothing added",
+        "452 |                             pass",
+        "453 |                     metrics[\"n_admitted\"] += len(added_ids)"
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 473,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "469 |             if getattr(self, \"_audit\", None) and admitted_ids:",
+        "471 |                     self._audit.emit_grow(admitted_ids, now_t_iso)",
+        "472 |                 except Exception:",
+        "473 |                     pass",
+        "474 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 521,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "515 |             if getattr(self, \"_audit\", None) and hp_list_all:",
+        "519 |                         self._audit.emit_eat(_hp, now_t_us)",
+        "520 |                 except Exception:",
+        "521 |                     pass",
+        "522 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 572,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "568 |                                 if getattr(self, \"_crc_logger\", None) is not None:",
+        "570 |                                         self._crc_logger.append(card)",
+        "571 |                                     except Exception:",
+        "572 |                                         pass",
+        "573 |                             except Exception:",
+        "574 |                                 # Do not affect main pipeline on CRC failures"
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 575,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "571 |                                     except Exception:",
+        "572 |                                         pass",
+        "573 |                             except Exception:",
+        "574 |                                 # Do not affect main pipeline on CRC failures",
+        "575 |                                 pass",
+        "576 |                     except Exception:"
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 578,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "575 |                                 pass",
+        "576 |                     except Exception:",
+        "577 |                         # Keep pipeline robust; continue other candidates",
+        "578 |                         pass",
+        "579 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 599,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "595 |             if getattr(self, \"_audit\", None) and updated:",
+        "597 |                     self._audit.emit_update(updated, now_t_iso)",
+        "598 |                 except Exception:",
+        "599 |                     pass",
+        "600 | "
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 627,
+      "type": "pass",
+      "category": "robustness_swallow",
+      "context": [
+        "622 |                                 res = self._dpo_engine.apply(rule, DPO_Match(edge_id=eid), self._dpo_adapter)  # type: ignore[arg-type]",
+        "624 |                                     removed += 1",
+        "625 |                             except Exception:",
+        "626 |                                 # Continue on per-edge failure",
+        "627 |                                 pass",
+        "628 |                     metrics[\"n_pruned\"] = removed"
+      ]
+    },
+    {
+      "file": "dch_pipeline/pipeline.py",
+      "line": 801,
+      "type": "pass",
+      "category": "logging_non_fatal",
+      "context": [
+        "795 |                             logging.getLogger(__name__).info(",
+        "798 |                                 pipeline.manifold.version(),",
+        "799 |                             )",
+        "800 |                         except Exception:",
+        "801 |                             pass",
+        "802 |                     except Exception:"
+      ]
+    },
+    {
+      "file": "dch_pipeline/evaluation.py",
+      "line": 385,
+      "type": "NotImplementedError",
+      "category": "intentional_stub",
+      "context": [
+        "381 |             NotImplementedError: if y_score is provided.",
+        "382 |             ValueError: on shape or label validation errors.",
+        "384 |         if y_score is not None:",
+        "385 |             raise NotImplementedError(\"StreamingEvaluator supports only y_pred in this subtask.\")",
+        "386 | ",
+        "387 |         yt = _to_int1d(y_true, \"y_true\")"
+      ]
+    }
+  ]
+}

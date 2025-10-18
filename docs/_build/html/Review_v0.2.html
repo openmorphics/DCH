@@ -1,0 +1,471 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>DCH v0.2 — Internal Review Package - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/Review_v0.2.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dch-v0-2-internal-review-package">
+<h1>DCH v0.2 — Internal Review Package<a class="headerlink" href="#dch-v0-2-internal-review-package" title="Link to this heading">¶</a></h1>
+<p>Purpose</p>
+<ul class="simple">
+<li><p>Drive the internal review for v0.2 of the Dynamic Causal Hypergraph (DCH) specification and code plan.</p></li>
+<li><p>Provide reviewer checklist, automated validation results, findings, proposed edits, and a sign‑off rubric.</p></li>
+</ul>
+<p>Scope of review (documents and code artifacts)</p>
+<ul class="simple">
+<li><p>Master spec: docs/DCH_TechSpec_v0.1.md</p></li>
+<li><p>Assembled one‑file spec: docs/DCH_TechSpec_v0.1_assembled.md</p></li>
+<li><p>Printable HTML artifact (render + print to PDF): docs/export/DCH_TechSpec_v0.1.html</p></li>
+<li><p>Diagrams index and report: docs/DiagramsIndex.md, docs/DiagramsReport.md</p></li>
+<li><p>Links validation report: docs/LinksReport.md</p></li>
+<li><p>Go/No-Go brief: docs/GoNoGo.md</p></li>
+<li><p>Prototype modules (heads‑up only for context): dch_core/* and tests/*</p></li>
+</ul>
+<p>Automated validation summary (current state)</p>
+<ul class="simple">
+<li><p>Diagrams (Mermaid): PASS (0 issues)</p>
+<ul>
+<li><p>Validator: scripts/check_diagrams.py</p></li>
+<li><p>Report: docs/DiagramsReport.md</p></li>
+</ul>
+</li>
+<li><p>Links and anchors across repo: PASS (0 issues)</p>
+<ul>
+<li><p>Validator: scripts/check_links.py</p></li>
+<li><p>Latest report: docs/LinksReport.md</p></li>
+</ul>
+</li>
+<li><p>Integration tests: PASS</p>
+<ul>
+<li><p>tests/test_integration_smoke.py — OK</p></li>
+<li><p>tests/test_fsm_minimal.py — OK</p></li>
+<li><p>tests/synthetic_micro.py — OK</p></li>
+</ul>
+</li>
+</ul>
+<p>Reviewer checklist (tick each when verified)</p>
+<ol class="arabic simple">
+<li><p>Formalism and invariants</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Section 1 definitions V(t), E(t), hyperedge attributes (Δmin, Δmax, ρ, r) are precise and consistent with usage.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> B‑connectivity semantics explicitly constrain backward traversal; examples reflect AND frontier semantics.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Invariants and safety (reliability bounds, no head clashes &lt; ρ, acyclicity under ABSTRACT) are stated and cross‑referenced.</p></li>
+</ul>
+</li>
+<li><p>Algorithms — DHG construction (TC‑kNN)</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Presyn source discovery (Pred(j)) and temporal windows align with defaults (1–30 ms; δ_causal = 2 ms).</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Candidate generation includes unary and multi‑tail within δ_causal; dedup and budgets specified.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Initialization and admission policies are justified; complexity and data structures described.</p></li>
+</ul>
+</li>
+<li><p>Algorithms — Plasticity and pruning</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Predict/confirm/miss watcher model specified; discounted counts and EMA rule (α=0.1, clamp [0.02,0.98]) match Section 3.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Pruning thresholds and “use it or lose it” policy control growth; housekeeping documented.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Concurrency determinism called out (update order, timestamps).</p></li>
+</ul>
+</li>
+<li><p>Algorithms — Credit assignment traversal</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Multi‑start randomized beam traversal parameters (M,L,B,τ_select,H_back) present and reasonable.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Temporal logic constraints (Δ windows, refractory) enforced in traversal; B‑connectivity implemented.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Path score aggregation and contribution semantics unambiguous.</p></li>
+</ul>
+</li>
+<li><p>Algorithms — Embeddings and grouping</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> WL streaming embedding role (online grouping) vs. periodic SAGE refinement separated and justified.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Causal‑context similarity used only to group/guide, not to assert causation.</p></li>
+</ul>
+</li>
+<li><p>Algorithms — Streaming FSM and rules</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Canonicalization, windowed heavy hitters/CMS, thresholds (W, s_min, r_min, γ) consistent and motivated.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Promotion produces RuleDescriptor and integrates with HOE abstraction.</p></li>
+</ul>
+</li>
+<li><p>Hierarchical abstraction (HOEs) and scaffolding</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> HOE creation constraints prevent cycles/duplication; provenance stored.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Task‑aware scaffolding (REUSE/ISOLATE/HYBRID) policy parameters and freeze semantics defined; regionization clear.</p></li>
+</ul>
+</li>
+<li><p>Interfaces and complexity/resource model</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Section 9 interfaces map cleanly to prototype structures.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Section 10 latency/memory targets achievable under stated workloads (DVS Gesture, N‑MNIST).</p></li>
+</ul>
+</li>
+<li><p>Evaluation and tuning</p>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Datasets, metrics, ablations, acceptance thresholds enumerated and feasible.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Tuning defaults and safe ranges cross‑referenced from Section 13.</p></li>
+</ul>
+</li>
+<li><p>Risks and hardware co‑design</p></li>
+</ol>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Risk/runbooks present (combinatorics, drift, forgetting, latency).</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Causa‑Chip mapping coherent: GSE, GMF, PTA, FSM, MC; dataflows align with SLOs.</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Export readiness</p></li>
+</ol>
+<ul class="contains-task-list simple">
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Printable HTML artifact renders all Mermaid diagrams and internal links.</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> PDF export pathway documented (pandoc or browser print); link integrity preserved.</p></li>
+</ul>
+<p>Findings (current)</p>
+<ul class="simple">
+<li><p>Diagrams and links: Zero issues reported by validators.</p></li>
+<li><p>Tests: All green on integration, FSM minimal, synthetic micro.</p></li>
+<li><p>Export: Browser‑printable HTML artifact available (docs/export/DCH_TechSpec_v0.1.html).</p>
+<ul>
+<li><p>Pandoc CLI path is prepared but requires local installation or running Docker daemon (currently not active).</p></li>
+</ul>
+</li>
+<li><p>Repository hygiene: docs assembled spec present; links normalized for intra‑repo navigation.</p></li>
+</ul>
+<p>Proposed v0.2 edits (document‑level; non‑breaking, clarity and completeness)</p>
+<ol class="arabic simple">
+<li><p>Formal clarifications</p>
+<ul class="simple">
+<li><p>Add explicit B‑connectivity definition box with small proof sketch of traversal admissibility.</p></li>
+<li><p>Introduce canonical anchor IDs for all major subsections using {#…} to stabilize cross‑links.</p></li>
+</ul>
+</li>
+<li><p>Algorithmic pseudocode inserts</p>
+<ul class="simple">
+<li><p>Provide concise pseudocode blocks for TC‑kNN candidate generation and randomized beam traversal.</p></li>
+<li><p>Provide a worked example for path evidence aggregation and EMA update with numbers.</p></li>
+</ul>
+</li>
+<li><p>FSM details</p>
+<ul class="simple">
+<li><p>Specify CMS width/depth defaults and W‑window semantics; add hysteresis on promotions.</p></li>
+<li><p>Clarify canonical label stability requirements under streaming updates.</p></li>
+</ul>
+</li>
+<li><p>Diagram polish</p>
+<ul class="simple">
+<li><p>Add figure numbers/titles and cross references; ensure consistent node legends across all Mermaid diagrams.</p></li>
+</ul>
+</li>
+<li><p>Embedding roadmap</p>
+<ul class="simple">
+<li><p>Add a “Periodic GraphSAGE refinement” stub with cadence and resource guardrail callouts.</p></li>
+</ul>
+</li>
+<li><p>Evaluation addenda</p>
+<ul class="simple">
+<li><p>Add a brief on event‑stream corruption/noise ablations and their expected impact on budgets/pruning.</p></li>
+</ul>
+</li>
+<li><p>Export appendix</p>
+<ul class="simple">
+<li><p>Add a short “How to export” appendix with exact pandoc/docker/browser flows.</p></li>
+</ul>
+</li>
+</ol>
+<p>Code‑adjacent proposals (prototype curvature; tracked for implementation sprints)</p>
+<ul class="simple">
+<li><p>dch_core/embeddings: add placeholder interface for periodic SAGE (disabled by default).</p></li>
+<li><p>dch_core/fsm: expose W, s_min, r_min, γ as config and add hysteresis on promotion.</p></li>
+<li><p>dch_core/traversal: optional audit trace mode for reviewer reproducibility.</p></li>
+</ul>
+<p>Reviewer actions</p>
+<ul class="simple">
+<li><p>Use the checklist above; record decisions and comments inline under each item (add “Decision”/“Notes” subsections as needed).</p></li>
+<li><p>Where “Proposed v0.2 edits” are accepted, mark [x] and leave a short instruction (file + anchor).</p></li>
+</ul>
+<p>Sign‑off rubric (fill)</p>
+<ul class="simple">
+<li><p>Research Lead: decision / name / date</p></li>
+<li><p>Engineering Lead: decision / name / date</p></li>
+<li><p>Hardware Lead: decision / name / date</p></li>
+<li><p>QA Lead: decision / name / date</p></li>
+</ul>
+<p>Appendix — handy commands</p>
+<ul class="simple">
+<li><p>Re‑run diagrams validator:  python3 scripts/check_diagrams.py</p></li>
+<li><p>Re‑run link validator:      python3 scripts/check_links.py</p></li>
+<li><p>Assemble one‑file spec:     python3 scripts/build_master_md.py</p></li>
+<li><p>Open printable artifact:     open docs/export/DCH_TechSpec_v0.1.html</p></li>
+</ul>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=01f34227"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

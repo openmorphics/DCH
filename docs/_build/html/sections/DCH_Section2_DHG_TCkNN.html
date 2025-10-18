@@ -1,0 +1,638 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 2 Dynamic Hypergraph Construction with TC kNN - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section2_DHG_TCkNN.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-2-dynamic-hypergraph-construction-with-tc-knn">
+<h1>Dynamic Causal Hypergraph DCH — Section 2 Dynamic Hypergraph Construction with TC kNN<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-2-dynamic-hypergraph-construction-with-tc-knn" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a>
+Cross reference Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Purpose and scope</p></li>
+</ol>
+<ul class="simple">
+<li><p>Define the online construction of E t around each postsynaptic spike event</p></li>
+<li><p>Specify TC kNN candidate selection higher order combination generation deduplication initialization and resource controls</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Inputs and outputs
+Inputs</p></li>
+</ol>
+<ul class="simple">
+<li><p>Event stream of spike vertices v equals neuron id comma timestamp</p></li>
+<li><p>Presynaptic adjacency Pred j for each neuron j</p></li>
+<li><p>Temporal parameters Δ min Δ max δ causal refractory ρ</p></li>
+<li><p>Budgets k max per head budget M in combinations cap C cap</p></li>
+</ul>
+<p>Outputs</p>
+<ul class="simple">
+<li><p>New hyperedges added to E t with initialized attributes and provenance</p></li>
+<li><p>Rejected candidate statistics for meta controller feedback</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Preliminaries and data structures
+Event buffers</p></li>
+</ol>
+<ul class="simple">
+<li><p>For each neuron i maintain a time sorted ring buffer B i of recent spike vertices with capacity measured by time horizon T ret and item cap N ret</p></li>
+<li><p>Support binary search by timestamp and append amortized O one</p></li>
+</ul>
+<p>Hyperedge stores</p>
+<ul class="simple">
+<li><p>incoming by head maps a head vertex id to a list of incident hyperedge ids</p></li>
+<li><p>by tail signature maps a canonical tail signature key to hyperedge id for deduplication</p></li>
+<li><p>recent heads by neuron maps neuron id to recent head vertex timestamps for enforcing refractory</p></li>
+</ul>
+<p>Canonical tail signature</p>
+<ul class="simple">
+<li><p>Define sig Tail as multiset of ordered pairs neuron id comma time sorted by time then neuron id</p></li>
+<li><p>Key equals hash of sig Tail concatenated with head vertex id</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>TC kNN candidate generation around a post spike
+Trigger</p></li>
+</ol>
+<ul class="simple">
+<li><p>When a spike v post equals neuron j comma time t j arrives begin candidate search</p></li>
+</ul>
+<p>Step A presynaptic lookup</p>
+<ul class="simple">
+<li><p>Retrieve Pred j from adjacency</p></li>
+<li><p>For each i in Pred j query B i for the most recent spike u i with time t i in interval t j minus Δ max to t j minus Δ min</p></li>
+<li><p>If none found for i skip i else add u i to set U j</p></li>
+</ul>
+<p>Step B unary candidates</p>
+<ul class="simple">
+<li><p>For each u in U j create a unary candidate Tail equals { u } and Head equals { v post }</p></li>
+</ul>
+<p>Step C higher order candidates up to k max</p>
+<ul class="simple">
+<li><p>Form all combinations of U j of size m for m in 2 to k max subject to temporal coherence constraint</p></li>
+<li><p>Temporal coherence requires max time of tails minus min time of tails less or equal δ causal</p></li>
+<li><p>For each coherent combination form Tail equals that combination and Head equals { v post }</p></li>
+</ul>
+<p>Step D candidate scoring and admission control</p>
+<ul class="simple">
+<li><p>Compute candidate priority score s cand using heuristics</p>
+<ul>
+<li><p>Delay closeness term equals mean over u in Tail of one minus abs t j minus t u minus μ Δ divided by Δ span where μ Δ equals mid of Δ min and Δ max and Δ span equals Δ max minus Δ min</p></li>
+<li><p>Fan in cost term penalizes large m for example λ m equals m divided by k max</p></li>
+<li><p>Priority s cand equals w delay times delay closeness plus w size times 1 minus λ m defaults w delay equals 0.7 w size equals 0.3</p></li>
+</ul>
+</li>
+<li><p>Maintain per head budget M in and global combinations cap C cap per post spike</p></li>
+<li><p>Select top candidates by s cand until budgets are met</p></li>
+</ul>
+<p>Step E deduplication</p>
+<ul class="simple">
+<li><p>For each selected candidate build sig Tail and key</p></li>
+<li><p>If key exists in by tail signature skip else continue</p></li>
+</ul>
+<p>Step F initialize hyperedge and insert</p>
+<ul class="simple">
+<li><p>Create edge e with attributes</p>
+<ul>
+<li><p>Tail as selected set of tail vertices</p></li>
+<li><p>Head equals { v post }</p></li>
+<li><p>Δ min Δ max ρ inherited from defaults or per neuron tables</p></li>
+<li><p>reliability score r e initialized to epsilon init default 0.05</p></li>
+<li><p>created at equals t j last update time equals t j usage count equals 0 type equals event edge</p></li>
+</ul>
+</li>
+<li><p>Insert e into E t and update indexes incoming by head and by tail signature and recent heads by neuron for refractory checks</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Refractory enforcement and conflict resolution</p></li>
+</ol>
+<ul class="simple">
+<li><p>Before inserting any edge with Head neuron j verify that no accepted head for neuron j exists in interval t j minus ρ to t j plus ρ</p></li>
+<li><p>If conflict occurs apply deterministic tie break</p>
+<ul>
+<li><p>Prefer the head with larger s cand</p></li>
+<li><p>If equal prefer earlier timestamp to reduce pile up</p></li>
+</ul>
+</li>
+<li><p>Edges referencing a rejected head are discarded</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Provenance and audit metadata</p></li>
+</ol>
+<ul class="simple">
+<li><p>Record for each inserted edge the candidate score s cand and the list of presynaptic neuron ids and time lags Δ u equals t j minus t u</p></li>
+<li><p>Maintain a creation token equals tuple of head vertex id and tail signature to support idempotent replay</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Parameter table defaults</p></li>
+</ol>
+<ul class="simple">
+<li><p>Δ min equals 1000 microseconds Δ max equals 30000 microseconds δ causal equals 2000 microseconds ρ equals 1000 microseconds</p></li>
+<li><p>k max equals 3 M in equals 6 C cap equals 10 epsilon init equals 0.05</p></li>
+<li><p>w delay equals 0.7 w size equals 0.3</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Complexity analysis
+Notation</p></li>
+</ol>
+<ul class="simple">
+<li><p>d j equals degree of Pred j</p></li>
+<li><p>b equals average buffer size per neuron within window</p></li>
+<li><p>c equals number of coherent tails admitted before budget</p></li>
+</ul>
+<p>Costs per post spike</p>
+<ul class="simple">
+<li><p>Presyn lookup O d j</p></li>
+<li><p>For each i binary search in B i O log b and constant time verification per match total O d j log b</p></li>
+<li><p>Combination enumeration worst case sum over m from 2 to k max of C of U j choose m bounded by budgets yields O c</p></li>
+<li><p>Deduplication and insert O 1 amortized via hash maps</p></li>
+</ul>
+<p>Memory</p>
+<ul class="simple">
+<li><p>Event buffers sum over i of size B i bounded by T ret and N ret</p></li>
+<li><p>Hyperedges active equals size of E t bounded by pruning policy and budgets</p></li>
+<li><p>Indexes proportional to number of active edges</p></li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>Concurrency and ordering</p></li>
+</ol>
+<ul class="simple">
+<li><p>Process events in nondecreasing timestamp order</p></li>
+<li><p>Apply per neuron j critical section for refractory and insertion to avoid races</p></li>
+<li><p>Use lock free ring buffers for B i and atomic increments for counters</p></li>
+<li><p>Idempotent creation by checking creation token before insert enables safe replays</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Failure and backpressure handling</p></li>
+</ol>
+<ul class="simple">
+<li><p>If budgets exceeded drop lowest s cand and increment rejected counters</p></li>
+<li><p>If buffer overflow occurs advance head of ring buffer and increment buffer evict counter</p></li>
+<li><p>If time skew detected for input events stash out of order events until watermark advances</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Interfaces aligned to module contracts
+Event ingestion to DHG</p></li>
+</ol>
+<ul class="simple">
+<li><p>on post spike inputs neuron id j and timestamp t j returns list of created edge ids may be empty</p></li>
+<li><p>get rejected stats returns struct with counts per reason and recent averages</p></li>
+</ul>
+<p>Query</p>
+<ul class="simple">
+<li><p>get tails for head head vertex id returns list of tail sets and edge ids</p></li>
+<li><p>exists edge key returns boolean</p></li>
+</ul>
+<p>Configuration</p>
+<ul class="simple">
+<li><p>set params provide Δ min Δ max δ causal ρ k max M in C cap weights and epsilon init</p></li>
+<li><p>get params returns current table possibly per neuron overrides</p></li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>Optional variants and extensions
+Adaptive windows</p></li>
+</ol>
+<ul class="simple">
+<li><p>Maintain per neuron pair i to j estimates of empirical delay distribution using exponential histograms</p></li>
+<li><p>Modulate Δ min and Δ max around current percentiles for that pair</p></li>
+</ul>
+<p>Ranked K for presyn</p>
+<ul class="simple">
+<li><p>Instead of only the most recent u i choose top K i recent spikes in the window and allow more combinations while tightening budgets</p></li>
+</ul>
+<p>Synaptic priors</p>
+<ul class="simple">
+<li><p>If the SNN exposes synaptic strength use it as a prior multiplier in s cand</p></li>
+</ul>
+<ol class="arabic simple" start="13">
+<li><p>Quality metrics for the DHG module</p></li>
+</ol>
+<ul class="simple">
+<li><p>Candidate hit rate equals created edges divided by evaluated candidates</p></li>
+<li><p>Deduplication rate equals skipped duplicates divided by evaluated candidates</p></li>
+<li><p>Average tails per head vertex</p></li>
+<li><p>Average admitted combination size</p></li>
+<li><p>End to end latency per post spike for DHG path</p></li>
+</ul>
+<ol class="arabic simple" start="14">
+<li><p>Mermaid diagram enhanced TC kNN flow</p></li>
+</ol>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart TB
+POST[Post spike j at time t j] --&gt; A1[Lookup Pred j]
+A1 --&gt; A2[Find most recent presyn spikes in window]
+A2 --&gt; A3[Form unary and multi tail candidates up to k max]
+A3 --&gt; A4[Temporal coherence filter within delta causal]
+A4 --&gt; A5[Score candidates and apply budgets]
+A5 --&gt; A6[Deduplicate by tail signature]
+A6 --&gt; A7[Refractory check and conflict resolve]
+A7 --&gt; A8[Insert edges and update indexes]
+</pre></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Acceptance criteria for Section 2</p></li>
+</ol>
+<ul class="simple">
+<li><p>TC kNN generation defined for unary and higher order tails with temporal coherence</p></li>
+<li><p>Budgets scoring deduplication initialization and refractory policy specified</p></li>
+<li><p>Complexity and memory bounds presented with symbols d j b c</p></li>
+<li><p>Interfaces align with contracts in outline and observability metrics defined</p></li>
+<li><p>Enhanced diagram included and consistent with outline</p></li>
+</ul>
+<ol class="arabic simple" start="16">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Formal symbols and validity constraints in Section 1 see <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p></li>
+<li><p>Plasticity updates in Section 3 see <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+<li><p>Traversal and credit assignment in Section 5 see <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+</ul>
+<p>End of Section 2</p>
+<section id="pseudocode-tcknn-candidate-generation-and-admission">
+<h2>17. Pseudocode — TC‑kNN candidate generation and admission<a class="headerlink" href="#pseudocode-tcknn-candidate-generation-and-admission" title="Link to this heading">¶</a></h2>
+<div class="highlight-pseudo notranslate"><div class="highlight"><pre><span></span># Inputs:
+#  - j: postsynaptic neuron id
+#  - t_j: postsynaptic spike time
+#  - Pred(j): presynaptic neuron set
+#  - B_i: per-neuron ring buffers (time-sorted) for recent spikes
+#  - Params: Δ_min, Δ_max, δ_causal, ρ, k_max, M_in, C_cap,
+#            w_delay, w_size, ε_init
+#  - Indexes: incoming_by_head, by_tail_signature, recent_heads_by_neuron
+
+function dhg_tc_knn_on_post_spike(j, t_j, Pred, Buffers, Params, Indexes):
+    U_j ← ∅
+    # Step A: presynaptic lookup within temporal window
+    for i in Pred(j):
+        u_i ← most_recent_spike_in_window(Buffers[i], [t_j - Δ_max, t_j - Δ_min])
+        if u_i ≠ ⊥:
+            U_j ← U_j ∪ { u_i }
+
+    Cands ← ∅
+    # Step B: unary candidates
+    for u in U_j:
+        Cands.add( (Tail={u}, Head={⟨j, t_j⟩}) )
+
+    # Step C: higher‑order candidates up to k_max with temporal coherence
+    # Enumerate combinations of U_j of size m ∈ [2, k_max]
+    for m in 2..k_max:
+        for comb in combinations(U_j, m):
+            t_min ← min(time(u) for u in comb)
+            t_max ← max(time(u) for u in comb)
+            if (t_max - t_min) ≤ δ_causal:
+                Cands.add( (Tail=comb, Head={⟨j, t_j⟩}) )
+
+    # Step D: candidate scoring and admission budgets
+    # Delay closeness per-tail averaged to prefer the middle of [Δ_min, Δ_max]
+    μ_Δ ← (Δ_min + Δ_max)/2
+    Δ_span ← (Δ_max - Δ_min)
+    Scored ← []
+    for c in Cands:
+        delays ← [ t_j - time(u) for u in c.Tail ]
+        delay_closeness ← mean( 1 - |Δ - μ_Δ|/Δ_span for Δ in delays )
+        λ_m ← |c.Tail| / k_max                       # fan‑in penalty
+        s_cand ← w_delay * delay_closeness + w_size * (1 - λ_m)
+        Scored.append( (c, s_cand) )
+
+    # Respect per‑head and per‑post budgets
+    Scored.sort_by_descending_score()
+    Admitted ← take_first_k(Scored, limit=M_in, also_cap=C_cap)
+
+    NewEdges ← []
+    # Step E/F: deduplicate, refractory check, and insert
+    for (c, s) in Admitted:
+        key ← make_tail_signature_key(c.Tail, c.Head)   # sorted by (time, neuron)
+        if by_tail_signature.contains(key):
+            continue
+
+        # Refractory: ensure no accepted head for neuron j within [t_j - ρ, t_j + ρ]
+        if Indexes.recent_heads_by_neuron[j].has_collision(t_j, ρ):
+            # Tie‑break if needed: prefer higher s_cand; else earlier t
+            if not passes_tie_break(j, t_j, s):
+                continue
+
+        e ← Hyperedge(
+                Tail=c.Tail,
+                Head=c.Head,
+                Δ_min=Δ_min, Δ_max=Δ_max, ρ=ρ,
+                r=ε_init,
+                created_at=t_j,
+                last_update=t_j,
+                usage_count=0,
+                type=&quot;event_edge&quot;,
+                provenance={ &quot;score&quot;: s,
+                             &quot;lags&quot;: [ t_j - time(u) for u in c.Tail ],
+                             &quot;pred&quot;: list(Pred(j)) }
+            )
+
+        insert_into_E(e)
+        Indexes.incoming_by_head[head_vertex_id(c.Head)].append(e.id)
+        Indexes.by_tail_signature[key] ← e.id
+        Indexes.recent_heads_by_neuron[j].record(t_j)
+        NewEdges.append(e.id)
+
+    return NewEdges
+</pre></div>
+</div>
+<p>Complexity note</p>
+<ul class="simple">
+<li><p>Presyn lookup: O(|Pred(j)| · log b) via buffer binary search (b = avg buffer size).</p></li>
+<li><p>Combination enumeration bounded by budgets M_in and C_cap; coherence filter reduces blow‑up.</p></li>
+<li><p>Dedup and insert amortized O(1) with hashing.</p></li>
+</ul>
+<p>Figure 2 — TC‑kNN pseudocode summary<br />
+The procedure mirrors Sections 4–7: presyn search, coherent combination, heuristic scoring, budgeted admission, deduplication, refractory safety, and indexed insertion with initialized reliability r = ε_init.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Dynamic Causal Hypergraph DCH — Section 2 Dynamic Hypergraph Construction with TC kNN</a><ul>
+<li><a class="reference internal" href="#pseudocode-tcknn-candidate-generation-and-admission">17. Pseudocode — TC‑kNN candidate generation and admission</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

@@ -1,0 +1,204 @@
+{
+  "generated_at": "2025-10-15T16:11:58Z",
+  "version": "0.9.0",
+  "scope": "API surface completeness vs spec",
+  "components": [
+    {
+      "name": "HypergraphOps",
+      "spec": { "file": "dch_core/interfaces.py", "line": 182 },
+      "implemented_by": [
+        { "file": "dch_core/hypergraph_mem.py", "class": "InMemoryHypergraph", "line": 47 }
+      ],
+      "apis": [
+        { "name": "ingest_event", "status": "implemented" },
+        { "name": "window_query", "status": "implemented", "notes": "O(N) scan in in-memory backend" },
+        { "name": "get_vertex", "status": "implemented" },
+        { "name": "get_edge", "status": "implemented" },
+        { "name": "get_incoming_edges", "status": "implemented" },
+        { "name": "get_outgoing_edges", "status": "implemented" },
+        { "name": "insert_hyperedges", "status": "implemented", "notes": "dedup by (head,sorted(tail))" },
+        { "name": "prune", "status": "implemented" },
+        { "name": "snapshot", "status": "implemented" }
+      ],
+      "status": "implemented",
+      "notes": "Adequate for CPU tests; optimized stores can slot under same Protocol."
+    },
+    {
+      "name": "GraphConnectivity",
+      "spec": { "file": "dch_core/interfaces.py", "line": 218 },
+      "implemented_by": [
+        { "file": "dch_core/hypergraph_mem.py", "class": "StaticGraphConnectivity", "line": 158 }
+      ],
+      "apis": [
+        { "name": "presyn_sources", "status": "implemented" }
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "DHGConstructor",
+      "spec": { "file": "dch_core/interfaces.py", "line": 227 },
+      "implemented_by": [
+        { "file": "dch_core/dhg.py", "class": "DefaultDHGConstructor", "line": 127 }
+      ],
+      "apis": [
+        { "name": "generate_candidates_tc_knn", "file": "dch_core/dhg.py", "line": 132, "status": "implemented" },
+        { "name": "admit", "file": "dch_core/dhg.py", "line": 258, "status": "implemented" }
+      ],
+      "status": "implemented",
+      "notes": "Unary and size-2/3 combos with time clustering, refractory, dedup, budget heuristic."
+    },
+    {
+      "name": "TraversalEngine",
+      "spec": { "file": "dch_core/interfaces.py", "line": 259 },
+      "implemented_by": [
+        { "file": "dch_core/traversal.py", "class": "DefaultTraversalEngine", "line": 90 }
+      ],
+      "apis": [
+        { "name": "backward_traverse", "file": "dch_core/traversal.py", "line": 103, "status": "implemented", "notes": "AND-frontier; deterministic top-K; rng reserved" }
+      ],
+      "status": "implemented",
+      "gaps": [ "No randomized branching policy", "No explicit BFS mode" ]
+    },
+    {
+      "name": "PlasticityEngine (EMA)",
+      "spec": { "file": "dch_core/interfaces.py", "line": 282 },
+      "implemented_by": [
+        { "file": "dch_core/plasticity.py", "class": "DefaultPlasticityEngine", "line": 31 }
+      ],
+      "apis": [
+        { "name": "update_from_evidence", "file": "dch_core/plasticity.py", "line": 40, "status": "implemented" },
+        { "name": "prune", "file": "dch_core/plasticity.py", "line": 90, "status": "implemented" }
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "PlasticityEngine (Beta)",
+      "spec": { "file": "dch_core/interfaces.py", "line": 282 },
+      "implemented_by": [
+        { "file": "dch_core/plasticity_beta.py", "class": "BetaPlasticityEngine", "line": 59 }
+      ],
+      "apis": [
+        { "name": "update_from_evidence", "file": "dch_core/plasticity_beta.py", "line": 94, "status": "implemented" },
+        { "name": "prune", "file": "dch_core/plasticity_beta.py", "line": 168, "status": "implemented" }
+      ],
+      "status": "implemented",
+      "notes": "Posterior-mean reliability; counters s/f; MC credible intervals via beta_utils."
+    },
+    {
+      "name": "FSMEngine",
+      "spec": { "file": "dch_core/interfaces.py", "line": 321 },
+      "implemented_by": [
+        { "file": "dch_core/fsm.py", "class": "StreamingFSMEngine", "line": 47 }
+      ],
+      "apis": [
+        { "name": "observe", "file": "dch_core/fsm.py", "line": 81, "status": "implemented" },
+        { "name": "pop_promotions", "file": "dch_core/fsm.py", "line": 109, "status": "implemented" }
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "AbstractionEngine",
+      "spec": { "file": "dch_core/interfaces.py", "line": 336 },
+      "implemented_by": [
+        { "file": "dch_core/abstraction.py", "class": "DefaultAbstractionEngine", "line": 64 }
+      ],
+      "apis": [
+        { "name": "promote", "file": "dch_core/abstraction.py", "line": 84, "status": "implemented", "notes": "HOE creation; dedup; floor/min aggregation" }
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "CRCExtractor",
+      "spec": { "file": "docs/AlgorithmSpecs.md", "line": 343 },
+      "implemented_by": [
+        { "file": "dch_core/crc.py", "class": "CRCExtractor", "line": 47 }
+      ],
+      "apis": [
+        { "name": "make_card", "file": "dch_core/crc.py", "line": 68, "status": "implemented" }
+      ],
+      "status": "implemented",
+      "gaps": [ "Traversal scoring does not yet incorporate CRC priors (planned WS-D)" ]
+    },
+    {
+      "name": "ManifoldBackend (CMC)",
+      "spec": { "file": "dch_core/manifold.py", "line": 32 },
+      "implemented_by": [
+        { "file": "dch_core/manifold.py", "class": "NoOpManifold", "line": 79 }
+      ],
+      "apis": [
+        { "name": "check_feasible", "file": "dch_core/manifold.py", "line": 61, "status": "implemented (interface)" },
+        { "name": "explain", "file": "dch_core/manifold.py", "line": 70, "status": "implemented (interface)" }
+      ],
+      "status": "partial",
+      "gaps": [ "No non-trivial feasibility backend; only NoOp", "Dual-proof gating wired in pipeline but backend is a stub" ]
+    },
+    {
+      "name": "DPO Engine",
+      "spec": { "file": "docs/AlgorithmSpecs.md", "line": 349 },
+      "implemented_by": [
+        { "file": "dch_core/dpo.py", "class": "DPOEngine", "line": 229 },
+        { "file": "dch_core/dpo.py", "class": "DPOGraphAdapter", "line": 83 }
+      ],
+      "apis": [
+        { "name": "apply(GROW)", "file": "dch_core/dpo.py", "line": 241, "status": "implemented" },
+        { "name": "apply(PRUNE)", "file": "dch_core/dpo.py", "line": 268, "status": "implemented" },
+        { "name": "apply(FREEZE)", "file": "dch_core/dpo.py", "line": 286, "status": "implemented" }
+      ],
+      "status": "implemented",
+      "gaps": [ "No audit logger/replay in pipeline (planned WS-C)" ]
+    },
+    {
+      "name": "DPO Analysis",
+      "spec": { "file": "docs/AlgorithmSpecs.md", "line": 349 },
+      "implemented_by": [
+        { "file": "dch_core/dpo_analysis.py", "func": "analyze_critical_pairs", "line": 217 },
+        { "file": "dch_core/dpo_analysis.py", "func": "check_termination", "line": 321 }
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "EAT Logger",
+      "spec": { "file": "docs/AlgorithmSpecs.md", "line": 367 },
+      "implemented_by": [
+        { "file": "dch_pipeline/eat_logger.py", "class": "EATAuditLogger", "line": 79 }
+      ],
+      "apis": [
+        { "name": "emit_grow", "file": "dch_pipeline/eat_logger.py", "line": 190, "status": "implemented" },
+        { "name": "emit_eat", "file": "dch_pipeline/eat_logger.py", "line": 158, "status": "implemented" },
+        { "name": "emit_update", "file": "dch_pipeline/eat_logger.py", "line": 209, "status": "implemented" },
+        { "name": "verify_file", "file": "dch_pipeline/eat_logger.py", "line": 280, "status": "implemented" }
+      ],
+      "status": "implemented"
+    },
+    {
+      "name": "Embeddings: WL",
+      "spec": { "file": "docs/DCH_TechSpec_v0.1.md", "line": 35 },
+      "implemented_by": [
+        { "file": "dch_core/embeddings/wl.py", "class": "WLHyperpathEmbedding", "line": 57 }
+      ],
+      "status": "implemented",
+      "gaps": [ "SAGE periodic embedding deferred or to be added as stub per ROADMAP" ]
+    },
+    {
+      "name": "CRC prior traversal hook",
+      "type": "feature",
+      "spec": { "file": "docs/ROADMAP.md", "line": 72 },
+      "status": "missing",
+      "gaps": [ "Add optional CRC-prior term in traversal scoring under a feature flag" ]
+    },
+    {
+      "name": "Manifold backends (non-NoOp)",
+      "type": "feature",
+      "spec": { "file": "docs/ROADMAP.md", "line": 58 },
+      "status": "missing",
+      "gaps": [ "Implement LinearReachability backend and tests", "Optional ConvexHull backend behind extras.stats" ]
+    },
+    {
+      "name": "DPO audit & replay",
+      "type": "feature",
+      "spec": { "file": "docs/ROADMAP.md", "line": 66 },
+      "status": "missing",
+      "gaps": [ "Add DPO audit logger with deterministic replay tooling and tests" ]
+    }
+  ]
+}

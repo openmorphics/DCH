@@ -1,0 +1,31 @@
+{
+  "clis": {
+    "scripts/make_results_bundle.py": true,
+    "scripts/run_ablation_suite.py": true,
+    "scripts/run_baselines_experiment.py": true,
+    "scripts/run_dataset_experiment.py": true,
+    "scripts/run_quick_experiment.py": true,
+    "scripts/run_stats_report.py": true
+  },
+  "docs": {
+    "docs/AlgorithmSpecs.md": true,
+    "docs/BASELINES.md": true,
+    "docs/REPRODUCIBILITY.md": true,
+    "docs/RESULTS.md": true,
+    "docs/ReleaseNotes.md": true
+  },
+  "flags": {
+    "dpo_default_off": true,
+    "dual_proof_default_off": true,
+    "manifold_default_off": true
+  },
+  "passed": true,
+  "tests": {
+    "tests/test_dpo_confluence.py": true,
+    "tests/test_dpo_rules.py": true,
+    "tests/test_dual_proof_gating.py": true,
+    "tests/test_results_bundle.py": true,
+    "tests/test_run_dataset_experiment_cli.py": true,
+    "tests/test_stats_report.py": true
+  }
+}

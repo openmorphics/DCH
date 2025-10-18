@@ -4,13 +4,22 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dch"
-version = "0.1.0"
-description = "Dynamic Causal Hypergraph (DCH) neuro-symbolic framework for event-based SNNs"
+version = "0.9.0"
+description = "Dynamic Causal Generative Hypergraph (DCGH) research package — auditable, deterministic, reproducible"
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [{name = "DCH Maintainers"}]
 keywords = ["spiking neural networks", "neuromorphic", "causal", "hypergraph", "neuro-symbolic"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 
 dependencies = [
   "torch>=2.2",
@@ -55,20 +64,31 @@ docs = [
   "myst-parser>=2.0",
   "furo>=2024.1.0",
 ]
+baselines = []
 
 [project.urls]
 Homepage = "https://example.com/dch"
 Repository = "https://example.com/dch/repo"
+homepage = "https://github.com/..."
+documentation = "https://github.com/.../docs"
+repository = "https://github.com/..."
 
 [project.scripts]
 dch-run = "scripts.run_experiment:main"
 dch-baseline-norse = "baselines.norse_sg:main"
 dch-baseline-bindsnet = "baselines.bindsnet_stdp:main"
+dch-quick = "scripts.run_quick_experiment:run_main"
+dch-dataset = "scripts.run_dataset_experiment:run_main"
+dch-ablation = "scripts.run_ablation_suite:run_main"
+dch-baselines = "scripts.run_baselines_experiment:run_main"
+dch-stats = "scripts.run_stats_report:run_main"
+dch-bundle = "scripts.make_results_bundle:run_main"
+dch-gate = "scripts.run_gate_review:run_main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["dch_core*", "dch_pipeline*", "dch_data*", "dch_snn*", "baselines*", "benchmarks*"]
-exclude = ["docs*", "scripts*", "tests*", "notebooks*"]
+include = ["dch_core*", "dch_pipeline*", "dch_data*", "dch_snn*", "baselines*", "benchmarks*", "scripts*"]
+exclude = ["docs*", "tests*", "notebooks*"]
 
 [tool.black]
 line-length = 100

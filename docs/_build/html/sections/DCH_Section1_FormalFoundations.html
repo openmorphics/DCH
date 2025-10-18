@@ -1,0 +1,468 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 1 Formal Foundations and Glossary - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section1_FormalFoundations.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-1-formal-foundations-and-glossary">
+<h1>Dynamic Causal Hypergraph DCH — Section 1 Formal Foundations and Glossary<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-1-formal-foundations-and-glossary" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Scope and defaults</p></li>
+</ol>
+<ul class="simple">
+<li><p>Time model continuous time timestamps in microseconds μs</p></li>
+<li><p>Path score product of edge reliabilities</p></li>
+<li><p>Reliability update EMA with alpha 0.1 and bounds 0.02 to 0.98</p></li>
+<li><p>TC kNN window 1 ms to 30 ms, k max 3, delta causal 2 ms</p></li>
+<li><p>Traversal seeds M 8, max depth L 12, branching cap B 4, selection temperature 0.7</p></li>
+<li><p>FSM window W 60 s, support s min 50, reliability threshold r min 0.6, decay gamma 0.98</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Base sets and objects</p></li>
+</ol>
+<ul class="simple">
+<li><p>Neuron id space I equals {1,2,…,N}</p></li>
+<li><p>Time domain T equals real nonnegative measured in microseconds</p></li>
+<li><p>Event vertex v equals neuron id i comma timestamp t with i in I and t in T</p></li>
+<li><p>Vertex set V t equals { v mid v.timestamp less or equal t }</p></li>
+<li><p>Hypergraph DCH t equals V t comma E t</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Hyperedge schema and attributes</p></li>
+</ol>
+<ul class="simple">
+<li><p>A directed hyperedge e equals Tail to Head with Head cardinality 1</p></li>
+<li><p>Tail e equals { u1 comma u2 comma … comma um } subset of V t with m greater or equal 1</p></li>
+<li><p>Head e equals { w } with w in V t</p></li>
+<li><p>Attributes for e</p>
+<ul>
+<li><p>delay window Δ min comma Δ max in microseconds with 0 less Δ min less Δ max</p></li>
+<li><p>refractory ρ in microseconds minimum separation for heads on same neuron</p></li>
+<li><p>reliability score r e in interval 0.02 to 0.98</p></li>
+<li><p>created at tau c equals Head timestamp</p></li>
+<li><p>last update time tau u</p></li>
+<li><p>usage count c e in integers</p></li>
+<li><p>type label in {event edge comma template edge}</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Validity predicate for temporal causality</p></li>
+</ol>
+<ul class="simple">
+<li><p>valid e mid V requires</p>
+<ul>
+<li><p>for every u in Tail e the time difference Δ u equals Head time minus u time satisfies Δ min less or equal Δ u less or equal Δ max</p></li>
+<li><p>no two hyperedges e1 and e2 with the same Head neuron create head times closer than ρ</p></li>
+</ul>
+</li>
+<li><p>valid e mid V implies e respects temporal logic constraints for causality</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Event anchored and template hyperedges</p></li>
+</ol>
+<ul class="simple">
+<li><p>Event anchored hyperedge an e whose Head is a realized vertex w in V t</p></li>
+<li><p>Template hyperedge τ defines Tail schema as a set of neuron ids with relative lags and a Head neuron id with relative zero</p></li>
+<li><p>Instantiation of τ at time t is a mapping of its schema to concrete vertices in V t that satisfy the window constraints</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Operations on E t</p></li>
+</ol>
+<ul class="simple">
+<li><p>GROW add new event anchored hyperedges produced around an observed Head vertex per TC kNN</p></li>
+<li><p>REFINE update reliability via predict and confirm evidence</p></li>
+<li><p>PRUNE remove e if r e below threshold or age large with low usage</p></li>
+<li><p>ABSTRACT introduce a template hyperedge that summarizes a frequent reliable hyperpath</p></li>
+<li><p>FREEZE gate updates for a protected subset of E t as part of task aware scaffolding</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Hyperpaths and B connectivity</p></li>
+</ol>
+<ul class="simple">
+<li><p>A hyperpath π from sources to sink w is a finite collection of hyperedges in E with a partial order such that for each edge e in π every tail vertex of e is either a source vertex or the head of some edge earlier in the order</p></li>
+<li><p>B connectivity constraint traversal from Head to Tail is allowed only if evidence exists for all tail vertices</p></li>
+<li><p>Instantiated hyperpath pairs π comma g where g grounds each edge to concrete vertices in V</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Path scoring and evidence aggregation</p></li>
+</ol>
+<ul class="simple">
+<li><p>Path score s π equals product over e in π of r e</p></li>
+<li><p>Positive evidence set P e equals valid hyperpaths that include e and originate from correct or rewarded sinks</p></li>
+<li><p>Negative evidence set N e equals valid hyperpaths that include e and originate from erroneous sinks</p></li>
+<li><p>Normalized target r hat e equals sum w in P e s w divided by sum s in P e union N e s plus epsilon where epsilon small</p></li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>Reliability update operator</p></li>
+</ol>
+<ul class="simple">
+<li><p>EMA update r new e equals clip of 1 minus alpha times r old e plus alpha times r hat e bounded to 0.02 and 0.98 with alpha equals 0.1</p></li>
+<li><p>Update timestamp tau u set to current time and increment c e</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Temporal windows and units</p></li>
+</ol>
+<ul class="simple">
+<li><p>Defaults Δ min equals 1000 microseconds and Δ max equals 30000 microseconds</p></li>
+<li><p>δ causal equals 2000 microseconds micro window for grouping near coincident presyn spikes</p></li>
+<li><p>All timestamps monotone per neuron and unique per event</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Presynaptic adjacency and candidate sources</p></li>
+</ol>
+<ul class="simple">
+<li><p>Pred j equals { i in I mid synapse i to j exists } provided by the underlying SNN or connectivity map</p></li>
+<li><p>Candidate antecedent spikes for a post spike at neuron j and time t j are the most recent spikes from each i in Pred j within the temporal window</p></li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>Invariants and safety constraints</p></li>
+</ol>
+<ul class="simple">
+<li><p>Reliability bounds 0.02 less or equal r e less or equal 0.98 for all e</p></li>
+<li><p>No self cycle from a head vertex back to itself</p></li>
+<li><p>For any neuron j and times t1 less t2 with t2 minus t1 less ρ at most one is a head of an accepted edge</p></li>
+<li><p>ABSTRACT does not introduce a cycle at the template level when projected to neuron graph</p></li>
+</ul>
+<ol class="arabic simple" start="13">
+<li><p>Observables and counters</p></li>
+</ol>
+<ul class="simple">
+<li><p>events per second lambda t</p></li>
+<li><p>active edges count size of E t</p></li>
+<li><p>average reliability bar r t equals mean over e in E t of r e</p></li>
+<li><p>prune rate equals removals per unit time</p></li>
+<li><p>traversal yield equals valid hyperpaths per seed</p></li>
+<li><p>rule discovery rate equals promoted templates per unit time</p></li>
+</ul>
+<ol class="arabic simple" start="14">
+<li><p>Notation summary</p></li>
+</ol>
+<ul class="simple">
+<li><p>i comma j neuron ids</p></li>
+<li><p>t comma tau time variables microseconds</p></li>
+<li><p>v equals i comma t event vertex</p></li>
+<li><p>e hyperedge Tail to Head with attributes Δ min Δ max ρ r</p></li>
+<li><p>π hyperpath</p></li>
+<li><p>s π path score</p></li>
+<li><p>P e positive evidence set N e negative evidence set</p></li>
+<li><p>r hat e normalized target probability</p></li>
+<li><p>alpha EMA step size default 0.1</p></li>
+</ul>
+<ol class="arabic simple" start="15">
+<li><p>Interfacing with the SNN substrate</p></li>
+</ol>
+<ul class="simple">
+<li><p>The DCH consumes spike events produced by an SNN or event sensor</p></li>
+<li><p>The DCH never writes to neuron state directly but may export symbolic rules and policy hints to guide search or initialization</p></li>
+</ul>
+<ol class="arabic simple" start="16">
+<li><p>Minimal worked example</p></li>
+</ol>
+<ul class="simple">
+<li><p>Suppose neuron A fires at time 10000 microseconds and neuron B at 11700 microseconds and neuron C at 21000 microseconds with Δ min equals 1000 and Δ max equals 30000</p></li>
+<li><p>GROW proposes unary edges {A at 10000} to {C at 21000} and {B at 11700} to {C at 21000} and a binary edge {A at 10000 comma B at 11700} to {C at 21000} since B minus A equals 1700 within δ causal equals 2000</p></li>
+<li><p>Later the pattern {A then B} repeats and C fires within window generating positive evidence that increases r for the binary edge by the EMA rule</p></li>
+</ul>
+<ol class="arabic simple" start="17">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Detailed construction algorithms appear in Section 2 see <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+<li><p>Traversal and credit assignment appear in Section 5 see <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+<li><p>Online rule induction appears in Section 6 see <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+</ul>
+<ol class="arabic simple" start="18">
+<li><p>Acceptance criteria for Section 1</p></li>
+</ol>
+<ul class="simple">
+<li><p>Formal definitions for V t E t vertices hyperedges attributes and validity are present</p></li>
+<li><p>Reliability update operator EMA with bounds and target aggregation is specified</p></li>
+<li><p>Hyperpath and B connectivity are defined with default path scoring</p></li>
+<li><p>Invariants and units are defined with defaults for Δ and δ causal</p></li>
+<li><p>Cross references align with the overall outline</p></li>
+</ul>
+<p>File index</p>
+<ul class="simple">
+<li><p>This section file <a class="reference internal" href="#"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p></li>
+<li><p>Parent outline file <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+</ul>
+<p>End of Section 1</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

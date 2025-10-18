@@ -1,0 +1,661 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 15 Causa Chip Hardware Co Design Overview - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section15_CausaChip.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-15-causa-chip-hardware-co-design-overview">
+<h1>Dynamic Causal Hypergraph DCH — Section 15 Causa Chip Hardware Co Design Overview<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-15-causa-chip-hardware-co-design-overview" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a><br />
+Cross references <a class="reference internal" href="DCH_Section10_ComplexityResource.html"><span class="std std-doc">DCH_Section10_ComplexityResource.md</span></a>, <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a>, <a class="reference internal" href="DCH_Section5_CreditAssignment.html"><span class="std std-doc">DCH_Section5_CreditAssignment.md</span></a>, <a class="reference internal" href="DCH_Section6_FSM.html"><span class="std std-doc">DCH_Section6_FSM.md</span></a>, <a class="reference internal" href="DCH_Section7_HierarchicalAbstraction.html"><span class="std std-doc">DCH_Section7_HierarchicalAbstraction.md</span></a>, <a class="reference internal" href="DCH_Section9_Interfaces.html"><span class="std std-doc">DCH_Section9_Interfaces.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Objectives and scope</p></li>
+</ol>
+<ul class="simple">
+<li><p>Translate DCH computational primitives into a heterogeneous SoC architecture for low latency event stream processing.</p></li>
+<li><p>Provide first order bandwidth latency and capacity estimates for DVS Gesture and N MNIST targets.</p></li>
+<li><p>Define unit responsibilities, interfaces, NoC interconnect, memory hierarchy, and fallback software model.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Workload recap and design targets</p></li>
+</ol>
+<ul class="simple">
+<li><p>Event lane latency budget per event ≤ 350 microseconds desktop prototype see <a class="reference internal" href="DCH_Section10_ComplexityResource.html"><span class="std std-doc">DCH_Section10_ComplexityResource.md</span></a>.</p></li>
+<li><p>Throughput sustained</p>
+<ul>
+<li><p>N MNIST ≥ 1e5 events per second with 2x headroom.</p></li>
+<li><p>DVS Gesture ≥ 5e5 events per second with 1.5x headroom.</p></li>
+</ul>
+</li>
+<li><p>Traversal cycle ≤ 8 ms per batch of seeds; FSM tick ≤ 10 ms per second maintenance.</p></li>
+<li><p>Memory working set edges 5 to 20 M typical desktop profile, up to 50 M cap see Section 10.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Architectural overview</p></li>
+</ol>
+<ul class="simple">
+<li><p>Heterogeneous SoC with five primary accelerators and one control core on a high bandwidth NoC:</p>
+<ul>
+<li><p>Graph Streaming Engine GSE for event ingestion and TC kNN candidate generation.</p></li>
+<li><p>Graph Memory Fabric GMF a PIM like memory subsystem for dynamic hypergraph storage and atomic updates.</p></li>
+<li><p>Parallel Traversal Accelerator PTA for constrained backward hyperpath traversal and credit aggregation.</p></li>
+<li><p>Frequent Subgraph Miner FSM engine for canonical labeling counting and streaming promotion.</p></li>
+<li><p>Meta Controller MC low power control processor to coordinate knobs, backpressure, and policy.</p></li>
+</ul>
+</li>
+<li><p>Shared chip level SRAM and off chip DRAM interface; optional on package HBM for high end.</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Computational unit specifications</p></li>
+</ol>
+<p>4.1 Graph Streaming Engine GSE</p>
+<ul class="simple">
+<li><p>Function</p>
+<ul>
+<li><p>Ingest events, maintain per neuron ring buffers, perform presyn lookup, temporal window search, candidate scoring, deduplication, refractory checks, and insert requests to GMF.</p></li>
+</ul>
+</li>
+<li><p>Microarchitecture</p>
+<ul>
+<li><p>Hardware event queues with timestamp watermarking, per neuron ring buffers in SRAM with binary search assist.</p></li>
+<li><p>TC kNN pipeline stages fetch presyn indices, window filter, combine tails up to k max 3, score and select with budgets M in and C cap.</p></li>
+<li><p>Signature unit computes tail signature hashes.</p></li>
+</ul>
+</li>
+<li><p>Interfaces</p>
+<ul>
+<li><p>Read only access to static synapse map Pred j, read write to GMF edge tables via GMF message ports.</p></li>
+<li><p>Metrics counters for candidate hit rate dedup and latency.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.2 Graph Memory Fabric GMF</p>
+<ul class="simple">
+<li><p>Function</p>
+<ul>
+<li><p>Primary storage for event anchored edges, template HOEs, and indices incoming by head and by tail signature.</p></li>
+<li><p>Provide in memory atomic operations on reliability and counters; support dynamic insert delete and prune.</p></li>
+</ul>
+</li>
+<li><p>Microarchitecture</p>
+<ul>
+<li><p>PIM near memory arrays e.g., ReRAM like banks plus digital periphery for atomic add min max and bounded clip on per edge fields.</p></li>
+<li><p>Packed Memory Array PMA like data structure controller for batched inserts and compaction.</p></li>
+<li><p>Two level index caches small SRAM for hot indices and larger eDRAM or SRAM for mid tier.</p></li>
+</ul>
+</li>
+<li><p>Operations</p>
+<ul>
+<li><p>Insert edge tail list and head id, write attributes, update two indices and creation token.</p></li>
+<li><p>Atomic EMA update r e and counters with bound checks.</p></li>
+<li><p>Prune by priority queue scan on s prune equals r e times freshness decays.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.3 Parallel Traversal Accelerator PTA</p>
+<ul class="simple">
+<li><p>Function</p>
+<ul>
+<li><p>Execute multi start randomized beam style backward traversal with B connectivity and temporal logic constraints; accumulate edge contributions A e.</p></li>
+</ul>
+</li>
+<li><p>Microarchitecture</p>
+<ul>
+<li><p>PE array arranged as 2D mesh each PE handles a partition of head vertex space; local caches for incoming by head lists and edge attributes; frontier and beam queues per PE.</p></li>
+<li><p>Edge filter units check Δ windows refractory and horizon; scorer computes softmax features w rel w rec w rule w sim.</p></li>
+</ul>
+</li>
+<li><p>Data path</p>
+<ul>
+<li><p>Pull candidate edges from GMF via read bursts; write contributions to per edge accumulators in GMF or scratchpad then reduce.</p></li>
+<li><p>Deterministic RNG per PE seeded by seed id and snapshot cycle.</p></li>
+</ul>
+</li>
+<li><p>Controls</p>
+<ul>
+<li><p>Caps L depth B branching C in admissible per vertex, K beams; early termination based on upper bound estimate.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.4 Frequent Subgraph Miner FSM engine</p>
+<ul class="simple">
+<li><p>Function</p>
+<ul>
+<li><p>Canonicalize grounded hyperpaths to template ids, maintain heavy hitters SpaceSaving and CMS with sliding window and decay, detect concept drift, and emit promotions.</p></li>
+</ul>
+</li>
+<li><p>Microarchitecture</p>
+<ul>
+<li><p>Canonical labeling pipeline encode lag bucketization, incidence expansion layering, token serialization; 128 bit hash unit with collision chains in on chip CAM.</p></li>
+<li><p>Counting stage with multi bank CAM and SRAM hash tables for HH; CMS arrays in SRAM with decay logic.</p></li>
+<li><p>HyperLogLog sketchers for coverage per HH template.</p></li>
+</ul>
+</li>
+<li><p>Output</p>
+<ul>
+<li><p>Rule descriptors to MC, HOE construction triggers to GMF via Abstraction microservice.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.5 Meta Controller MC</p>
+<ul class="simple">
+<li><p>Function</p>
+<ul>
+<li><p>Execute policy loops for backpressure and scaffolding knobs; orchestrate cadence and budgets; log and expose health.</p></li>
+</ul>
+</li>
+<li><p>Microarchitecture</p>
+<ul>
+<li><p>RISC V class core or small microcontroller, access to module counters and control registers over NoC; interrupt lines for threshold breaches.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Network on Chip NoC and memory hierarchy</p></li>
+</ol>
+<ul class="simple">
+<li><p>NoC</p>
+<ul>
+<li><p>2D mesh or ring bus hybrid; express routes between GSE GMF and PTA; QoS channels high priority for event lane traffic.</p></li>
+<li><p>Bandwidth target aggregate ≥ 200 GB per second desktop class; arbitration priority to event path reads writes.</p></li>
+</ul>
+</li>
+<li><p>Memory</p>
+<ul>
+<li><p>On chip SRAM 8 to 64 MB for indices caches queues and scratch; optional eDRAM blocks for mid tier.</p></li>
+<li><p>Off chip DDR5 or LPDDR5X 16 to 32 GB system memory; for high end consider HBM3 256 to 512 GB per second.</p></li>
+</ul>
+</li>
+<li><p>Atomicity</p>
+<ul>
+<li><p>GMF provides line level atomic operations for reliability and counters; PIM reduces round trips on hot updates.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Bandwidth and latency model first order</p></li>
+</ol>
+<ul class="simple">
+<li><p>GSE</p>
+<ul>
+<li><p>Reads presyn indices O d in and ring buffer heads; writes new edges and index updates; budget ≤ 100 microseconds per event.</p></li>
+<li><p>Estimated traffic per admitted edge insert metadata 64 to 128 B plus two index writes 16 to 32 B each.</p></li>
+</ul>
+</li>
+<li><p>PTA</p>
+<ul>
+<li><p>For K beams L depth and C in caps worst case touches K times L times C in edge records; with caching and admissibility filters effective fetches smaller.</p></li>
+<li><p>Target ≤ 1 ms per seed; aggregate ≤ 8 ms cycle; batched read bursts amortize header overhead.</p></li>
+</ul>
+</li>
+<li><p>FSM</p>
+<ul>
+<li><p>Per path canonicalization tens of tokens 1 to 2 cache lines; HH and CMS O 1 updates; maintenance tick linear in HH size 100k.</p></li>
+<li><p>Budget ≤ 50 microseconds per path hot path; maintenance ≤ 10 ms per second.</p></li>
+</ul>
+</li>
+<li><p>NoC</p>
+<ul>
+<li><p>Event path peak concurrency dimensioned to tolerate bursts 2x typical for ≥ 50 ms with buffering and priority QoS.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Capacity and sizing examples rough order of magnitude at 7 nm for guidance only</p></li>
+</ol>
+<ul class="simple">
+<li><p>Area budgets indicative</p>
+<ul>
+<li><p>GSE 8 to 15 mm^2 ring buffers, signature and TC kNN pipeline.</p></li>
+<li><p>GMF per bank 10 to 20 mm^2 excluding large SRAM eDRAM; replicated 4 to 8 banks.</p></li>
+<li><p>PTA PE array 20 to 40 mm^2 including local caches.</p></li>
+<li><p>FSM pipeline 8 to 12 mm^2 including CAM and counters.</p></li>
+<li><p>MC and glue logic 2 to 4 mm^2.</p></li>
+<li><p>Total compute logic 60 to 100 mm^2 excluding large memory macros.</p></li>
+</ul>
+</li>
+<li><p>Power envelopes indicative at 1 GHz class clocks</p>
+<ul>
+<li><p>Event lane sustained 10 to 25 W depending on |E| and λ; PTA spikes to 5 to 10 W during traversal cycles.</p></li>
+<li><p>FSM 1 to 3 W average; MC negligible.</p></li>
+<li><p>Aggressive power gating for PTA and FSM between bursts.</p></li>
+</ul>
+</li>
+<li><p>Latency</p>
+<ul>
+<li><p>End to end event path ≤ 350 microseconds average; p99 depends on NoC contention; enforce QoS.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Programming and runtime model</p></li>
+</ol>
+<ul class="simple">
+<li><p>Driver model</p>
+<ul>
+<li><p>Modules exposed via memory mapped control registers and DMA queues; host driver schedules cadences and monitors counters.</p></li>
+<li><p>Snapshot ids for WL SAGE and FSM rules tracked in control plane per <a class="reference internal" href="DCH_Section9_Interfaces.html"><span class="std std-doc">DCH_Section9_Interfaces.md</span></a>.</p></li>
+</ul>
+</li>
+<li><p>Data flow</p>
+<ul>
+<li><p>Event DMA to GSE, GMF handles inserts; PTA launched with seeds; FSM consumes path stream; MC adjusts knobs on thresholds.</p></li>
+</ul>
+</li>
+<li><p>Fallback</p>
+<ul>
+<li><p>Software fallback for PTA and FSM on host CPU GPU during bringup; deterministic results matched via snapshot ids.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>Abstraction and HOE handling in hardware</p></li>
+</ol>
+<ul class="simple">
+<li><p>HOE table in GMF with role definitions lag intervals and reliability; small CAM for fast role matching.</p></li>
+<li><p>GSE consults HOE table to emit HOE candidates with boosted scores.</p></li>
+<li><p>PTA treats HOE as single step edges retrieving provenance pointers only if audit requested.</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Flow and data path diagrams</p></li>
+</ol>
+<p>10.1 Chip level dataflow</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+EVQ[Event Queues] --&gt; GSE[GSE TC-kNN]
+GSE --&gt; GMF[GMF Graph Memory Fabric]
+GMF --&gt; PTA[PTA Traversal]
+PTA --&gt; FSME[FSM Engine]
+FSME --&gt; MC[Meta Controller]
+MC --&gt;|knobs| GSE
+MC --&gt;|knobs| PTA
+MC --&gt;|knobs| FSME
+MC --&gt;|prune| GMF
+</pre></div>
+</div>
+<p>10.2 GMF update pipeline</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart TB
+REQ[Insert or Update Request] --&gt; IDX[Index Lookup]
+IDX --&gt; PIMU[PIM Atomic Update r_e and Counters]
+PIMU --&gt; IDX2[Update Incoming-by-Head and Tail-Signature]
+IDX2 --&gt; ACK[Ack and Metrics]
+</pre></div>
+</div>
+<p>10.3 PTA PE array topology</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart TB
+SEEDS[Seed Queue] --&gt; DISPATCH[Dispatcher]
+DISPATCH --&gt; PE1[PE Partition 1]
+DISPATCH --&gt; PE2[PE Partition 2]
+DISPATCH --&gt; PEn[PE Partition N]
+PE1 --&gt; REDUCE[Reduce Edge Contributions]
+PE2 --&gt; REDUCE
+PEn --&gt; REDUCE
+REDUCE --&gt; GMFWR[Write Aggregates to GMF]
+</pre></div>
+</div>
+<p>10.4 FSM pipeline</p>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+PATHS[Grounded Hyperpaths] --&gt; NORM[Normalize and Lag Bucketize]
+NORM --&gt; CANON[Canonical Labeling + Hash]
+CANON --&gt; COUNT[HH + CMS Update]
+COUNT --&gt; THRES[Threshold + Hysteresis]
+THRES --&gt; RULES[Promote/Demote Rules]
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Interfaces mapping to software spec</p></li>
+</ol>
+<ul class="simple">
+<li><p>Each hardware module implements a subset of the APIs in <a class="reference internal" href="DCH_Section9_Interfaces.html"><span class="std std-doc">DCH_Section9_Interfaces.md</span></a></p>
+<ul>
+<li><p>GSE maps to dhg.on_post_spike, get params, metrics snapshot.</p></li>
+<li><p>GMF maps to hyperedge CRUD and atomic updates.</p></li>
+<li><p>PTA maps to traversal.assign_credit with hardware beam and caps.</p></li>
+<li><p>FSM maps to fsm.submit_path and fsm.tick and poll promotions.</p></li>
+<li><p>MC maps to meta.step and scaffolding style knob pushes.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>Backpressure and fault handling on chip</p></li>
+</ol>
+<ul class="simple">
+<li><p>Hardware thresholds for queue depth watermark lag and memory occupancy drive MC actions: lower C cap raise τ prune and stretch Δt WL cadences.</p></li>
+<li><p>Fault containment</p>
+<ul>
+<li><p>If GMF rejects inserts due to capacity pressure MC pauses GSE candidate combinations first; then raises pruning.</p></li>
+<li><p>If PTA exceeds latency budget MC reduces K L and C in and raises rule bias; can also skip noncritical seeds.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="13">
+<li><p>Verification and co simulation strategy</p></li>
+</ol>
+<ul class="simple">
+<li><p>Trace driven simulation using software DCH to generate event streams and golden paths.</p></li>
+<li><p>Unit level verification testbenches for GSE GMF PTA FSM with corner cases Δ windows refractory checks and collision storms.</p></li>
+<li><p>NoC contention and roofline models to validate bandwidth headroom.</p></li>
+<li><p>Determinism tests seeded RNG and snapshot checksums.</p></li>
+</ul>
+<ol class="arabic simple" start="14">
+<li><p>Risks and open questions hardware</p></li>
+</ol>
+<ul class="simple">
+<li><p>PIM primitive fidelity for bounded clip EMA and decay operations verify numerical stability and endurance.</p></li>
+<li><p>FSM canonicalization throughput ensure pipeline depth and CAM sizing to sustain target path rates without backpressure.</p></li>
+<li><p>Partitioning strategy for PTA to minimize remote edge fetches consider vertex partitioning by head id and time sharding.</p></li>
+<li><p>HOE matchers complexity vs benefit ensure CAM size sufficient for active HOE set K HOE global.</p></li>
+</ul>
+<ol class="arabic simple" start="15">
+<li><p>Early BoM style estimates non binding</p></li>
+</ol>
+<ul class="simple">
+<li><p>Desktop accelerator card</p>
+<ul>
+<li><p>Die 120 to 180 mm^2 compute logic plus memory macros; TDP 25 to 50 W depending on configuration.</p></li>
+<li><p>16 to 32 GB LPDDR5X off chip; optional HBM variant for research.</p></li>
+</ul>
+</li>
+<li><p>Embedded edge module</p>
+<ul>
+<li><p>Die 60 to 90 mm^2 with reduced GMF and PTA; TDP 5 to 12 W; 8 to 16 GB LPDDR5X.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="16">
+<li><p>Acceptance criteria for Section 15</p></li>
+</ol>
+<ul class="simple">
+<li><p>Units defined with roles microarchitecture operations and interfaces.</p></li>
+<li><p>NoC and memory hierarchy sketched with bandwidth targets.</p></li>
+<li><p>First order area power and latency budgets provided.</p></li>
+<li><p>Dataflow and pipeline diagrams included.</p></li>
+<li><p>Fault and backpressure policies mapped to MC actions.</p></li>
+</ul>
+<ol class="arabic simple" start="17">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Complexity and performance budgets <a class="reference internal" href="DCH_Section10_ComplexityResource.html"><span class="std std-doc">DCH_Section10_ComplexityResource.md</span></a></p></li>
+<li><p>Abstraction and HOE usage <a class="reference internal" href="DCH_Section7_HierarchicalAbstraction.html"><span class="std std-doc">DCH_Section7_HierarchicalAbstraction.md</span></a></p></li>
+<li><p>FSM requirements <a class="reference internal" href="DCH_Section6_FSM.html"><span class="std std-doc">DCH_Section6_FSM.md</span></a></p></li>
+<li><p>Traversal constraints <a class="reference internal" href="DCH_Section5_CreditAssignment.html"><span class="std std-doc">DCH_Section5_CreditAssignment.md</span></a></p></li>
+<li><p>Interface contracts <a class="reference internal" href="DCH_Section9_Interfaces.html"><span class="std std-doc">DCH_Section9_Interfaces.md</span></a></p></li>
+</ul>
+<p>End of Section 15</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

@@ -1,0 +1,588 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 4 Hyperpath Embedding and Causal-Context Similarity - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section4_HyperpathEmbedding.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-4-hyperpath-embedding-and-causal-context-similarity">
+<h1>Dynamic Causal Hypergraph DCH — Section 4 Hyperpath Embedding and Causal-Context Similarity<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-4-hyperpath-embedding-and-causal-context-similarity" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a><br />
+Cross references Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a> and Section 2 <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Purpose and scope</p></li>
+</ol>
+<ul class="simple">
+<li><p>Define causal-context embeddings used to group vertices by similarity of causal histories and to propose higher-order hyperedges.</p></li>
+<li><p>Specify an approved hybrid scheme</p>
+<ul>
+<li><p>WL-style online embedding deterministic, r=2, d=64, update cadence 10 ms, drives streaming DHG grouping and GROW.</p></li>
+<li><p>GraphSAGE incidence-expansion embedding periodic, r=3, d=128, refresh 500 ms, refines global causal-context for FSM and hierarchical abstraction.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Design overview and rationale</p></li>
+</ol>
+<ul class="simple">
+<li><p>The DCH operates on event tuples with sparse, evolving structure; vertex identity has little feature content.</p></li>
+<li><p>Similarity must reflect causal context i.e., hyperpaths terminating at vertices and the timing/reliability attributes along those paths.</p></li>
+<li><p>WL online delivers low-latency deterministic updates compatible with per-event GROW and PRUNE, while periodic SAGE captures richer higher-order context without stalling the stream.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Notation and prerequisites</p></li>
+</ol>
+<ul class="simple">
+<li><p>Vertex v equals i comma t see Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a>.</p></li>
+<li><p>Hyperpath π and reliability r e defined in Section 1.</p></li>
+<li><p>TC kNN construction produces candidate edges around a head vertex see Section 2 <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a>.</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>WL-style online embedding WL
+Defaults</p></li>
+</ol>
+<ul class="simple">
+<li><p>Radius r WL equals 2 backward hops over incident incoming hyperedges.</p></li>
+<li><p>Dimension d WL equals 64 via feature hashing.</p></li>
+<li><p>Update cadence Δt WL equals 10 ms wall-clock or watermark-aligned.</p></li>
+<li><p>Update policy deterministic incremental recompute affected vertices only.</p></li>
+</ul>
+<p>4.1 Hypergraph neighborhood and labels</p>
+<ul class="simple">
+<li><p>Work on the directed hypergraph using backward incidence from head to tails.</p></li>
+<li><p>Node labels</p>
+<ul>
+<li><p>For vertex v define base label l0 v as tuple neuron id i and time bucket of v timestamp quantized to q time equals 100 microseconds.</p></li>
+</ul>
+</li>
+<li><p>Edge labels</p>
+<ul>
+<li><p>For hyperedge e define label fe as tuple cardinality of Tail, delay stats mean and variance over Δ u equals head time minus tail times, and binned reliability r e bucketized into K r buckets.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.2 WL iteration and hashing</p>
+<ul class="simple">
+<li><p>Iteration k equals 1 to r WL</p>
+<ul>
+<li><p>For each vertex v collect multiset Mk v of labeled messages from parents</p>
+<ul>
+<li><p>For each incoming e to v head compute message m e as hash fe concatenated with multiset of parent labels from previous iteration l k minus 1 of each u in Tail e and with temporal deltas Δ u bucketized.</p></li>
+</ul>
+</li>
+<li><p>Aggregate Mk v into string or tuple then hash with a stable 64 bit function.</p></li>
+</ul>
+</li>
+<li><p>Feature hashing</p>
+<ul>
+<li><p>Map each hashed token into d WL bins with k independent hash functions and add sign hashing for balanced updates.</p></li>
+<li><p>Maintain an embedding vector x WL v in R to the d WL updated additively and normalized to unit norm.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.3 Temporal features</p>
+<ul class="simple">
+<li><p>Bucketization</p>
+<ul>
+<li><p>Δ u buckets logarithmic over 1 ms to 30 ms; refractory indicators as binary features.</p></li>
+</ul>
+</li>
+<li><p>Recency</p>
+<ul>
+<li><p>Apply exponential time decay weight w time equals exp of negative lambda time times Head time minus v time when aggregating labels default lambda time equals 1 divided by 200 ms.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.4 Incremental maintenance</p>
+<ul class="simple">
+<li><p>Upon insertion of a new head vertex v post</p>
+<ul>
+<li><p>Update l0 v post then perform up to r WL backward iterations confined to the r WL neighborhood frontier.</p></li>
+<li><p>Only recompute x WL for vertices whose WL hash multiset changed.</p></li>
+</ul>
+</li>
+<li><p>Complexity per event bounded by neighborhood growth; cap via frontier budget F max default 256 vertices.</p></li>
+</ul>
+<p>4.5 Grouping with LSH</p>
+<ul class="simple">
+<li><p>Use cosine LSH over x WL to generate candidate groups of vertices with similar context.</p></li>
+<li><p>Parameters</p>
+<ul>
+<li><p>Bands b equals 8, rows r band equals 4 per band, yielding 32 projections; collision threshold τ LSH equals 2 band matches.</p></li>
+</ul>
+</li>
+<li><p>Output</p>
+<ul>
+<li><p>For a new head v post return top K group candidates K group equals 3, each a small set of antecedent vertices whose embeddings collide with v post.</p></li>
+</ul>
+</li>
+</ul>
+<p>4.6 Integration with DHG GROW</p>
+<ul class="simple">
+<li><p>DHG candidate selection Section 2 augments TC kNN with WL grouping</p>
+<ul>
+<li><p>For each group candidate G produce a higher-order tail by selecting the most recent event per neuron in G within δ causal; deduplicate against existing edges.</p></li>
+<li><p>Prioritize these group-induced candidates by boosting s cand with a term proportional to average cosine similarity between x WL v post and group members.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>GraphSAGE incidence-expansion embedding SAGE
+Defaults</p></li>
+</ol>
+<ul class="simple">
+<li><p>Refresh cadence Δt SAGE equals 500 ms periodic batch run.</p></li>
+<li><p>Dimension d SAGE equals 128, radius r SAGE equals 3.</p></li>
+<li><p>Encoder</p>
+<ul>
+<li><p>Operate on the bipartite incidence expansion H to B where H are hyperedge nodes and B are event vertices; connect v in B to e in H if v in Tail e or v equals Head e.</p></li>
+<li><p>Use mean or attention aggregator with time encoding.</p></li>
+</ul>
+</li>
+</ul>
+<p>5.1 Features and encoders</p>
+<ul class="simple">
+<li><p>Vertex initial features</p>
+<ul>
+<li><p>One hot neuron id compressed via trainable embedding table size N by d id where d id equals 16.</p></li>
+<li><p>Time encoding via sinusoidal features over microsecond scale and recentness decay.</p></li>
+<li><p>Local WL embedding x WL as input channel to SAGE to bootstrap structure.</p></li>
+</ul>
+</li>
+<li><p>Hyperedge initial features</p>
+<ul>
+<li><p>Tail size, reliability bucket, delay stats, age, and usage count.</p></li>
+</ul>
+</li>
+<li><p>Aggregation</p>
+<ul>
+<li><p>Layer l plus 1 embedding h v equals sigma of W l times concatenation of h v l and aggregate over neighbors N v h u l with time attention weights a u based on Δ and reliability.</p></li>
+</ul>
+</li>
+</ul>
+<p>5.2 Training objectives</p>
+<ul class="simple">
+<li><p>Unsupervised contrastive objective over positive pairs vertex and true hyperedge neighbors and negatives sampled by degree profile.</p></li>
+<li><p>Optional temporal skip gram objective over sequences of heads in short windows.</p></li>
+</ul>
+<p>5.3 Outputs and usage</p>
+<ul class="simple">
+<li><p>Produce x SAGE v in R to the d SAGE for vertices and optionally x SAGE e for hyperedges.</p></li>
+<li><p>Publish a global causal-context map used by</p>
+<ul>
+<li><p>Streaming FSM Section 6 to canonicalize and compress pattern types.</p></li>
+<li><p>Hierarchical abstraction Section 7 to cluster similar hyperpaths before rule promotion.</p></li>
+</ul>
+</li>
+</ul>
+<p>5.4 Resource controls</p>
+<ul class="simple">
+<li><p>Mini-batch construction limited to B size equals 4096 vertices per refresh with neighbor sampling cap S nbr equals 32 and hyperedge sampling cap S edge equals 64.</p></li>
+<li><p>End-to-end refresh budget less than 20 ms on desktop target for 500 ms cadence.</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Interfaces
+6.1 WL online API</p></li>
+</ol>
+<ul class="simple">
+<li><p>embedding wl get vertex id returns vector x WL v</p></li>
+<li><p>embedding wl update on event vertex id timestamp returns updated vectors for touched vertices limited by F max</p></li>
+<li><p>embedding wl propose groups head vertex id returns list of K group candidate sets and similarity scores</p></li>
+<li><p>embedding wl params set or get to adjust r WL d WL Δt WL b r band τ LSH F max</p></li>
+</ul>
+<p>6.2 GraphSAGE periodic API</p>
+<ul class="simple">
+<li><p>embedding sage refresh now returns snapshot id and statistics</p></li>
+<li><p>embedding sage get vertex id returns x SAGE v from latest snapshot</p></li>
+<li><p>embedding sage link FSM returns handles for FSM to use SAGE embeddings as features</p></li>
+<li><p>embedding sage params set or get to adjust r SAGE d SAGE Δt SAGE batch and sampling knobs</p></li>
+</ul>
+<p>6.3 Unified embedding view</p>
+<ul class="simple">
+<li><p>embedding get vertex id returns x WL v and x SAGE v with timestamps and snapshot ids</p></li>
+<li><p>similarity vertex a vertex b mode in {WL, SAGE, HYBRID} returns cosine sims and composite score</p></li>
+<li><p>events to DHG pipeline requests WL-only fast path for GROW; FSM requests HYBRID targeting rule mining.</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Parameter table defaults and tuning</p></li>
+</ol>
+<ul class="simple">
+<li><p>WL r WL 2, d WL 64, Δt WL 10 ms, frontier F max 256, LSH b 8, r band 4, τ LSH 2, lambda time 1 divided by 200 ms, q time 100 microseconds.</p></li>
+<li><p>SAGE r SAGE 3, d SAGE 128, Δt SAGE 500 ms, batch B size 4096, S nbr 32, S edge 64.</p></li>
+<li><p>Grouping K group 3, cosine threshold τ cos 0.65 for boosting DHG candidates.</p></li>
+<li><p>Tuning</p>
+<ul>
+<li><p>Increase d WL to 128 if collision precision is low and budgets allow.</p></li>
+<li><p>Reduce Δt WL if event density is low to amortize computations.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Complexity and performance</p></li>
+</ol>
+<ul class="simple">
+<li><p>WL per event</p>
+<ul>
+<li><p>Neighborhood scan O frontier size up to F max; hashing O tokens with small constants; LSH insert O b.</p></li>
+<li><p>Latency target less than 200 microseconds per event on desktop prototype.</p></li>
+</ul>
+</li>
+<li><p>SAGE per refresh</p>
+<ul>
+<li><p>Sampling O B size times S nbr plus S edge; message passing O edges in sampled subgraph; GPU offload recommended.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>Data structures and storage</p></li>
+</ol>
+<ul class="simple">
+<li><p>Embedding tables</p>
+<ul>
+<li><p>WL table map vertex id to x WL vector with last update time.</p></li>
+<li><p>SAGE snapshot store map snapshot id to arrays for x SAGE.</p></li>
+</ul>
+</li>
+<li><p>LSH indices</p>
+<ul>
+<li><p>Maintain b hash tables with r band rows each keyed by integer projections; garbage-collect entries older than TTL equals 2 seconds.</p></li>
+</ul>
+</li>
+<li><p>Provenance</p>
+<ul>
+<li><p>Keep per-group creation records mapping from WL collisions to DHG candidates for auditability.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Quality metrics</p></li>
+</ol>
+<ul class="simple">
+<li><p>WL collision precision and recall measured against known causal groupings on synthetic workloads.</p></li>
+<li><p>Group-augmented DHG admission rate uplift relative to TC kNN only baseline.</p></li>
+<li><p>FSM rule discovery rate improvement when SAGE embeddings are available.</p></li>
+<li><p>End-to-end overhead percent of DHG latency budget consumed by WL updates; target less than 30 percent.</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Failure and edge cases</p></li>
+</ol>
+<ul class="simple">
+<li><p>Hash collisions generating spurious groups mitigate by requiring minimum cosine τ cos and by deduplication against existing edges.</p></li>
+<li><p>Embedding staleness if WL cadence is too slow; enforce max staleness bound of 20 ms for DHG use.</p></li>
+<li><p>Snapshot skew between WL and SAGE when FSM consumes both; annotate paths with snapshot ids for reproducibility.</p></li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>Security and privacy considerations</p></li>
+</ol>
+<ul class="simple">
+<li><p>Embedding vectors are derived from event timing and neuron ids; ensure logs redact raw timestamps when exporting outside the system by quantization per q time and by removing neuron id mapping tables.</p></li>
+</ul>
+<ol class="arabic simple" start="13">
+<li><p>Mermaid diagram embedding pipeline</p></li>
+</ol>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+EV[Event vertex stream] --&gt; WLUP[WL update r=2 d=64 every 10 ms]
+WLUP --&gt; LSHI[LSH index]
+LSHI --&gt; GROUPS[Group candidates]
+GROUPS --&gt; GROW[DHG GROW booster]
+EV --&gt; SAGEBUF[Periodic sample buffer 500 ms]
+SAGEBUF --&gt; SAGE[GraphSAGE r=3 d=128 refresh]
+SAGE --&gt; FSM[FSM and abstraction]
+</pre></div>
+</div>
+<ol class="arabic simple" start="14">
+<li><p>Acceptance criteria for Section 4</p></li>
+</ol>
+<ul class="simple">
+<li><p>WL online embedding algorithm defined with temporal features, hashing, incremental maintenance, and LSH grouping.</p></li>
+<li><p>Integration with DHG candidate generation and prioritization specified.</p></li>
+<li><p>GraphSAGE periodic embedding defined with incidence-expansion modeling, features, objective, and refresh policy.</p></li>
+<li><p>Interfaces, defaults, complexity, and observability metrics provided.</p></li>
+<li><p>Diagram reflects dataflow and module boundaries.</p></li>
+</ul>
+<ol class="arabic simple" start="15">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Formal definitions Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p></li>
+<li><p>DHG construction Section 2 <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a></p></li>
+<li><p>FSM Section 6 outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+<li><p>Abstraction Section 7 outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+</ul>
+<p>End of Section 4</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

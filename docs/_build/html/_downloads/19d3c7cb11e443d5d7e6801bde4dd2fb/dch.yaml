@@ -1,0 +1,40 @@
+# DCH core configuration (portable YAML, no Hydra). Intended for reuse across experiments.
+# Maps conceptually to DHG candidate generation, backward traversal, plasticity updates, FSM thresholds, and abstraction flags.
+# These values are conservative defaults to preserve current baseline behavior. Units are milliseconds unless noted.
+
+dhg:
+  # Temporal window for causal admissibility relative to head event time.
+  delay_min: 1.0         # ms, minimum allowed lag from presyn to postsyn
+  delay_max: 20.0        # ms, maximum allowed lag from presyn to postsyn
+  refractory_ms: 2.0     # ms, per-neuron refractory period for candidate generation
+  candidate_budget_unary: 8   # cap for unary heads per step
+  candidate_budget_pair: 8    # cap for pairwise combinations per step
+  candidate_budget_triple: 0  # cap for triple combinations per step (0 disables)
+
+traversal:
+  # Constrained backward traversal of the hypergraph.
+  horizon: 50.0          # ms lookback horizon
+  beam_size: 16          # number of partial paths to keep
+  length_penalty: 0.95   # multiplicative penalty per hop (0.9..0.99 typical)
+
+plasticity:
+  # Evidence-weighted exponential moving average and pruning.
+  ema_alpha: 0.2         # EMA smoothing factor for reliability
+  potentiation: 0.05     # additive increase on positive evidence
+  depression: 0.03       # additive decrease on negative evidence
+  prune_threshold: 0.1   # drop edges below this reliability
+
+fsm:
+  # Streaming FSM parameters controlling promotion/decay of hypotheses.
+  theta: 3.0             # detection threshold
+  lambda_decay: 0.99     # multiplicative decay per tick
+  hold_k: 2              # keep-top-K active hypotheses
+  min_weight: 1.0        # minimum weight clamp
+
+abstraction:
+  # Hierarchical abstraction and provenance settings. Defaults keep abstraction OFF.
+  enable_abstraction: false
+  reliability_agg: "min"   # how to aggregate reliabilities when compressing
+  reliability_floor: 0.1   # floor when abstracting weak components
+  provenance: true         # keep provenance for traceability
+  dedup: true              # deduplicate equivalent abstractions

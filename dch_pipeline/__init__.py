@@ -22,6 +22,7 @@ from .pipeline import (
     PlasticityConfig,
     PipelineConfig,
     DCHPipeline,
+    ManifoldConfig,
 )
 
 __all__ = [
@@ -30,4 +31,11 @@ __all__ = [
     "PlasticityConfig",
     "PipelineConfig",
     "DCHPipeline",
+    "ManifoldConfig",
 ]
+
+# Re-export version string from dch_core for convenience
+try:
+    from dch_core import __version__ as __version__  # re-export
+except Exception:
+    __version__ = "0.0.0"

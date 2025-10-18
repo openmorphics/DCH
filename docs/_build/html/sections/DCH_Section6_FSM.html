@@ -1,0 +1,574 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 6 Streaming Frequent Hyperpath Mining and Online Rule Induction - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section6_FSM.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-6-streaming-frequent-hyperpath-mining-and-online-rule-induction">
+<h1>Dynamic Causal Hypergraph DCH — Section 6 Streaming Frequent Hyperpath Mining and Online Rule Induction<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-6-streaming-frequent-hyperpath-mining-and-online-rule-induction" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a><br />
+Cross references Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a>, Section 4 <a class="reference internal" href="DCH_Section4_HyperpathEmbedding.html"><span class="std std-doc">DCH_Section4_HyperpathEmbedding.md</span></a>, Section 5 <a class="reference internal" href="DCH_Section5_CreditAssignment.html"><span class="std std-doc">DCH_Section5_CreditAssignment.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Purpose and scope</p></li>
+</ol>
+<ul class="simple">
+<li><p>Define a streaming Frequent Subgraph Mining FSM engine specialized for hyperpaths of the DCH.</p></li>
+<li><p>Convert discovered valid hyperpaths from traversal into canonical templates, maintain frequency and reliability statistics with sliding windows and decay, and promote recurring high quality templates to symbolic rules.</p></li>
+<li><p>Provide outputs to hierarchical abstraction Section 7 and priors to traversal Section 5, enabling the neuro symbolic loop.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Inputs and outputs<br />
+Inputs</p></li>
+</ol>
+<ul class="simple">
+<li><p>Stream of valid hyperpaths Π valid emitted by traversal, each with</p>
+<ul>
+<li><p>sink vertex id w star, ordered list of grounded hyperedges, per path score s π, WL and SAGE snapshot ids (optional), wall time t now.</p></li>
+</ul>
+</li>
+<li><p>Current DCH parameters for thresholds (support s min, reliability r min), windows (W seconds), decay γ.</p></li>
+<li><p>Optional embedding features from Section 4 for template context.</p></li>
+</ul>
+<p>Outputs</p>
+<ul class="simple">
+<li><p>Template statistics table with counts, decayed support, reliability aggregates, distinct sink coverage.</p></li>
+<li><p>Promotion events for templates that qualify as symbolic rules with descriptors.</p></li>
+<li><p>Demotion or expiration events for templates falling below thresholds due to drift.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Hyperpath template definition</p></li>
+</ol>
+<ul class="simple">
+<li><p>A hyperpath template τ abstracts away concrete timestamps while preserving structure and relative lags.</p></li>
+<li><p>Representation goals</p>
+<ul>
+<li><p>Invariant to isomorphic reorderings of commutative tail sets.</p></li>
+<li><p>Stable under small timestamp noise by time binning.</p></li>
+<li><p>Compact and hashable for high throughput counting.</p></li>
+</ul>
+</li>
+<li><p>Template payload</p>
+<ul>
+<li><p>Topology order of hyperedges as a DAG from sources to sink.</p></li>
+<li><p>For each hyperedge e in the path</p>
+<ul>
+<li><p>Head neuron id j e</p></li>
+<li><p>Tail multiset of presynaptic neuron ids with binned relative delays Δ bin u equals bucketize head time minus tail time</p></li>
+<li><p>Tail cardinality m e</p></li>
+</ul>
+</li>
+<li><p>Global metadata</p>
+<ul>
+<li><p>Sink neuron id j sink</p></li>
+<li><p>Path length number of edges L π</p></li>
+<li><p>Optional reliability bucket for each edge.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Canonical labeling for streaming hyperpaths<br />
+4.1 Normalization</p></li>
+</ol>
+<ul class="simple">
+<li><p>Shift times so that sink head time equals 0; all tail times become negative lags.</p></li>
+<li><p>Bucketize lags using logarithmic or fixed bins over [1 ms, 30 ms]; default fixed bins of 1,2,3,5,7,10,15,20,25,30 ms.</p></li>
+<li><p>Bucketize edge reliabilities into K r buckets (default 5).</p></li>
+<li><p>Encode neuron id using a stable compact id (no learning needed).</p></li>
+</ul>
+<p>4.2 Incidence expansion and layering</p>
+<ul class="simple">
+<li><p>Convert the grounded hyperpath to a bipartite incidence DAG with vertex nodes and hyperedge nodes.</p></li>
+<li><p>Compute a topological layering by nondecreasing head lag; break ties with tail lag multiset lexicographic order.</p></li>
+<li><p>Within each layer, sort hyperedge nodes by tuple (j e, m e, multiset of tail (neuron id, Δ bin) pairs).</p></li>
+</ul>
+<p>4.3 Canonical string and hash</p>
+<ul class="simple">
+<li><p>For each hyperedge in the canonical order, emit a token</p>
+<ul>
+<li><p>H:j e;M:m e;T:[(i1,Δb1),(i2,Δb2),…];R:rb</p></li>
+</ul>
+</li>
+<li><p>Concatenate tokens with separators and append sink id j sink and total length L π.</p></li>
+<li><p>Compute a 128 bit hash using a stable non cryptographic function (e.g., FarmHash style) to form template id tid; retain the string only for audit to reduce memory.</p></li>
+</ul>
+<p>4.4 Determinism and collision handling</p>
+<ul class="simple">
+<li><p>Deterministic ordering ensures identical grounded hyperpaths map to the same tid.</p></li>
+<li><p>Collisions are rare but possible; maintain a small collision chain and verify by comparing canonical strings when a hash match occurs.</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Counting with sliding window and decay</p></li>
+</ol>
+<ul class="simple">
+<li><p>Maintain two tier statistics per tid</p>
+<ul>
+<li><p>Heavy hitters exact top K using SpaceSaving structure with capacity K HH (default 100k).</p></li>
+<li><p>Global approximate support using Count Min Sketch CMS with width W cm and depth D cm (defaults W cm equals 32768, D cm equals 4).</p></li>
+</ul>
+</li>
+<li><p>Sliding window W seconds (default 60 s)</p>
+<ul>
+<li><p>Ring buffer of B buckets (default 60 buckets of 1 s each) holding per tid increments for heavy hitters; on bucket expiry, decrement counts.</p></li>
+<li><p>CMS maintained with exponential decay γ per second (default γ equals 0.98) to approximate windowed counts for non HH templates.</p></li>
+</ul>
+</li>
+<li><p>Statistics per tid</p>
+<ul>
+<li><p>support win exact or approximate</p></li>
+<li><p>avg reliability r avg computed as EWMA over path scores or edge reliabilities (default EWMA α r equals 0.1)</p></li>
+<li><p>distinct sink count coverage computed with HyperLogLog HLL sketch per tid</p></li>
+<li><p>last seen time and stability measures (variance of increments).</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Concept drift detection</p></li>
+</ol>
+<ul class="simple">
+<li><p>Per tid, track two exponential windows reference and current with rates γ ref greater γ cur to detect significant changes in support or r avg.</p></li>
+<li><p>Promotion hysteresis</p>
+<ul>
+<li><p>Require stability duration D stab (default 5 s) above thresholds before promotion.</p></li>
+<li><p>Demote when support falls below s min demote (default 0.5 times s min) for D demote duration (default 5 s).</p></li>
+</ul>
+</li>
+<li><p>Global drift</p>
+<ul>
+<li><p>Monitor total unique templates and churn rate; if churn spikes, raise thresholds temporarily to keep compute bounded.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Promotion criteria and rule descriptor<br />
+7.1 Eligibility thresholds</p></li>
+</ol>
+<ul class="simple">
+<li><p>support win greater or equal s min (default 50 within W 60 s).</p></li>
+<li><p>r avg greater or equal r min (default 0.6).</p></li>
+<li><p>coverage distinct sinks greater or equal c min (default 10) to avoid overfitting to a single sink.</p></li>
+<li><p>topology constraints L π less or equal L max rule (default 6) and max tail size per edge less or equal k max rule (default 3).</p></li>
+<li><p>no recent demotion cooling time (default 10 s).</p></li>
+</ul>
+<p>7.2 Symbolic rule descriptor</p>
+<ul class="simple">
+<li><p>Rule id rid equals tid plus version.</p></li>
+<li><p>Head predicate Spike j sink, 0 and body predicates Spike i, minus Δ for each antecedent with their binned lags; include permissible lag intervals [Δ min, Δ max] for robustness.</p></li>
+<li><p>Parameters</p>
+<ul>
+<li><p>Prior reliability r rule prior equals r avg</p></li>
+<li><p>Support support win, coverage distinct sinks, stability indicators</p></li>
+<li><p>Scope conditions task tags, dataset, or context labels if available</p></li>
+<li><p>Provenance pointer to sample grounded hyperpaths and example ids for audit.</p></li>
+</ul>
+</li>
+</ul>
+<p>7.3 Emission and lifecycle</p>
+<ul class="simple">
+<li><p>Emit promotion event with descriptor; mark as Active.</p></li>
+<li><p>Demotion emits state change to Inactive but preserves stats for potential reactivation.</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Integration points<br />
+8.1 With traversal (Section 5)</p></li>
+</ol>
+<ul class="simple">
+<li><p>Rule priors influence edge selection via f rule feature; maintain a mapping from tid to motif matchers that recognize if an incoming edge sequence can complete a known rule.</p></li>
+<li><p>Traversal can request prioritized expansion when partial matches to Active rules are detected (guide search).</p></li>
+</ul>
+<p>8.2 With hierarchical abstraction (Section 7)</p>
+<ul class="simple">
+<li><p>When a rule promotes, trigger higher order hyperedge creation</p>
+<ul>
+<li><p>Tail set equals the source vertices of the template (unique earliest events), Head equals the sink event class.</p></li>
+<li><p>Initialize new edge’s reliability with r rule prior and usage counters zero; attach provenance links to constituent edges.</p></li>
+<li><p>Ensure cycle prevention and deduplication against existing abstractions.</p></li>
+</ul>
+</li>
+</ul>
+<p>8.3 With embeddings (Section 4)</p>
+<ul class="simple">
+<li><p>WL embeddings are included in template context for collision filtering; SAGE snapshot id is stored to correlate clusters with rules.</p></li>
+<li><p>FSM can export cluster aware rule variants if a template consistently occurs within a specific embedding cluster.</p></li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>APIs and data contracts</p></li>
+</ol>
+<ul class="simple">
+<li><p>fsm submit path inputs path record seed id, sink vertex id, path edge ids, s π, t now, snapshot ids returns tid and whether counted in HH or CMS.</p></li>
+<li><p>fsm tick inputs watermark time advances ring buffer, expires buckets, applies decay returns maintenance stats.</p></li>
+<li><p>fsm poll promotions inputs max n returns up to n new rule descriptors and demotions since last poll.</p></li>
+<li><p>fsm get template stats inputs tid returns support, r avg, coverage, stability and state.</p></li>
+<li><p>fsm params get set thresholds, window size, decay rates, HH capacities, CMS sizes, hysteresis durations.</p></li>
+<li><p>fsm export rules returns current Active ruleset for traversal and abstraction.</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Observability and metrics</p></li>
+</ol>
+<ul class="simple">
+<li><p>rule discovery rate promotions per minute and active count.</p></li>
+<li><p>precision proxy fraction of promoted rules that remain Active for at least T persist (default 60 s).</p></li>
+<li><p>coverage of active rules fraction of seeds whose paths partially match any Active rule.</p></li>
+<li><p>compute usage HH occupancy, CMS load, per call latency.</p></li>
+<li><p>churn rate promotions plus demotions per minute and top template volatility.</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Complexity and performance targets</p></li>
+</ol>
+<ul class="simple">
+<li><p>Submit path hot path</p>
+<ul>
+<li><p>Canonicalization O length π times tail size with small constants due to short paths and small tails.</p></li>
+<li><p>HH update O 1 amortized; CMS update O D cm.</p></li>
+<li><p>Latency target less than 50 microseconds per path on desktop prototype.</p></li>
+</ul>
+</li>
+<li><p>Maintenance tick per second</p>
+<ul>
+<li><p>Expire one bucket and apply CMS decay linear in HH size; budget less than 10 ms per second.</p></li>
+</ul>
+</li>
+<li><p>Memory</p>
+<ul>
+<li><p>HH stores K HH templates; CMS memory W cm times D cm counters; HLL per HH template.</p></li>
+</ul>
+</li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>Failure modes and mitigations</p></li>
+</ol>
+<ul class="simple">
+<li><p>Template explosion under noise raise s min adaptively and increase γ to decay faster; throttle by rejecting low score paths s π below s path min (default 0.2).</p></li>
+<li><p>Hash collisions verify canonical strings on HH insertion; for CMS tolerate collision noise and rely on HH for promotions.</p></li>
+<li><p>Window skew if event timestamps jitter ensure watermark based tick; buffer out of order submissions until watermark advances.</p></li>
+<li><p>Drift overreaction use hysteresis and moving thresholds to avoid oscillation.</p></li>
+</ul>
+<ol class="arabic simple" start="13">
+<li><p>Security and privacy notes</p></li>
+</ol>
+<ul class="simple">
+<li><p>Canonical strings can include neuron ids; for external logs, map ids through a one way dictionary and coarsen Δ bins.</p></li>
+<li><p>Avoid exporting raw path exemplars unless explicitly requested for audit with access control.</p></li>
+</ul>
+<ol class="arabic simple" start="14">
+<li><p>Mermaid diagram — FSM pipeline</p></li>
+</ol>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart LR
+TRAV[Valid hyperpaths from traversal] --&gt; NORM[Normalize and bucketize lags]
+NORM --&gt; CAN[Canonical label to tid]
+CAN --&gt; COUNT[HH and CMS counting with window W and decay gamma]
+COUNT --&gt; CHECK[Threshold and hysteresis checks]
+CHECK --&gt;|Promote| RULE[Emit rule descriptor and activate]
+CHECK --&gt;|Demote| DROP[Deactivate and retain stats]
+RULE --&gt; ABST[Trigger abstraction creation]
+</pre></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Parameter defaults and tuning (aligned with outline)</p></li>
+</ol>
+<ul class="simple">
+<li><p>W equals 60 s, γ equals 0.98 per second.</p></li>
+<li><p>s min equals 50, r min equals 0.6, c min equals 10, L max rule equals 6, k max rule equals 3.</p></li>
+<li><p>K HH equals 100k, W cm equals 32768, D cm equals 4.</p></li>
+<li><p>EWMA α r equals 0.1, D stab equals 5 s, s min demote equals 0.5 times s min, D demote equals 5 s.</p></li>
+<li><p>s path min equals 0.2 to screen very low confidence paths.</p></li>
+</ul>
+<ol class="arabic simple" start="16">
+<li><p>Acceptance criteria for Section 6</p></li>
+</ol>
+<ul class="simple">
+<li><p>Canonical labeling scheme for hyperpaths is specified, deterministic, and hashable.</p></li>
+<li><p>Counting design supports sliding window, heavy hitters, and approximate totals with decay.</p></li>
+<li><p>Concept drift detection and hysteresis thresholds are defined.</p></li>
+<li><p>Promotion outputs a complete rule descriptor consumable by traversal and abstraction.</p></li>
+<li><p>APIs, metrics, and performance targets are provided.</p></li>
+<li><p>Diagram depicts the end to end FSM flow.</p></li>
+</ul>
+<ol class="arabic simple" start="17">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Formal path and reliability definitions Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p></li>
+<li><p>Embedding integration Section 4 <a class="reference internal" href="DCH_Section4_HyperpathEmbedding.html"><span class="std std-doc">DCH_Section4_HyperpathEmbedding.md</span></a></p></li>
+<li><p>Traversal source and priors Section 5 <a class="reference internal" href="DCH_Section5_CreditAssignment.html"><span class="std std-doc">DCH_Section5_CreditAssignment.md</span></a></p></li>
+<li><p>Abstraction sink Section 7 (to be drafted) <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a></p></li>
+</ul>
+<p>End of Section 6</p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

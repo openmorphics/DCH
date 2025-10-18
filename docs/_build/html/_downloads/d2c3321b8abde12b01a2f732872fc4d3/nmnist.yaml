@@ -1,0 +1,45 @@
+# N-MNIST experiment configuration (portable YAML; no Hydra).
+# Keys mirror high-level pipeline params and are loader-agnostic.
+# - experiment: run naming
+# - data: dataset root/split
+# - encoder: SimpleBinner parameters (see dch_data/encoders.py)
+# - pipeline: deterministic seed and step budget for scaffolding
+# - dch: reference to core algorithm settings (see configs/dch.yaml)
+# - logging: artifact destinations
+# - notes: informational only; not parsed
+
+experiment:
+  name: "nmnist_baseline"
+
+data:
+  root: "./data/nmnist"
+  split: "train"
+  download: false
+
+encoder:
+  name: "SimpleBinner"
+  bin_ms: 2.0
+
+pipeline:
+  seed: 123
+  max_steps: 200
+
+dch:
+  # Reference include: merge with configs/dch.yaml externally when constructing the pipeline.
+  # Intentionally no Hydra-specific syntax to keep this file portable.
+  _ref: "./configs/dch.yaml"
+
+logging:
+  csv_path: "./runs/nmnist/metrics.csv"
+  jsonl_path: "./runs/nmnist/metrics.jsonl"
+  tb_log_dir: null
+
+notes: |
+  How to run (scaffold):
+    - The current runner implements only 'synthetic' data generation.
+    - After integrating N-MNIST loader, invoke:
+        python scripts/run_experiment.py --experiment nmnist --seed 123
+  Related components:
+    - Pipeline: dch_pipeline/pipeline.DCHPipeline (see [dch_pipeline/pipeline.py](dch_pipeline/pipeline.py:146))
+    - Encoder: dch_data/encoders.SimpleBinnerEncoder (see [dch_data/encoders.py](dch_data/encoders.py:1))
+    - Runner CLI: [scripts/run_experiment.py](scripts/run_experiment.py:1)

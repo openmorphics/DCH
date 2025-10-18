@@ -1,0 +1,631 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.09.25 -->
+        <title>Dynamic Causal Hypergraph DCH — Section 5 Credit Assignment via Constrained Backward Hyperpath Traversal - Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #eeffcc;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">Dynamic Causal Hypergraph (DCH) 0.1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API_REFERENCE.html">DCH API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../EVALUATION_PROTOCOL.html">Standardized Evaluation Protocol — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../REPRODUCIBILITY.html">Reproducibility Guide — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../USAGE.html">DCH Usage Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../TROUBLESHOOTING.html">Troubleshooting and FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ModuleResponsibilityMatrix.html">Module Responsibility Matrix — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../HardwareAppendix.html">Hardware Mapping Appendix — “Causa‑Chip” Sketch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../RESULTS.html">Results and Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../BASELINES.html">DCH Baselines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../AlgorithmSpecs.html">Algorithm Specifications and Complexity — Dynamic Causal Hypergraph (DCH)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ReleaseNotes.html">Release Notes</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/sections/DCH_Section5_CreditAssignment.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dynamic-causal-hypergraph-dch-section-5-credit-assignment-via-constrained-backward-hyperpath-traversal">
+<h1>Dynamic Causal Hypergraph DCH — Section 5 Credit Assignment via Constrained Backward Hyperpath Traversal<a class="headerlink" href="#dynamic-causal-hypergraph-dch-section-5-credit-assignment-via-constrained-backward-hyperpath-traversal" title="Link to this heading">¶</a></h1>
+<p>Parent outline <a class="reference internal" href="../DCH_TechSpec_Outline.html"><span class="std std-doc">DCH_TechSpec_Outline.md</span></a><br />
+Cross references Section 1 <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a>, Section 2 <a class="reference internal" href="DCH_Section2_DHG_TCkNN.html"><span class="std std-doc">DCH_Section2_DHG_TCkNN.md</span></a>, Section 3 <a class="reference internal" href="DCH_Section3_Plasticity.html"><span class="std std-doc">DCH_Section3_Plasticity.md</span></a>, Section 4 <a class="reference internal" href="DCH_Section4_HyperpathEmbedding.html"><span class="std std-doc">DCH_Section4_HyperpathEmbedding.md</span></a></p>
+<p>Version v0.1</p>
+<ol class="arabic simple">
+<li><p>Purpose and scope</p></li>
+</ol>
+<ul class="simple">
+<li><p>Define the discrete, evidence based credit assignment mechanism for DCH.</p></li>
+<li><p>Traverse backward from target head vertices to discover valid causal hyperpaths under temporal and biological constraints.</p></li>
+<li><p>Aggregate path evidence to update hyperedge reliabilities and feed online plasticity and rule induction.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Inputs and outputs<br />
+Inputs</p></li>
+</ol>
+<ul class="simple">
+<li><p>Seed set S seeds of head vertices tagged by supervision, error, or reward events (e.g., classifier output spikes or task signals).</p></li>
+<li><p>Current DCH state E t and V t with incoming by head index from Section 2.</p></li>
+<li><p>Temporal parameters Δ min, Δ max, refractory ρ; traversal policy M, L, B, temperature τ select (Section 1 defaults).</p></li>
+<li><p>Optional symbolic rule priors from FSM and abstraction (Sections 6–7) as bias features.</p></li>
+</ul>
+<p>Outputs</p>
+<ul class="simple">
+<li><p>Set of discovered valid hyperpaths Π valid with per path scores s π.</p></li>
+<li><p>Edge level aggregates A e positive and negative evidence contributions.</p></li>
+<li><p>Optional partial paths for audit and debugging when termination budgets are hit.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Valid hyperpath constraints (B connectivity and temporal logic)</p></li>
+</ol>
+<ul class="simple">
+<li><p>B connectivity: An expansion across a hyperedge e from its head w to its tail Tail e is admissible only if evidence exists for every tail vertex u in Tail e. Since E t encodes realized event anchored edges, tails exist, but traversal must honor bounds below.</p></li>
+<li><p>Temporal window: For each u in Tail e, Δ u equals w time minus u time must satisfy Δ min less or equal Δ u less or equal Δ max (edge attributes).</p></li>
+<li><p>Refractory: Along any path, no two edges with heads on the same neuron may have head timestamps closer than ρ (prevents implausible rapid refiring).</p></li>
+<li><p>Horizon: Only traverse to tail vertices with timestamps greater or equal t w minus H back, where H back is a traversal horizon in time (default H back 100 ms for event vision); also obey step and branching caps.</p></li>
+<li><p>Acyclicity: Because event vertices are time ordered and edges head time is strictly greater than tail times, cycles are precluded in event anchored traversal; still avoid reusing the same vertex id within a single path.</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Traversal state and search space</p></li>
+</ol>
+<ul class="simple">
+<li><p>State represented as a pair Frontier, Path where Frontier is a multiset of vertices that must be justified and Path is the ordered list of edges already included.</p></li>
+<li><p>Initialization per seed w star in S seeds set Frontier equals { w star } and Path equals empty.</p></li>
+<li><p>Goal condition reached when Frontier is empty; a complete hyperpath π has been discovered.</p></li>
+<li><p>Expansion chooses a vertex v from Frontier, selects an admissible incoming edge e with head v, removes v from Frontier, and adds all u in Tail e into Frontier; append e to Path.</p></li>
+<li><p>Sampling domain for admissible edges includes only edges meeting B connectivity and temporal checks and respecting refractory relations to edges already in Path.</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Multi start random B walk policy<br />
+Defaults (Section 1): M equals 8 seeds per event, L equals 12 max depth, B equals 4 branching cap per expansion, τ select equals 0.7.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Selection probability for candidate edge e given current v:</p>
+<ul>
+<li><p>Features</p>
+<ul>
+<li><p>f rel equals log r e (monotonic with reliability).</p></li>
+<li><p>f rec equals exp of negative lambda rec times age e where age e equals current time minus head time of e; default lambda rec equals 1 divided by 100 ms.</p></li>
+<li><p>f rule equals 1 if e aligns with a known symbolic rule motif from FSM, else 0; may be weighted by rule confidence.</p></li>
+<li><p>f sim equals average cosine similarity between WL embedding of v and WL embeddings of tails of e (Section 4).</p></li>
+</ul>
+</li>
+<li><p>Score z e equals w rel times f rel plus w rec times f rec plus w rule times f rule plus w sim times f sim with defaults w rel 1.0, w rec 0.5, w rule 0.5, w sim 0.5.</p></li>
+<li><p>Sampling probability p e equals softmax over candidates z e divided by τ select.</p></li>
+</ul>
+</li>
+<li><p>Branching control pick up to B highest probability candidates per expansion or sample without replacement up to B; beam style control described in Section 6 below.</p></li>
+<li><p>Depth control terminate any branch exceeding L expansions or reaching timestamps older than H back.</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Search strategies and determinism</p></li>
+</ol>
+<ul class="simple">
+<li><p>Randomized beam search: Maintain K beam partial states with cumulative log scores and expand the top K after each layer (K default equals M). This improves stability vs. pure random selection while preserving exploration via softmax.</p></li>
+<li><p>AND frontier semantics: Because hyperedges are AND relations over their tails, a state with Frontier size greater than 1 must justify all vertices; interleave expansions by picking any vertex from Frontier that has admissible incoming edges.</p></li>
+<li><p>Vertex selection heuristic: Prefer the frontier vertex with the fewest admissible incoming edges first (fail fast), ties broken by most recent timestamp.</p></li>
+<li><p>Deterministic replay: Use a seeded RNG keyed by seed vertex id, current time bucket, and frontier signature. With the same seed and DCH snapshot, traversal sequences are reproducible.</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>Path scoring and aggregation</p></li>
+</ol>
+<ul class="simple">
+<li><p>Path score s π equals product over e in π of r e (Section 1 default).</p></li>
+<li><p>Sign of contribution:</p>
+<ul>
+<li><p>For correct or rewarded seeds, add s π to A e positive for all e in π.</p></li>
+<li><p>For erroneous seeds (wrong class spike or error signal), add s π to A e negative for all e in π.</p></li>
+</ul>
+</li>
+<li><p>Normalization per edge e:</p>
+<ul>
+<li><p>r hat path e equals A e positive divided by A e positive plus A e negative plus ε with ε small equals 1.0 for stability.</p></li>
+</ul>
+</li>
+<li><p>Emission to plasticity: Provide r hat path e and optionally per edge weights to Section 3 to blend with local watcher statistics (λ path control).</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>Temporal logic enforcement details</p></li>
+</ol>
+<ul class="simple">
+<li><p>Interval algebra alignment: Treat each hyperedge as imposing interval relations where tail[u] precedes head[w] by Δ u within bounds; disallow overlaps that violate refractory for same neuron heads.</p></li>
+<li><p>Head coincidence filter: If two admissible edges share the same head neuron with head times closer than ρ, only allow the earlier one in a given path branch.</p></li>
+<li><p>Tail collapse: If two tails within the same expansion refer to events from the same neuron within δ causal, select the latest tail event (consistent with Section 2 construction) to avoid duplicate justifications.</p></li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>Efficiency, pruning, and early termination</p></li>
+</ol>
+<ul class="simple">
+<li><p>Candidate capping: For a vertex v, cap the number of admissible incoming edges evaluated at C in per vertex cap default 16 to bound branching.</p></li>
+<li><p>Early discard rules:</p>
+<ul>
+<li><p>Upper bound pruning discard partial states whose maximum possible extension score upper bound (using max r e on remaining depth) cannot beat the current k th best; maintain per depth best beams.</p></li>
+<li><p>Time bound pruning discard branches where the next admissible steps would violate H back.</p></li>
+</ul>
+</li>
+<li><p>Memoization: Cache admissible incoming edges per head vertex within the current traversal cycle keyed by head id and snapshot id to avoid repeated filtering.</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>Data dependencies and interfaces</p></li>
+</ol>
+<ul class="simple">
+<li><p>Requires incoming by head index and hyperedge attribute access from Section 2.</p></li>
+<li><p>Requires WL embeddings for similarity term and optional SAGE snapshot id from Section 4.</p></li>
+<li><p>Outputs r hat path e to Section 3 via plasticity update from path signals.</p></li>
+<li><p>Rule priors from FSM (Section 6) provided as a lookup mapping hyperedge motifs to bias weights.</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>Parameters and defaults</p></li>
+</ol>
+<ul class="simple">
+<li><p>M equals 8 seeds per event; L equals 12; B equals 4; τ select equals 0.7; H back equals 100 ms; C in equals 16.</p></li>
+<li><p>Feature weights w rel equals 1.0, w rec equals 0.5, w rule equals 0.5, w sim equals 0.5; λ rec equals 1 divided by 100 ms.</p></li>
+<li><p>ε equals 1.0 for r hat normalization.</p></li>
+<li><p>Determinism seed composed from seed vertex id, time bucket 1 ms, and traversal cycle id.</p></li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>Observability and metrics</p></li>
+</ol>
+<ul class="simple">
+<li><p>paths per seed average and distribution, valid ratio.</p></li>
+<li><p>average depth reached and branching factor.</p></li>
+<li><p>positive vs negative evidence totals per cycle and per class.</p></li>
+<li><p>traversal latency per seed and total budget use.</p></li>
+<li><p>contribution coverage fraction of active edges touched by traversal.</p></li>
+</ul>
+<ol class="arabic simple" start="13">
+<li><p>Complexity analysis<br />
+Notation: D equals average admissible in degree after constraints; B equals branching cap; L equals depth cap; K equals beam width (approximately M).</p></li>
+</ol>
+<ul class="simple">
+<li><p>Worst case explored states O K times sum from d equals 1 to L of B to the d which is controlled by caps; practical due to tight admissibility filters and temporal horizon.</p></li>
+<li><p>Per expansion work dominated by admissible edge filtering O D (bounded by C in) plus feature scoring O D and softmax.</p></li>
+<li><p>Total per seed cost upper bounded by K times L times C in with small constants.</p></li>
+</ul>
+<ol class="arabic simple" start="14">
+<li><p>Failure and edge cases</p></li>
+</ol>
+<ul class="simple">
+<li><p>No admissible incoming edges for a frontier vertex leads to branch dead end; continue with other vertices in Frontier; if none remain, branch fails.</p></li>
+<li><p>Seeds with timestamp near stream start older than H back yield few or no paths; still emit empty aggregates to avoid bias.</p></li>
+<li><p>Highly bursty inputs may create many admissible candidates; enforce C in and B, defer excess edges via priority queues, and spill stats for meta controller.</p></li>
+</ul>
+<ol class="arabic simple" start="15">
+<li><p>Mermaid diagram — backward traversal with AND frontier</p></li>
+</ol>
+<div class="highlight-mermaid notranslate"><div class="highlight"><pre><span></span>flowchart TB
+SEED[Seed head vertex w*] --&gt; INIT[Init Frontier={w*}, Path=[]]
+INIT --&gt; EXPAND[Pick frontier vertex v with fewest admissible edges]
+EXPAND --&gt; FILTER[Filter incoming edges by temporal windows, refractory, horizon]
+FILTER --&gt; SELECT[Score edges and sample up to B via softmax]
+SELECT --&gt; BRANCH1[Choose edge e1]
+SELECT --&gt; BRANCH2[Choose edge e2]
+BRANCH1 --&gt; FRONT1[Replace v with Tail(e1) in Frontier; append e1 to Path]
+BRANCH2 --&gt; FRONT2[Replace v with Tail(e2) in Frontier; append e2 to Path]
+FRONT1 --&gt; CHECK1{Frontier empty?}
+FRONT2 --&gt; CHECK2{Frontier empty?}
+CHECK1 --&gt;|Yes| EMIT1[Emit path π1 and score s(π1)]
+CHECK2 --&gt;|Yes| EMIT2[Emit path π2 and score s(π2)]
+CHECK1 --&gt;|No| EXPAND
+CHECK2 --&gt;|No| EXPAND
+</pre></div>
+</div>
+<ol class="arabic simple" start="16">
+<li><p>Quality targets and acceptance criteria</p></li>
+</ol>
+<ul class="simple">
+<li><p>Valid hyperpaths honor all temporal windows and refractory constraints; no violations in audit replays.</p></li>
+<li><p>On synthetic benchmarks with planted causal chains, traversal recovers at least 90 percent of ground truth edges within H back under default caps.</p></li>
+<li><p>End to end traversal latency per seed less than 1 ms on desktop prototype for K equals 8, L equals 12, C in equals 16.</p></li>
+<li><p>Emitted r hat path e integrates with plasticity Section 3 and yields monotonic reliability growth on consistent tasks and depression on error tagged seeds.</p></li>
+</ul>
+<ol class="arabic simple" start="17">
+<li><p>Interfaces aligned to module contracts</p></li>
+</ol>
+<ul class="simple">
+<li><p>traversal assign credit inputs seeds list, mode in {reward, error, correct}, returns edge to contribution map A e positive or A e negative and per path records.</p></li>
+<li><p>traversal params set or get to adjust M, L, B, τ select, H back, C in, and feature weights.</p></li>
+<li><p>traversal metrics snapshot returns counters listed in Section 12.</p></li>
+</ul>
+<ol class="arabic simple" start="18">
+<li><p>Cross references</p></li>
+</ol>
+<ul class="simple">
+<li><p>Reliability aggregation and EMA update <a class="reference internal" href="DCH_Section3_Plasticity.html"><span class="std std-doc">DCH_Section3_Plasticity.md</span></a></p></li>
+<li><p>Embedding based similarity <a class="reference internal" href="DCH_Section4_HyperpathEmbedding.html"><span class="std std-doc">DCH_Section4_HyperpathEmbedding.md</span></a></p></li>
+<li><p>Formal objects and constraints <a class="reference internal" href="DCH_Section1_FormalFoundations.html"><span class="std std-doc">DCH_Section1_FormalFoundations.md</span></a></p></li>
+</ul>
+<p>End of Section 5</p>
+<section id="pseudocode-randomized-beam-traversal-with-and-frontier">
+<h2>18. Pseudocode — randomized beam traversal with AND frontier<a class="headerlink" href="#pseudocode-randomized-beam-traversal-with-and-frontier" title="Link to this heading">¶</a></h2>
+<div class="highlight-pseudo notranslate"><div class="highlight"><pre><span></span># Inputs:
+#  - Seeds: list of seed head vertex ids w* with tag ∈ {reward, error, correct}
+#  - E: hyperedge store with incoming_by_head index
+#  - V: vertex store with timestamps
+#  - Params: M, L, B, τ_select, H_back, C_in,
+#            weights (w_rel, w_rec, w_rule, w_sim), λ_rec,
+#            seed_time_bucket = 1 ms
+#  - Priors: Active rule motifs (optional)
+#  - Embeds: WL embeddings map (optional)
+
+function assign_credit(Seeds, E, V, Params, Priors, Embeds):
+    RNG.seed = make_seed(Seeds, now(), seed_time_bucket)
+
+    Aggregates_pos ← map&lt;edge_id, float&gt;()
+    Aggregates_neg ← map&lt;edge_id, float&gt;()
+    Paths_emitted  ← list&lt;PathRecord&gt;()
+
+    for s in Seeds[0 .. M-1]:
+        beam ← init_beam_with_state( frontier={s}, path=[], score_log=0 )
+        depth ← 0
+
+        while depth &lt; L and not beam.empty():
+            next_beam ← empty structure
+            for state in beam:      # randomized beam
+                # Select a frontier vertex by fail-fast heuristic
+                v_sel ← pick_frontier_vertex_with_fewest_admissible(state, E, V, Params, H_back)
+                if v_sel == ⊥:
+                    # If all frontier vertices lack admissible edges, check completion
+                    if state.frontier == ∅:
+                        finalize_emit(state, Aggregates_pos, Aggregates_neg, Paths_emitted, s.tag)
+                    continue
+
+                # Enumerate admissible incoming edges with B-connectivity &amp; temporal checks
+                cand_edges ← filter_incoming_edges(v_sel, state, E, V, Params, H_back, C_in)
+                if cand_edges.empty():
+                    # Try another frontier vertex (loop continues)
+                    continue
+
+                # Score candidates (softmax with τ_select)
+                scored ← []
+                for e in cand_edges:
+                    z ← score_edge(e, state, Priors, Embeds, weights, λ_rec)
+                    scored.append( (e, z) )
+                probs ← softmax_over_scores(scored, τ_select)
+
+                # Branch up to B edges (sample without replacement or pick top-B)
+                chosen ← pick_up_to_B(probs, B, RNG)
+
+                # Create child states
+                for (e, p) in chosen:
+                    child ← clone(state)
+                    child.frontier.remove(v_sel)
+                    for u in Tail(e):
+                        child.frontier.add(u)
+                    child.path.append(e)
+                    child.score_log += log( max(e.r, 1e-6) )   # product of r as log-sum
+                    # Refractory and temporal guards already enforced in filter
+                    next_beam.add(child)
+
+            # Keep top-K states by score (beam width K ≈ M) with some randomness
+            beam ← select_topK_with_random_tiebreak(next_beam, K=M, RNG)
+            depth ← depth + 1
+
+        # Emit any completed paths in final beam layer
+        for state in beam:
+            if state.frontier == ∅:
+                finalize_emit(state, Aggregates_pos, Aggregates_neg, Paths_emitted, s.tag)
+
+    return Aggregates_pos, Aggregates_neg, Paths_emitted
+
+
+function filter_incoming_edges(v, state, E, V, Params, H_back, C_in):
+    # Incoming edges whose head == v and satisfy:
+    #  - For all u∈Tail(e): Δ_u = t_head - t_u ∈ [Δ_min, Δ_max]
+    #  - Refractory: no prior head on same neuron within ρ in current path
+    #  - Horizon: t_u ≥ t_head - H_back
+    #  - No vertex reuse in path
+    cand ← []
+    for e in E.incoming_by_head[v]:
+        if not temporal_valid(e, V, Params.Δ_min, Params.Δ_max, H_back): continue
+        if violates_refractory(e, state.path, Params.ρ): continue
+        if reuses_vertex(e, state.path): continue
+        cand.append(e)
+        if len(cand) == C_in: break
+    return cand
+
+
+function score_edge(e, state, Priors, Embeds, weights, λ_rec):
+    f_rel  = log( clamp(e.r, 1e-6, 1.0) )
+    age    = now() - head_time(e)
+    f_rec  = exp( -λ_rec * age )
+    f_rule = motif_match_score(e, state, Priors)     # ∈ [0,1]
+    f_sim  = wl_similarity(head_vertex(e), Tail(e), Embeds)  # ∈ [0,1]
+    z = weights.w_rel*f_rel + weights.w_rec*f_rec + weights.w_rule*f_rule + weights.w_sim*f_sim
+    return z
+
+
+function finalize_emit(state, Agg_pos, Agg_neg, Paths_emitted, tag):
+    # Path score = product of r(e) (stored as log-sum in state)
+    s_pi = exp(state.score_log)
+    for e in state.path:
+        if tag ∈ {reward, correct}:
+            Agg_pos[e] = Agg_pos.get(e, 0.0) + s_pi
+        else:
+            Agg_neg[e] = Agg_neg.get(e, 0.0) + s_pi
+    Paths_emitted.append( make_path_record(state, s_pi) )
+</pre></div>
+</div>
+<p>Normalization to r̂_path</p>
+<ul class="simple">
+<li><p>For each edge e discovered during this cycle, compute r̂_path(e) = Agg_pos[e] / (Agg_pos[e] + Agg_neg[e] + ε) with ε ≈ 1e-6 and pass to Plasticity (Section 3).</p></li>
+<li><p>Determinism: use seeded RNG based on seed id and time bucket; memoize admissible sets per head id within a cycle for repeatability.</p></li>
+</ul>
+<p>Audit mode (optional)</p>
+<ul class="simple">
+<li><p>Store compact per-branch traces (frontier signatures and chosen edge ids) behind a debug flag to enable exact replay during review without logging full paths.</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Dynamic Causal Hypergraph DCH — Section 5 Credit Assignment via Constrained Backward Hyperpath Traversal</a><ul>
+<li><a class="reference internal" href="#pseudocode-randomized-beam-traversal-with-and-frontier">18. Pseudocode — randomized beam traversal with AND frontier</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=01f34227"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    </body>
+</html>

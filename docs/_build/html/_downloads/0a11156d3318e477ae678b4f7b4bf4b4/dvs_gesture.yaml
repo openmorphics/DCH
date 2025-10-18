@@ -1,0 +1,46 @@
+# DVS Gesture experiment configuration (portable YAML; no Hydra).
+# Maps to high-level pipeline parameters; this file is loader-agnostic.
+# Keys:
+# - experiment: run naming
+# - data: dataset root/split
+# - encoder: SimpleBinner parameters
+# - pipeline: seeds and max steps for scripts
+# - dch: see configs/dch.yaml for core algorithm settings
+# - logging: metrics/logging destinations
+# - notes: informational text; not parsed by runtime
+
+experiment:
+  name: "dvs_gesture_baseline"
+
+data:
+  root: "./data/dvs_gesture"
+  split: "train"
+  download: false
+
+encoder:
+  name: "SimpleBinner"
+  bin_ms: 5.0
+
+pipeline:
+  seed: 123
+  max_steps: 200
+
+dch:
+  # Reference include: merge with configs/dch.yaml externally when constructing the pipeline.
+  # This file intentionally avoids Hydra-specific syntax to remain loader-agnostic.
+  _ref: "./configs/dch.yaml"
+
+logging:
+  csv_path: "./runs/dvs_gesture/metrics.csv"
+  jsonl_path: "./runs/dvs_gesture/metrics.jsonl"
+  tb_log_dir: null
+
+notes: |
+  How to run (scaffold):
+    - The current runner implements only 'synthetic' data generation.
+    - Integrate dataset loader, then run:
+        python scripts/run_experiment.py --experiment dvs_gesture --seed 123
+  Related components:
+    - Pipeline config dataclasses: dch_pipeline/pipeline.py
+    - SimpleBinner encoder: dch_data/encoders.py
+    - Runner CLI: scripts/run_experiment.py

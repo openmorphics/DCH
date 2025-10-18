@@ -1,3 +1,5 @@
+baselines
+benchmarks
 dch_core
 dch_data
 dch_pipeline

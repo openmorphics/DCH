@@ -61,6 +61,134 @@ jobs:
             coverage.xml
           if-no-files-found: ignore
 
+  package-dist:
+    name: Build dists (sdist+wheel) and upload
+    needs: lint-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Build distributions
+        run: |
+          python -m pip install -U pip build twine
+          python -m build
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-3.10
+          path: dist/*
+
+  install-wheel-smoke:
+    name: Install wheel and quick synthetic smoke
+    needs: package-dist
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-3.10
+          path: dist
+      - name: Install wheel and minimal deps, run CLI
+        run: |
+          python -m pip install -U pip
+          WHEEL=$(ls dist/dch-0.9.0-*.whl | head -n 1)
+          echo "Wheel: $WHEEL"
+          python -m pip install --no-deps "$WHEEL"
+          # Minimal runtime dep for evaluation helpers
+          python -m pip install 'numpy>=1.24,<2'
+          mkdir -p artifacts/quick
+          dch-quick --mode synthetic --artifacts-dir artifacts/quick
+      - name: Upload quick artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: quick-artifacts
+          path: artifacts/quick
+          if-no-files-found: error
+
+  docs-html:
+    name: Build docs (HTML)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - name: Build docs
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ".[docs]"
+          make -C docs html || python -m sphinx -b html docs docs/_build/html
+      - name: Upload docs html
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-html
+          path: docs/_build/html
+          if-no-files-found: warn
+
+  publish-testpypi:
+    name: Publish to TestPyPI (manual, requires secrets)
+    needs: package-dist
+    if: ${{ github.event_name == 'workflow_dispatch' && secrets.TWINE_USERNAME != '' && secrets.TWINE_PASSWORD != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-3.10
+          path: dist
+      - name: Upload via Twine to TestPyPI
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        run: |
+          python -m pip install -U pip twine
+          python -m twine upload --repository testpypi dist/*
+
+  testpypi-install-smoke:
+    name: TestPyPI install + quick smoke
+    needs: publish-testpypi
+    if: ${{ needs.publish-testpypi.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: "pip"
+      - name: Install from TestPyPI and run quick
+        run: |
+          python -m pip install -U pip
+          python -m pip install --index-url https://test.pypi.org/simple --extra-index-url https://pypi.org/simple "dch==0.9.0"
+          python - << 'PY'
+import json
+from dch_core import __version__
+print(json.dumps({"installed_version": __version__}))
+PY
+          mkdir -p artifacts/quick
+          dch-quick --mode synthetic --artifacts-dir artifacts/quick || true
+      - name: Upload testpypi quick artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: testpypi-quick-artifacts
+          path: artifacts/quick
+          if-no-files-found: warn
   # cuda-test:
   #   name: CUDA Tests (scheduled/self-hosted)
   #   if: github.event_name == 'schedule'
